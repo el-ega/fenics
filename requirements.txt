@@ -1,0 +1,2 @@
+django
+mysql-python
