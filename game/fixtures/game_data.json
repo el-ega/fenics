@@ -1,0 +1,53 @@
+[
+    {
+        "pk": 1, 
+        "model": "game.team", 
+        "fields": {
+            "logo": "", 
+            "name": "Equipo1", 
+            "slug": "equipo1"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "game.team", 
+        "fields": {
+            "logo": "", 
+            "name": "Equipo2", 
+            "slug": "equipo2"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "game.team", 
+        "fields": {
+            "logo": "", 
+            "name": "Equipo3", 
+            "slug": "equipo3"
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "game.team", 
+        "fields": {
+            "logo": "", 
+            "name": "Equipo4", 
+            "slug": "equipo4"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "game.tournament", 
+        "fields": {
+            "teams": [
+                1, 
+                2, 
+                3, 
+                4
+            ], 
+            "name": "Torneo de Test", 
+            "publish": true, 
+            "slug": "torneo-de-test"
+        }
+    }
+]

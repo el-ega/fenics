@@ -129,6 +129,7 @@ INSTALLED_APPS = (
     'sorl.thumbnail',
 
     'bootstrap',
+    'game',
 )
 
 
