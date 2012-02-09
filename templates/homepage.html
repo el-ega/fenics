@@ -1,0 +1,95 @@
+{% load thumbnail %}
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>fenics</title>
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css" />
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/bottombar.css" />
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/overrides.css" />
+
+        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.min.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+    </head>
+
+    <body>
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="brand" href="#">
+                        fenics
+                    </a>
+
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+
+                    <div class="nav-collapse">
+                        <ul class="nav pull-right">
+<!--                             <li><a href="#">matiasb</a></li> -->
+                            <li class="avatar">{% thumbnail "http://matias.bordese.com.ar/images/matias.png" "20x20" as avatar %}
+                                <a href="#" class="thumbnail">
+                                    <img src="{{ avatar.url }}" alt="matiasb">
+                                </a>
+                                {% endthumbnail %}
+                            </li>
+                            <li class="divider-vertical"></li>
+                            <li><a href="#">Jugar</a></li>
+                            <li><a href="#">Posiciones</a></li>
+                            <li class="divider-vertical"></li>
+                            <li><a href="#">Salir</a></li>
+                        </ul>
+                    </div>
+
+                    {% comment %}
+                    <ul class="nav pull-right">
+                        <li><a href="#">Entrar</a></li>
+                        <li class="divider-vertical"></li>
+                        <li><a href="#">Registrarme</a></li>
+                    </ul>
+                    {% endcomment %}
+                </div>
+            </div>
+        </div>
+
+        <div class="wrapper">
+            <div class="hero-unit">
+                <div class="container">
+                    <p>Some content here</p>
+                </div>
+            </div>
+
+            <div class="container">
+                <!-- Example row of columns -->
+                <div class="row">
+                    <div class="span4">
+                    <h2>Heading</h2>
+                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+                    <p><a href="#" class="btn">View details »</a></p>
+                    </div>
+                    <div class="span4">
+                    <h2>Heading</h2>
+                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+                    <p><a href="#" class="btn">View details »</a></p>
+                </div>
+                    <div class="span4">
+                    <h2>Heading</h2>
+                    <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+                    <p><a href="#" class="btn">View details »</a></p>
+                    </div>
+                </div>
+
+                <hr/>
+            </div>
+        </div>
+
+
+        <footer class="bottombar footer">
+           <p>&copy; fenics 2012</p>
+        </footer>
+
+    </body>
+
+</html>
+

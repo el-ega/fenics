@@ -1,2 +1,5 @@
 django
+PIL
 mysql-python
+south
+solr-thumbnail

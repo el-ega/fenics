@@ -125,7 +125,19 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+
+    'sorl.thumbnail',
+
+    'bootstrap',
 )
+
+
+#CACHES = {
+    #'default': {
+        #'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        #'LOCATION': 'db_cache',
+    #}
+#}
 
 
 # A sample logging configuration. The only tangible logging
