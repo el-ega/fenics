@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>{% block html-title %}fenics{% endblock %}</title>
+
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css" />
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/bottombar.css" />
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/overrides.css" />
+
+        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.min.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+
+        {% block extra-head %}
+        {% endblock %}
+
+    </head>
+
+    <body>
+        {% include '_top_navbar.html' %}
+
+        <div class="wrapper">
+            {% block main-section %}
+                {% block before-content %}
+                {% endblock %}
+
+                <div class="container">
+                    {% block content %}
+                    {% endblock %}
+                    <hr/>
+                </div>
+            {% endblock %}
+        </div>
+
+
+        <footer class="bottombar footer">
+            {% block footer %}
+                <p>&copy; fenics 2012</p>
+            {% endblock %}
+        </footer>
+
+    </body>
+
+</html>
+

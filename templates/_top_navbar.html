@@ -1,0 +1,42 @@
+{% load thumbnail %}
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="brand" href="#">
+                fenics
+            </a>
+
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                    <li class="avatar">{% thumbnail "http://matias.bordese.com.ar/images/matias.png" "20x20" as avatar %}
+<!--                        <a href="#">matiasb</a>-->
+                        <a href="#" class="thumbnail">
+                            <img src="{{ avatar.url }}" alt="matiasb">
+                        </a>
+                        {% endthumbnail %}
+                    </li>
+                    <li class="divider-vertical"></li>
+                    <li><a href="#">Jugar</a></li>
+                    <li><a href="#">Posiciones</a></li>
+                    <li class="divider-vertical"></li>
+                    <li><a href="#">Salir</a></li>
+                </ul>
+            </div>
+
+            {% comment %}
+            <ul class="nav pull-right">
+                <li><a href="#">Entrar</a></li>
+                <li class="divider-vertical"></li>
+                <li><a href="#">Registrarme</a></li>
+            </ul>
+            {% endcomment %}
+        </div>
+    </div>
+</div>
