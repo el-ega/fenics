@@ -7,7 +7,9 @@
             <h2>Sumate!</h2>
             <p>Pronosticá los resultados de los partidos y ganá.<br/>
                Armá ligas y duelos con amigos, dejá tus comentarios para cada partido y seguí las estadísticas.</p>
-            <p><a class="btn btn-primary btn-large">Registrate »</a></p>
+            <p><a class="btn btn-primary btn-large">Registrate »</a>
+               <small>o si ya estás registrado, <a href="#">entrá por acá</a></small>.
+            </p>
         </div>
     </div>
 {% endblock %}
@@ -16,7 +18,7 @@
     <!-- Example row of columns -->
     <div class="row">
         <div class="span4">
-        <h2>Últimas Noticias</h2>
+        <h2>Noticias</h2>
         <p>Palermo se despidió del fútbol en un estadio repleto, pero sin la presencia de Riquelme.
         <a href="#">Detalles</a></p>
         <p>Palermo se despidió del fútbol en un estadio repleto, pero sin la presencia de Riquelme.
@@ -26,7 +28,7 @@
         </div>
 
         <div class="span4">
-        <h2>Últimos Resultados</h2>
+        <h2>Resultados</h2>
         <table class="table">
             <thead>
             </thead>
@@ -37,8 +39,8 @@
                         <img src="{{ team_img.url }}" />
                         {% endthumbnail %}
                     </td>
-                    <td>2</td>
-                    <td>0</td>
+                    <td><strong>2</strong></td>
+                    <td><strong>0</strong></td>
                     <td>{% thumbnail "images/river.png" "30x30" as team_img %}
                         <img src="{{ team_img.url }}" />
                         {% endthumbnail %}
@@ -51,8 +53,8 @@
                         <img src="{{ team_img.url }}" />
                         {% endthumbnail %}
                     </td>
-                    <td>2</td>
-                    <td>0</td>
+                    <td><strong>2</strong></td>
+                    <td><strong>0</strong></td>
                     <td>{% thumbnail "images/river.png" "30x30" as team_img %}
                         <img src="{{ team_img.url }}" />
                         {% endthumbnail %}
@@ -65,8 +67,8 @@
                         <img src="{{ team_img.url }}" />
                         {% endthumbnail %}
                     </td>
-                    <td>2</td>
-                    <td>0</td>
+                    <td><strong>2</strong></td>
+                    <td><strong>0</strong></td>
                     <td>{% thumbnail "images/river.png" "30x30" as team_img %}
                         <img src="{{ team_img.url }}" />
                         {% endthumbnail %}
@@ -79,7 +81,7 @@
         </div>
 
         <div class="span4">
-        <h2>Posiciones</h2>
+        <h2>Top 3</h2>
         <table class="table">
             <tbody>
                 <tr>
@@ -90,7 +92,7 @@
                         </a>
                         {% endthumbnail %}
                     </td>
-                    <td><a href="#">matiasb</a></td>
+                    <td><strong><a href="#">matiasb</a></strong></td>
                     <td>51 puntos</td>
                 </tr>
                 <tr>
@@ -101,7 +103,7 @@
                         </a>
                         {% endthumbnail %}
                     </td>
-                    <td><a href="#">matiasb</a></td>
+                    <td><strong><a href="#">matiasb</a></strong></td>
                     <td>51 puntos</td>
                 </tr>
                 <tr>
@@ -112,7 +114,7 @@
                         </a>
                         {% endthumbnail %}
                     </td>
-                    <td><a href="#">matiasb</a></td>
+                    <td><strong><a href="#">matiasb</a></strong></td>
                     <td>51 puntos</td>
                 </tr>
             </tbody>

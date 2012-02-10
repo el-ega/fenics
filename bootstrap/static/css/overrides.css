@@ -36,6 +36,9 @@ body {
     body {
         padding-top: 0px;
     }
+    .mobile-hidden {
+        display: none;
+    }
     .navbar-fixed-top {
         margin-bottom: 0px;
     }
