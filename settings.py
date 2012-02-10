@@ -132,6 +132,7 @@ INSTALLED_APPS = (
     'game',
 )
 
+THUMBNAIL_FORMAT = 'PNG'
 
 #CACHES = {
     #'default': {

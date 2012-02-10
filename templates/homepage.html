@@ -1,9 +1,13 @@
 {% extends 'base.html' %}
+{% load thumbnail %}
 
 {% block before-content %}
     <div class="hero-unit">
         <div class="container">
-            <p>Some content here</p>
+            <h2>Sumate!</h2>
+            <p>Pronosticá los resultados de los partidos y ganá.<br/>
+               Armá ligas y duelos con amigos, dejá tus comentarios para cada partido y seguí las estadísticas.</p>
+            <p><a class="btn btn-primary btn-large">Registrate »</a></p>
         </div>
     </div>
 {% endblock %}
@@ -12,19 +16,109 @@
     <!-- Example row of columns -->
     <div class="row">
         <div class="span4">
-        <h2>Heading</h2>
-        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-        <p><a href="#" class="btn">View details »</a></p>
+        <h2>Últimas Noticias</h2>
+        <p>Palermo se despidió del fútbol en un estadio repleto, pero sin la presencia de Riquelme.
+        <a href="#">Detalles</a></p>
+        <p>Palermo se despidió del fútbol en un estadio repleto, pero sin la presencia de Riquelme.
+        <a href="#">Detalles</a></p>
+        <p>Palermo se despidió del fútbol en un estadio repleto, pero sin la presencia de Riquelme.
+        <a href="#">Detalles</a></p>
         </div>
+
         <div class="span4">
-        <h2>Heading</h2>
-        <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-        <p><a href="#" class="btn">View details »</a></p>
-    </div>
-        <div class="span4">
-        <h2>Heading</h2>
-        <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-        <p><a href="#" class="btn">View details »</a></p>
+        <h2>Últimos Resultados</h2>
+        <table class="table">
+            <thead>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Boca</td>
+                    <td>{% thumbnail "images/boca.png" "30x30" as team_img %}
+                        <img src="{{ team_img.url }}" />
+                        {% endthumbnail %}
+                    </td>
+                    <td>2</td>
+                    <td>0</td>
+                    <td>{% thumbnail "images/river.png" "30x30" as team_img %}
+                        <img src="{{ team_img.url }}" />
+                        {% endthumbnail %}
+                    </td>
+                    <td>River</td>
+                </tr>
+                <tr>
+                    <td>Boca</td>
+                    <td>{% thumbnail "images/boca.png" "30x30" as team_img %}
+                        <img src="{{ team_img.url }}" />
+                        {% endthumbnail %}
+                    </td>
+                    <td>2</td>
+                    <td>0</td>
+                    <td>{% thumbnail "images/river.png" "30x30" as team_img %}
+                        <img src="{{ team_img.url }}" />
+                        {% endthumbnail %}
+                    </td>
+                    <td>River</td>
+                </tr>
+                <tr>
+                    <td>Boca</td>
+                    <td>{% thumbnail "images/boca.png" "30x30" as team_img %}
+                        <img src="{{ team_img.url }}" />
+                        {% endthumbnail %}
+                    </td>
+                    <td>2</td>
+                    <td>0</td>
+                    <td>{% thumbnail "images/river.png" "30x30" as team_img %}
+                        <img src="{{ team_img.url }}" />
+                        {% endthumbnail %}
+                    </td>
+                    <td>River</td>
+                </tr>
+            </tbody>
+        </table>        
+        <p><a href="#" class="btn">Resultados de la última fecha »</a></p>
         </div>
+
+        <div class="span4">
+        <h2>Posiciones</h2>
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>{% thumbnail "http://matias.bordese.com.ar/images/matias.png" "30x30" as avatar %}
+                        <a href="#">
+                            <img src="{{ avatar.url }}" alt="matiasb">
+                        </a>
+                        {% endthumbnail %}
+                    </td>
+                    <td><a href="#">matiasb</a></td>
+                    <td>51 puntos</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>{% thumbnail "http://matias.bordese.com.ar/images/matias.png" "30x30" as avatar %}
+                        <a href="#">
+                            <img src="{{ avatar.url }}" alt="matiasb">
+                        </a>
+                        {% endthumbnail %}
+                    </td>
+                    <td><a href="#">matiasb</a></td>
+                    <td>51 puntos</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>{% thumbnail "http://matias.bordese.com.ar/images/matias.png" "30x30" as avatar %}
+                        <a href="#">
+                            <img src="{{ avatar.url }}" alt="matiasb">
+                        </a>
+                        {% endthumbnail %}
+                    </td>
+                    <td><a href="#">matiasb</a></td>
+                    <td>51 puntos</td>
+                </tr>
+            </tbody>
+        </table>
+        <p><a href="#" class="btn">Ver Posiciones »</a></p>
+        </div>
+
     </div>
 {% endblock %}

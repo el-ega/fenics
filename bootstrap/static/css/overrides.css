@@ -8,6 +8,10 @@ body {
     border: none;
 }
 
+.hero-unit {
+    padding: 20px;
+}
+
 .footer {
     background: url('/static/images/footer-grass.png') repeat-x;
     height: 80px;
