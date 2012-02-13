@@ -32,6 +32,10 @@ body {
     margin-top: 10px;
 }
 
+.table td {
+    vertical-align: middle;
+}
+
 @media (max-width: 980px) {
     body {
         padding-top: 0px;
