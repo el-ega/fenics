@@ -50,9 +50,9 @@ class MatchGroup(models.Model):
 
 
 class Match(models.Model):
-    group = models.ForeignKey('MatchGroup')
+    group = models.ForeignKey('MatchGroup', verbose_name=_('Fecha'))
     location = models.CharField(_('Estadio'), max_length=200, blank=True)
-    referee = models.CharField(_('Árbitro'), max_length=200, blank=True)
+    referee = models.CharField(_('Arbitro'), max_length=200, blank=True)
     home = models.ForeignKey(Team, verbose_name=_('Equipo local'),
                              related_name='home_game_set',)
     away = models.ForeignKey(Team, verbose_name=_('Equipo visitante'),
