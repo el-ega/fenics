@@ -3,3 +3,5 @@ PIL
 mysql-python
 south
 solr-thumbnail
+pyquery
+feedparser
