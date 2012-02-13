@@ -32,35 +32,10 @@ class GameTestCase(TestCase):
                                            date=match_date)
 
         # cards played for the match above
-        Card.objects.create(user=self.user1, match=self.match1,
+        self.card1 = Card.objects.create(user=self.user1, match=self.match1,
                             home_goals=2, away_goals=1)
-        Card.objects.create(user=self.user2, match=self.match1,
+        self.card2 = Card.objects.create(user=self.user2, match=self.match1,
                             home_goals=1, away_goals=0)
-
-    def assert_card_update(self, card):
-        """Check card score is correct according to related match result."""
-        score = 0
-
-        if card.home_goals == card.match.home_goals and \
-           card.away_goals == card.match.away_goals:
-            score = game_settings.EXACTLY_MATCH_POINTS
-
-        elif card.home_goals > card.away_goals and \
-           card.match.home_goals > card.match.away_goals:
-            score = game_settings.WINNER_MATCH_POINTS
-
-        elif card.home_goals < card.away_goals and \
-           card.match.home_goals < card.match.away_goals:
-            score = game_settings.WINNER_MATCH_POINTS
-
-        elif card.home_goals == card.away_goals and \
-           card.match.home_goals == card.match.away_goals:
-            score = game_settings.WINNER_MATCH_POINTS
-
-        if card.score and card.starred:
-            score += game_settings.STARRED_MATCH_POINTS
-
-        self.assertEqual(card.score, score)
 
     def set_match_result(self, match, home_goals, away_goals, approved=True):
         """Update match results and approval."""
@@ -93,8 +68,10 @@ class GameTestCase(TestCase):
         """When saving a match, if approved, related cards should be updated."""
         self.set_match_result(self.match1, 2, 1)
 
-        for card in self.match1.card_set.all():
-            self.assert_card_update(card)
+        card1 = Card.objects.get(pk=self.card1.pk)
+        card2 = Card.objects.get(pk=self.card2.pk)
+        self.assertEqual(card1.score, game_settings.EXACTLY_MATCH_POINTS)
+        self.assertEqual(card2.score, game_settings.WINNER_MATCH_POINTS)
 
     def test_cards_update_exactly_result(self):
         """For a card with exactly result score is EXACTLY_MATCH_POINTS."""
@@ -138,17 +115,21 @@ class GameTestCase(TestCase):
         
     def test_update_user_position(self):
         """Check user positions are updated after saving a match result."""
+        new_card = Card.objects.create(user=self.user1, match=self.match2,
+                                       home_goals=0, away_goals=0)
+
         self.set_match_result(self.match1, 2, 1)
         self.set_match_result(self.match2, 1, 1)
-
-        Card.objects.create(user=self.user1, match=self.match2,
-                            home_goals=0, away_goals=0)
 
         cards = Card.objects.all()
         score = cards.filter(user=self.user1).aggregate(total=Sum('score'))
         position1 = UserPosition.objects.get(user=self.user1)
         self.assertEqual(position1.points, score['total'])
+        self.assertEqual(position1.winner, 1)
+        self.assertEqual(position1.exact, 1)
 
         score = cards.filter(user=self.user2).aggregate(total=Sum('score'))
         position2 = UserPosition.objects.get(user=self.user2)
         self.assertEqual(position2.points, score['total'])
+        self.assertEqual(position2.winner, 1)
+        self.assertEqual(position2.exact, 0)

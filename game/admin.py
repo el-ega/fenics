@@ -46,8 +46,8 @@ class MatchAdmin(admin.ModelAdmin):
             'fields': ('group',)
         }),
         ('Match Info', {
-            'fields': ('home', 'home_goals', 'away', 'away_goals', 'date',
-                       'approved')
+            'fields': ('location', 'referee', 'home', 'home_goals',
+                       'away', 'away_goals', 'date', 'approved')
         }),
     )
 admin.site.register(Match, MatchAdmin)

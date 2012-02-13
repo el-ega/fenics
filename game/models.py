@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models import Sum
+from django.db.models import Count, Sum
 from django.utils.translation import ugettext_lazy as _
 
 import game_settings
@@ -51,6 +51,8 @@ class MatchGroup(models.Model):
 
 class Match(models.Model):
     group = models.ForeignKey('MatchGroup')
+    location = models.CharField(_('Estadio'), max_length=200, blank=True)
+    referee = models.CharField(_('Árbitro'), max_length=200, blank=True)
     home = models.ForeignKey(Team, verbose_name=_('Equipo local'),
                              related_name='home_game_set',)
     away = models.ForeignKey(Team, verbose_name=_('Equipo visitante'),
@@ -100,6 +102,7 @@ class Card(models.Model):
     away_goals = models.IntegerField(_('Goles equipo visitante'), null=True,
                                      blank=True)
     score = models.IntegerField(_('Puntos'), null=True, blank=True)
+    exact = models.BooleanField(_('Exacto?'), default=False)
 
     class Meta:
         verbose_name = _('Tarjeta')
@@ -118,6 +121,7 @@ class Card(models.Model):
             self.score = 0
         elif self.home_goals == home and self.away_goals == away:
             self.score = game_settings.EXACTLY_MATCH_POINTS
+            self.exact = True
         elif self.home_goals > self.away_goals and home > away:
             self.score = game_settings.WINNER_MATCH_POINTS
         elif self.home_goals < self.away_goals and home < away:
@@ -136,7 +140,9 @@ class Card(models.Model):
 class UserPosition(models.Model):
     tournament = models.ForeignKey('Tournament', verbose_name=_('Torneo'))
     user = models.ForeignKey(User, verbose_name=_('Usuario'))
-    points = models.IntegerField(_('Puntos'), default=0)
+    points = models.IntegerField(_('Puntos (total)'), default=0)
+    winner = models.IntegerField(_('Puntos (por acertar ganador)'), default=0)
+    exact = models.IntegerField(_('Puntos (por resultado exacto)'), default=0)
 
     class Meta:
         verbose_name = _('Posiciones de usuario')
@@ -150,6 +156,8 @@ class UserPosition(models.Model):
             match__group__tournament=self.tournament)
         score = cards.aggregate(total=Sum('score'))
         self.points = score['total']
+        self.exact = cards.filter(exact=True).count()
+        self.winner = cards.count() - self.exact
         self.save()
 
 
