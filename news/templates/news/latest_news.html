@@ -1,0 +1,10 @@
+{% for item in news_items %}
+    <p><small>{{ item.published|date:"d.m.Y H:i" }}</small><br/>
+       <strong>{{ item.title }}</strong><br/>
+       {{ item.summary }}.
+    <a href="{{ item.link }}" target="new">Detalles</a></p>
+{% endfor %}
+
+<p class="pull-right">
+    <small>Fuente: <a href="http://www.canchallena.com/">canchallena</a></small>
+</p>

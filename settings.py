@@ -131,6 +131,7 @@ INSTALLED_APPS = (
     'bootstrap',
     'helpers',
     'game',
+    'news',
 )
 
 THUMBNAIL_FORMAT = 'PNG'
