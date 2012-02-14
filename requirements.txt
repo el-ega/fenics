@@ -2,6 +2,6 @@ django
 PIL
 mysql-python
 south
-solr-thumbnail
+sorl-thumbnail
 pyquery
 feedparser
