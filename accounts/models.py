@@ -1,5 +1,6 @@
 import urllib2
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 from django.db.models.signals import post_save
@@ -11,10 +12,13 @@ from social_auth.backends.twitter import TwitterBackend
 from social_auth.signals import pre_update
 
 
+DEFAULT_AVATAR = getattr(settings, 'FENICS_DEFAULT_AVATAR',
+                         'accounts/default_avatar.jpg')
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
     avatar = models.ImageField(upload_to='accounts', blank=True,
-                               default='accounts/default_avatar.jpg')
+                               default=DEFAULT_AVATAR)
     favorite_club = models.ForeignKey('game.Team', blank=True, null=True)
 
     def __unicode__(self):
@@ -31,6 +35,11 @@ post_save.connect(create_profile, sender=User, dispatch_uid="create-profile")
 def set_user_avatar(sender, user, response, details, **kwargs):
     """Update avatar in user profile."""
     result = False
+    profile = user.get_profile()
+
+    # if avatar already set, do not change
+    if profile.avatar and profile.avatar != DEFAULT_AVATAR:
+        return True
 
     if "id" in response:
         try:
@@ -42,8 +51,6 @@ def set_user_avatar(sender, user, response, details, **kwargs):
                 url = response["profile_image_url"]
 
             if url:
-                profile = user.get_profile()
-
                 data = urllib2.urlopen(url)
                 profile.avatar.save(slugify(user.username + " social") + '.jpg',
                                     ContentFile(data.read()))
