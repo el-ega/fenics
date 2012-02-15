@@ -24,7 +24,7 @@
 
             <div class="nav-collapse">
                 <ul class="nav pull-right">
-                    <li class="avatar">{% thumbnail "http://matias.bordese.com.ar/images/matias.png" "20x20" as avatar %}
+                    <li class="avatar">{% thumbnail user.get_profile.avatar "20x20" as avatar %}
 <!--                        <a href="#">matiasb</a>-->
                         <a href="#" class="thumbnail">
                             <img src="{{ avatar.url }}" alt="{{ user.username }}">

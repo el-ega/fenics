@@ -129,6 +129,7 @@ INSTALLED_APPS = (
     'sorl.thumbnail',
     'social_auth',
 
+    'accounts',
     'bootstrap',
     'helpers',
     'game',
@@ -145,6 +146,8 @@ AUTHENTICATION_BACKENDS = (
     #'social_auth.backends.google.GoogleBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
+
+AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 
 LOGIN_URL          = '/login/'
 LOGIN_REDIRECT_URL = '/'
