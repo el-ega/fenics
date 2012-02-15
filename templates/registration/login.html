@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- Example row of columns -->
+    <div class="row">
+        <div class="span6 offset2">
+        <h3>Entrar</h3>
+        <p>
+            <small>Entrar usando mi cuenta de <a href="{% url socialauth_begin 'twitter' %}">Twitter</a> o <a href="{% url socialauth_begin 'facebook' %}">Facebook</a>.</small>
+        </p>
+
+        <form action="." method="POST" class="form-horizontal">
+            {% csrf_token %}
+            <fieldset>
+            {% for field in form %}
+                {% if not field.hidden %}
+                    <div class="control-group{% if field.errors%} error{% endif %}">
+                    <label for="{{ field.name }}" class="control-label">{{ field.label }}</label>
+                    <div class="controls">
+                        {{ field }}
+                        {% if field.errors %}
+                            <span class="help-inline">{{ field.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                    </div>
+                {% else %}
+                    {{ field }}
+                {% endif %}
+            {% endfor %}
+
+            <div class="form-actions">
+                <button class="btn btn-primary" type="submit">Entrar</button>
+                <small>o podés <a href="#">registrarte aquí</a></small>
+            </div>
+            </fieldset>
+        </form>
+
+        </div>
+    </div>
+{% endblock %}

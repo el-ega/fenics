@@ -27,11 +27,11 @@
                     <li class="avatar">{% thumbnail "http://matias.bordese.com.ar/images/matias.png" "20x20" as avatar %}
 <!--                        <a href="#">matiasb</a>-->
                         <a href="#" class="thumbnail">
-                            <img src="{{ avatar.url }}" alt="matiasb">
+                            <img src="{{ avatar.url }}" alt="{{ user.username }}">
                         </a>
                         {% endthumbnail %}
                     </li>
-                    <li><a href="#">matiasb</a></li>
+                    <li><a href="#">{{ user.username }}</a></li>
                     <li class="divider-vertical"></li>
                     <li><a href="#">Partidos pendientes</a></li>
                     <li><a href="#">Posiciones</a></li>
@@ -39,14 +39,14 @@
                     <li><a href="#">Duelos</a></li>
                     <li><a href="#">Ligas</a></li>
                     <li class="divider-vertical"></li>
-                    <li><a href="#">Salir</a></li>
+                    <li><a href="{% url fenics-logout %}">Salir</a></li>
                 </ul>
             </div>
 
             {% else %}
 
             <ul class="nav pull-right">
-                <li><a href="#">Entrar</a></li>
+                <li><a href="{% url fenics-login %}">Entrar</a></li>
                 <li class="divider-vertical"></li>
                 <li><a href="#">Registrarme</a></li>
             </ul>

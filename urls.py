@@ -13,6 +13,8 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^login/$', 'django.contrib.auth.views.login', name='fenics-login'),
+    url(r'^logout/$', 'django.contrib.auth.views.logout_then_login', name='fenics-logout'),
     url(r'', include('social_auth.urls')),
 
     ('^$', TemplateView.as_view(template_name='homepage.html')),
