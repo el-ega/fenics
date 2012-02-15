@@ -1,0 +1,22 @@
+{% load thumbnail %}
+
+<table class="table">
+    <tbody>
+        {% for match in matches %}
+        <tr>
+            <td>{{ match.home }}</td>
+            <td>{% thumbnail match.home.logo "30x30" as team_img %}
+                <img src="{{ team_img.url }}" />
+                {% endthumbnail %}
+            </td>
+            <td><strong>{{ match.home_goals|default_if_none:'-' }}</strong></td>
+            <td><strong>{{ match.away_goals|default_if_none:'-' }}</strong></td>
+            <td>{% thumbnail match.away.logo "30x30" as team_img %}
+                <img src="{{ team_img.url }}" />
+                {% endthumbnail %}
+            </td>
+            <td>{{ match.away }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

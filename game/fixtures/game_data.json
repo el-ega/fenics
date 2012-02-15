@@ -49,5 +49,20 @@
             "publish": true, 
             "slug": "torneo-de-test"
         }
+    },
+    {
+        "pk": 2,
+        "model": "game.tournament",
+        "fields": {
+            "teams": [
+                1,
+                2,
+                3,
+                4
+            ],
+            "name": "Otro Torneo",
+            "publish": true,
+            "slug": "otro-torneo"
+        }
     }
 ]

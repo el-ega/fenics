@@ -1,1 +1,2 @@
 from test_models import GameTestCase
+from test_game_tags import LatestResultsTestCase

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load game_tags %}
 {% load news_tags %}
 {% load thumbnail %}
 
@@ -26,54 +27,8 @@
 
         <div class="span4">
         <h2>Resultados</h2>
-        <table class="table">
-            <thead>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Boca</td>
-                    <td>{% thumbnail "images/boca.png" "30x30" as team_img %}
-                        <img src="{{ team_img.url }}" />
-                        {% endthumbnail %}
-                    </td>
-                    <td><strong>2</strong></td>
-                    <td><strong>0</strong></td>
-                    <td>{% thumbnail "images/river.png" "30x30" as team_img %}
-                        <img src="{{ team_img.url }}" />
-                        {% endthumbnail %}
-                    </td>
-                    <td>River</td>
-                </tr>
-                <tr>
-                    <td>Boca</td>
-                    <td>{% thumbnail "images/boca.png" "30x30" as team_img %}
-                        <img src="{{ team_img.url }}" />
-                        {% endthumbnail %}
-                    </td>
-                    <td><strong>2</strong></td>
-                    <td><strong>0</strong></td>
-                    <td>{% thumbnail "images/river.png" "30x30" as team_img %}
-                        <img src="{{ team_img.url }}" />
-                        {% endthumbnail %}
-                    </td>
-                    <td>River</td>
-                </tr>
-                <tr>
-                    <td>Boca</td>
-                    <td>{% thumbnail "images/boca.png" "30x30" as team_img %}
-                        <img src="{{ team_img.url }}" />
-                        {% endthumbnail %}
-                    </td>
-                    <td><strong>2</strong></td>
-                    <td><strong>0</strong></td>
-                    <td>{% thumbnail "images/river.png" "30x30" as team_img %}
-                        <img src="{{ team_img.url }}" />
-                        {% endthumbnail %}
-                    </td>
-                    <td>River</td>
-                </tr>
-            </tbody>
-        </table>        
+        {% latest_results %}
+
         <p><a href="#" class="btn">Resultados de la última fecha »</a></p>
         </div>
 
