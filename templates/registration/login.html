@@ -11,6 +11,10 @@
 
         <form action="." method="POST" class="form-horizontal">
             {% csrf_token %}
+            {% for error_msg in form.non_field_errors %}
+                <p><span class="label label-important">Error</span>
+                {{ error_msg }}</p>
+            {% endfor %}
             <fieldset>
             {% for field in form %}
                 {% if not field.hidden %}
