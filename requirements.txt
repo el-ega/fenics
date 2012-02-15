@@ -1,7 +1,8 @@
 django
 PIL
-mysql-python
+#mysql-python
 south
 sorl-thumbnail
 pyquery
 feedparser
+django-social-auth

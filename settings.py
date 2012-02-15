@@ -127,6 +127,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
 
     'sorl.thumbnail',
+    'social_auth',
 
     'bootstrap',
     'helpers',
@@ -135,6 +136,20 @@ INSTALLED_APPS = (
 )
 
 THUMBNAIL_FORMAT = 'PNG'
+
+AUTHENTICATION_BACKENDS = (
+    'social_auth.backends.twitter.TwitterBackend',
+    'social_auth.backends.facebook.FacebookBackend',
+    #'social_auth.backends.google.GoogleOAuthBackend',
+    #'social_auth.backends.google.GoogleOAuth2Backend',
+    #'social_auth.backends.google.GoogleBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+#LOGIN_URL          = '/login-form/'
+LOGIN_REDIRECT_URL = '/'
+#LOGIN_ERROR_URL    = '/login-error/'
+
 
 #CACHES = {
     #'default': {
