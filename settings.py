@@ -128,6 +128,7 @@ INSTALLED_APPS = (
 
     'sorl.thumbnail',
     'social_auth',
+    'uni_form',
 
     'accounts',
     'bootstrap',

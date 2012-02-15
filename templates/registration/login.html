@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load uni_form_tags %}
 
 {% block content %}
     <!-- Example row of columns -->
@@ -11,26 +12,8 @@
 
         <form action="." method="POST" class="form-horizontal">
             {% csrf_token %}
-            {% for error_msg in form.non_field_errors %}
-                <p><span class="label label-important">Error</span>
-                {{ error_msg }}</p>
-            {% endfor %}
-            <fieldset>
-            {% for field in form %}
-                {% if not field.hidden %}
-                    <div class="control-group{% if field.errors%} error{% endif %}">
-                    <label for="{{ field.name }}" class="control-label">{{ field.label }}</label>
-                    <div class="controls">
-                        {{ field }}
-                        {% if field.errors %}
-                            <span class="help-inline">{{ field.errors.0 }}</span>
-                        {% endif %}
-                    </div>
-                    </div>
-                {% else %}
-                    {{ field }}
-                {% endif %}
-            {% endfor %}
+
+            {{ form|as_uni_form }}
 
             <div class="form-actions">
                 <button class="btn btn-primary" type="submit">Entrar</button>

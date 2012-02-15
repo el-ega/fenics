@@ -1,0 +1,9 @@
+{% if form.non_field_errors %}
+    <div id="errorMsg">
+        {% if form_error_title %}<h3>{{ form_error_title }}</h3>{% endif %}
+        {% for error_msg in form.non_field_errors %}
+            <p><span class="label label-important">Error</span>
+            {{ error_msg }}</p>
+        {% endfor %}
+    </div>
+{% endif %}

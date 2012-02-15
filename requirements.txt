@@ -6,3 +6,4 @@ sorl-thumbnail
 pyquery
 feedparser
 django-social-auth
+django-uni-form
