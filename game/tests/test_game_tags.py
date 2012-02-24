@@ -12,14 +12,16 @@ class LatestResultsTestCase(TestCase):
 
     def setUp(self):
         # setting up sample matches
-        tournament = Tournament.objects.get(slug='torneo-de-test')
-        another_tournament = Tournament.objects.get(slug='otro-torneo')
+        self.tournament = Tournament.objects.get(slug='torneo-de-test')
+        self.another_tournament = Tournament.objects.get(slug='otro-torneo')
         
-        group = MatchGroup.objects.create(tournament=tournament, name='Fecha 1')
-        another_group = MatchGroup.objects.create(tournament=another_tournament,
-                                                  name='Fecha 1')
-        team1 = tournament.teams.all()[0]
-        team2 = tournament.teams.all()[1]
+        group = MatchGroup.objects.create(tournament=self.tournament,
+                                          name='Fecha 1')
+        another_group = MatchGroup.objects.create(
+                                            tournament=self.another_tournament,
+                                            name='Fecha 1')
+        team1 = self.tournament.teams.all()[0]
+        team2 = self.tournament.teams.all()[1]
         match_date = datetime.datetime(2012, 2, 10, 22, 0)
         match1 = Match.objects.create(group=group, home=team1, away=team2,
                                       date=match_date, approved=True)
@@ -39,18 +41,20 @@ class LatestResultsTestCase(TestCase):
 
         self.assertEqual(len(matches), 3)
         self.assertTrue(
-            filter(lambda m: m.group.tournament.slug=='otro-torneo', matches))
+            filter(lambda m: m.group.tournament==self.another_tournament,
+                   matches)
+        )
         self.assertTrue(
-            filter(lambda m: m.group.tournament.slug=='torneo-de-test', matches))
+            filter(lambda m: m.group.tournament==self.tournament, matches))
 
     def test_specific_tournament_latest_results(self):
         """Check latest results for given tournament are returned."""
-        context = latest_results('torneo-de-test')
+        context = latest_results(self.tournament)
         matches = context['matches']
 
         self.assertEqual(len(matches), 2)
         self.assertEqual(
-            len(filter(lambda m: m.group.tournament.slug=='torneo-de-test',
+            len(filter(lambda m: m.group.tournament==self.tournament,
                        matches)), 2)
 
         # only approved results

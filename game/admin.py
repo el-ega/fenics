@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 
-from models import Team, Tournament, Match, MatchGroup, Card, UserPosition
+from models import (Team, Tournament, Match, MatchGroup, Card, UserPosition,
+                    TeamPosition)
 
 
 class TeamAdmin(admin.ModelAdmin):
@@ -37,7 +38,7 @@ admin.site.register(MatchGroup, MatchGroupAdmin)
 
 
 class MatchAdmin(admin.ModelAdmin):
-    list_display = ('group', 'home', 'away', 'date')
+    list_display = ('group', 'home', 'home_goals', 'away_goals', 'away', 'date')
     list_filter = ('approved', 'group', 'date')
     search_fields = ('home__name', 'away__name')
     ordering = ('group', )
@@ -64,4 +65,13 @@ class UserPositionAdmin(admin.ModelAdmin):
     list_display = ('user', 'tournament', 'points')
     list_filter = ('tournament',)
     search_fields = ('user__username',)
+    ordering = ('order',)
 admin.site.register(UserPosition, UserPositionAdmin)
+
+
+class TeamPositionAdmin(admin.ModelAdmin):
+    list_display = ('tournament', 'team', 'pts', 'pg', 'pe', 'pp', 'dg', 'gf', 'gc')
+    list_filter = ('tournament',)
+    search_fields = ('team__name',)
+    ordering = ('order',)
+admin.site.register(TeamPosition, TeamPositionAdmin)

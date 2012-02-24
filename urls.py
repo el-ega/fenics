@@ -16,6 +16,7 @@ urlpatterns = patterns('',
     url(r'^login/$', 'django.contrib.auth.views.login', name='fenics-login'),
     url(r'^logout/$', 'django.contrib.auth.views.logout_then_login', name='fenics-logout'),
     url(r'', include('social_auth.urls')),
+    url(r'^game/', include('game.urls')),
 
     ('^$', TemplateView.as_view(template_name='homepage.html')),
     ('^interior/$', TemplateView.as_view(template_name='interior.html'))

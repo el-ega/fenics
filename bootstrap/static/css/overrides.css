@@ -36,6 +36,53 @@ body {
     vertical-align: middle;
 }
 
+.group-title {
+    margin-bottom: 20px;
+}
+
+hr {
+    margin: 5px 0;
+}
+
+.match-entry .goals-fieldset {
+    text-align: center;
+    clear: both;
+}
+
+.match-entry .more-info {
+    cursor: pointer;
+}
+
+select.score-select {
+    width: 70px;
+    margin: 5px;
+}
+
+.match-heading {
+    padding-left: 25px;
+    cursor: pointer;
+}
+
+.match-heading small {
+    padding-left: 5px;
+}
+
+.starred {
+    background: url('/static/images/selected_star.png') no-repeat;
+}
+
+.non-starred {
+    background: url('/static/images/empty_star.png') no-repeat;
+}
+
+.prediction-percentage-label {
+    display: block;
+}
+
+.prediction-percentage-value {
+    font-size: 1.1em;
+}
+
 @media (max-width: 980px) {
     body {
         padding-top: 0px;
@@ -54,5 +101,11 @@ body {
     }
     .bottombar {
         position: static;
+    }
+    hr {
+        margin: 18px 0;
+    }
+    .prediction-percentage-label {
+        display: inline;
     }
 }

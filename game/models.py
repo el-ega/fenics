@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
-import math
-
 from datetime import datetime, timedelta
 
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models import Count, Sum
+from django.db.models import Count, Sum, Q
 from django.utils.translation import ugettext_lazy as _
 
 import game_settings
@@ -22,6 +20,12 @@ class Team(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def latest_matches(self, tournament=None):
+        """Return team previously played matches."""
+        now = datetime.now()
+        matches = Match.objects.filter(Q(away=self)|Q(home=self), date__lte=now)
+        return matches
 
 
 class Tournament(models.Model):
@@ -49,6 +53,17 @@ class MatchGroup(models.Model):
         return "%s - %s" % (self.tournament.name, self.name)
 
 
+class PlayableMatchesManager(models.Manager):
+    """Manager that returns a queryset filtering open to play matches."""
+    def get_query_set(self):
+        now = datetime.now()
+        deadline = now + timedelta(hours=game_settings.HOURS_TO_DEADLINE)
+        available = now + timedelta(hours=game_settings.SHOW_HOURS_BEFORE)
+        
+        return super(PlayableMatchesManager, self).get_query_set().filter(
+            date__gte=deadline, date__lte=available)
+
+
 class Match(models.Model):
     group = models.ForeignKey('MatchGroup', verbose_name=_('Fecha'))
     location = models.CharField(_('Estadio'), max_length=200, blank=True)
@@ -63,6 +78,9 @@ class Match(models.Model):
                                      blank=True)
     date = models.DateTimeField(_('Fecha del partido'), null=True, blank=True)
     approved = models.BooleanField(_('Aprobado'), default=False)
+
+    objects = models.Manager()
+    currently_playable = PlayableMatchesManager()
 
     class Meta:
         verbose_name = _('Partido')
@@ -90,6 +108,12 @@ class Match(models.Model):
                 # update user position
                 position, created = UserPosition.objects.get_or_create(
                     tournament=self.group.tournament, user=card.user)
+                position.update()
+
+            # update team positions
+            for team in [self.home, self.away]:
+                position, created = TeamPosition.objects.get_or_create(
+                                    tournament=self.group.tournament, team=team)
                 position.update()
 
 
@@ -143,12 +167,20 @@ class UserPosition(models.Model):
     points = models.IntegerField(_('Puntos (total)'), default=0)
     winner = models.IntegerField(_('Puntos (por acertar ganador)'), default=0)
     exact = models.IntegerField(_('Puntos (por resultado exacto)'), default=0)
+    order = models.IntegerField(_('Posición'), default=0)
 
     class Meta:
         verbose_name = _('Posiciones de usuario')
         verbose_name_plural = _('Posiciones de usuario')
-        ordering = ['-points']
+        ordering = ['-points', '-exact']
         unique_together = ('user', 'tournament')
+
+    def _update_tournament(self):
+        """"""
+        positions = UserPosition.objects.filter(tournament=self.tournament)
+        for order, position in enumerate(positions, 1):
+            position.order = order
+            position.save()
 
     def update(self):
         """Update user position according to card scores."""
@@ -159,6 +191,78 @@ class UserPosition(models.Model):
         self.exact = cards.filter(exact=True).count()
         self.winner = cards.count() - self.exact
         self.save()
+        self._update_tournament()
+
+
+class TeamPosition(models.Model):
+    tournament = models.ForeignKey('Tournament', verbose_name=_('Torneo'))
+    team = models.ForeignKey(Team, verbose_name=_('Equipo'))
+    pts = models.IntegerField(_('Puntos'), default=0)
+    pg = models.IntegerField(_('Partidos ganados'), default=0)
+    pe = models.IntegerField(_('Partidos empatados'), default=0)
+    pp = models.IntegerField(_('Partidos perdidos'), default=0)
+    gf = models.IntegerField(_('Goles a favor'), default=0)
+    gc = models.IntegerField(_('Goles en contra'), default=0)
+    dg = models.IntegerField(_('Diferencia de gol'), default=0)
+    order = models.IntegerField(_('Posición'), default=0)
+
+    class Meta:
+        verbose_name = _('Posiciones')
+        verbose_name_plural = _('Posiciones')
+        ordering = ['-pts', '-dg', '-gf', 'gc']
+        unique_together = ('team', 'tournament')
+
+    def _clear(self):
+        """"""
+        self.pts = 0
+        self.pg = 0
+        self.pe = 0
+        self.pp = 0
+        self.gf = 0
+        self.gc = 0
+        self.dg = 0
+
+    def _update_tournament(self):
+        """"""
+        positions = TeamPosition.objects.filter(tournament=self.tournament)
+        for order, position in enumerate(positions, 1):
+            position.order = order
+            position.save()
+
+    def update(self):
+        """Update team position according to approved match scores."""
+        matches = Match.objects.filter(Q(home=self.team)|Q(away=self.team),
+                                       group__tournament=self.tournament,
+                                       home_goals__isnull=False,
+                                       away_goals__isnull=False,
+                                       approved=True)
+
+        self._clear()
+        for match in matches:
+            if match.home == self.team:
+                # as local
+                self.gf += match.home_goals
+                self.gc += match.away_goals
+                if match.home_goals > match.away_goals:
+                    self.pg += 1
+                elif match.home_goals == match.away_goals:
+                    self.pe += 1
+                else:
+                    self.pp += 1
+            else:
+                # as visitor
+                self.gf += match.away_goals
+                self.gc += match.home_goals
+                if match.home_goals > match.away_goals:
+                    self.pp += 1
+                elif match.home_goals == match.away_goals:
+                    self.pe += 1
+                else:
+                    self.pg += 1
+        self.dg = self.gf - self.gc
+        self.pts = self.pg * 3 + self.pe
+        self.save()
+        self._update_tournament()
 
 
 class LeagueInvitation(models.Model):
