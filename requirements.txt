@@ -1,9 +1,0 @@
-django
-PIL
-#mysql-python
-south
-sorl-thumbnail
-pyquery
-feedparser
-django-social-auth
-django-uni-form

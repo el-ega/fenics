@@ -1,3 +1,0 @@
-from test_canchallena import PullNewsTestCase
-from test_ole_matches import PullMatchInfoTestCase
-
