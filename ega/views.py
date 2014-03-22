@@ -10,6 +10,11 @@ from ega.models import Prediction, Tournament
 
 
 @login_required
+def home(request):
+    return TemplateResponse(request, 'ega/home.html')
+
+
+@login_required
 def next_matches(request, slug):
     """Return coming matches for the speficied tournament."""
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
