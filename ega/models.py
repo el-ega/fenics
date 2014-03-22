@@ -19,6 +19,12 @@ class Tournament(models.Model):
     def __unicode__(self):
         return self.name
 
+    def next_matches(self, days=game_settings.NEXT_MATCHES_DAYS):
+        """Return matches in the next days."""
+        now = datetime.utcnow()
+        until = now + timedelta(days=days)
+        return self.match_set.filter(when__range=(now, until))
+
 
 class Team(models.Model):
     """Team metadata."""
