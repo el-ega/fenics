@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form method="POST" action="">
+    {% csrf_token %}
+    {{ formset.management_form }}
+    {% for form in formset %}
+        {{ form.id }}
+        {{ form.match }}
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-2 col-md-offset-1 text-center">{{ form.instance.match.home }}</div>
+                <div class="col-md-2 text-center">{{ form.home_goals }}</div>
+                <div class="col-md-2 text-center">{{ form.away_goals }}</div>
+                <div class="col-md-2 text-center">{{ form.instance.match.away }}</div>
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="row">
+        <div class="col-md-2 col-md-offset-4">
+            <button name="save" type="submit" class="btn btn-primary">Guardar</button>
+            <button name="back" type="submit" class="btn btn-default">Volver</button>
+        </div>
+    </div>
+
+</form>
+
+{% endblock %}
