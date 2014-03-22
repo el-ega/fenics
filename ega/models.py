@@ -72,13 +72,12 @@ class Prediction(models.Model):
     starred = models.BooleanField(default=False)
 
     score = models.IntegerField(null=True, blank=True)
-    exact = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ('user', 'match')
 
     def __unicode__(self):
-        return u"%s: %s vs %s" % (self.user, self.match)
+        return u"%s: %s" % (self.user, self.match)
 
     def update_score(self):
         """Updates the score from the real result."""
@@ -90,7 +89,6 @@ class Prediction(models.Model):
             score = 0
         elif self.home_goals == home and self.away_goals == away:
             score = game_settings.EXACTLY_MATCH_POINTS
-            self.exact = True
         elif self.home_goals > self.away_goals and home > away:
             score = game_settings.WINNER_MATCH_POINTS
         elif self.home_goals < self.away_goals and home < away:
