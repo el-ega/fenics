@@ -62,7 +62,18 @@
     </nav>
 
         <div class="container">
-            <h1 class="text-muted">el Ega - beta</h1>
+            <h1 class="text-muted">
+                {% block content-title %}el Ega - beta{% endblock %}
+            </h1>
+
+            <div>
+                {% for message in messages %}
+                <div id="messages" class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+
             <div>
                 {% block content %}
                 {% endblock %}
