@@ -14,9 +14,9 @@ from ega.models import Prediction, Tournament
 
 @login_required
 def home(request):
-    can_twit = request.user.socialaccount_set.filter(
+    can_tweet = request.user.socialaccount_set.filter(
         provider='twitter').exists()
-    return render(request, 'ega/home.html', dict(can_twit=can_twit))
+    return render(request, 'ega/home.html', dict(can_tweet=can_tweet))
 
 
 @login_required
@@ -31,7 +31,7 @@ def invite_friends_via_twitter(request):
     creds = twitter_account.socialtoken_set.all()
     if not creds:
         messages.warning(
-            request, 'We don\'t have your twitter token to twit for you.')
+            request, 'We don\'t have your twitter token to tweet for you.')
         return HttpResponseRedirect(reverse('home'))
 
     creds = creds[0]
@@ -48,7 +48,7 @@ def invite_friends_via_twitter(request):
         'Visit http://el-ega.com.ar'
     )
 
-    messages.info(request, 'Twit successfully posted for you!')
+    messages.info(request, 'Tweet successfully posted for you!')
     return HttpResponseRedirect(reverse('home'))
 
 
