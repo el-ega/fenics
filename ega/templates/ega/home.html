@@ -1,5 +1,16 @@
-{% include 'base.html' %}
+{% extends 'base.html' %}
+
+{% block content-title %}
+Invite your friends!
+{% endblock content-title %}
 
 {% block content %}
-<p> Hola {{ user.username }} </p>
+<div>
+    {% if can_twit %}
+    <p>
+        <a href="{% url 'twit' %}">Twit</a> about el Ega and invite all your
+        friend to participate!
+    </p>
+    {% endif %}
+</div>
 {% endblock content %}
