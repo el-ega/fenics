@@ -76,4 +76,5 @@ def next_matches(request, slug):
         formset = PredictionFormSet(queryset=predictions)
 
     return render(
-        request, 'ega/next_matches.html', {'formset': formset})
+        request, 'ega/next_matches.html',
+        {'tournament': tournament, 'formset': formset})
