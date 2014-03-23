@@ -8,10 +8,10 @@ class PredictionForm(forms.ModelForm):
 
     home_goals = forms.ChoiceField(
         choices=GOAL_CHOICES, required=False,
-        widget=forms.Select(attrs={'class':'form-control'}))
+        widget=forms.Select(attrs={'class':'form-control input-lg'}))
     away_goals = forms.ChoiceField(
         choices=GOAL_CHOICES, required=False,
-        widget=forms.Select(attrs={'class':'form-control'}))
+        widget=forms.Select(attrs={'class':'form-control input-lg'}))
 
     def _clean_goals(self, field_name):
         goals = self.cleaned_data.get(field_name)

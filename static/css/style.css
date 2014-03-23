@@ -1,0 +1,51 @@
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    padding-top: 70px;
+    /* Margin bottom by footer height */
+    margin-bottom: 80px;
+}
+
+.team-image {
+    max-width: 65px;
+}
+
+.team-image-small {
+    max-width: 65px;
+    margin-top: -20px;
+}
+
+.team-panel-name {
+    margin-top: 15px;
+}
+
+.progress-bar {
+    border: 0;
+    box-shadow: none;
+}
+.progress-tie {
+    color: #8A6D3B;
+    background-color: #FCF8E3;
+}
+
+.progress-local {
+    color: #3C763D;
+    background-color: #DFF0D8;
+}
+
+.progress-away {
+    color: #31708F;
+    background-color: #D9EDF7;
+}
+
+.footer {
+    background: url('/static/images/footer-grass.png') repeat-x;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 80px;
+}
