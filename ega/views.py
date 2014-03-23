@@ -7,6 +7,7 @@ from django.forms.models import modelformset_factory
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.template.response import TemplateResponse
+from django.views.decorators.http import require_http_methods
 
 from ega.forms import PredictionForm
 from ega.models import Prediction, Tournament
@@ -17,6 +18,20 @@ def home(request):
     can_tweet = request.user.socialaccount_set.filter(
         provider='twitter').exists()
     return render(request, 'ega/home.html', dict(can_tweet=can_tweet))
+
+
+@require_http_methods(('GET', 'POST'))
+@login_required
+def invite_friends_via_email(request):
+    if request.method == 'POST':
+        form = InviteFriendsForm(request.POST)
+        if form.is_valid():
+            messages.success(request, 'Friends invited!')
+            return HttpResponseRedirect(reverse('home'))
+    else:
+        form = InviteFriendsForm()
+
+    return render(request, 'ega/invite.html', dict(form=form))
 
 
 @login_required

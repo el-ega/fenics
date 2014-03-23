@@ -9,6 +9,13 @@ from django.dispatch import receiver
 from ega import settings as game_settings
 
 
+LEAGUE_JOIN_CHOICES = [
+    ('tweet', 'Link followed from tweet.'),
+    ('email', 'Link followed from email.'),
+    ('self', 'User joined a league by himself.'),
+]
+
+
 class Tournament(models.Model):
     """Tournament metadata."""
     name = models.CharField(max_length=200)
@@ -111,13 +118,29 @@ class Prediction(models.Model):
 
 class League(models.Model):
     """Custom league metadata."""
+
     name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
     tournament = models.ForeignKey('Tournament')
-    owner = models.ForeignKey(User)
+    created = models.DateTimeField(default=datetime.utcnow)
+    members = models.ManyToManyField(User, through='LeagueMember')
 
     def __unicode__(self):
         return u"%s - $s" % (self.owner, self.name)
+
+
+class LeagueMember(models.Model):
+    """A league member."""
+
+    user = models.ForeignKey(User)
+    league = models.ForeignKey(League)
+    is_owner = models.BooleanField()
+    date_joined = models.DateTimeField(default=datetime.utcnow)
+    origin = models.CharField(
+        max_length=10, choices=LEAGUE_JOIN_CHOICES)
+
+    class Meta:
+        unique_together = ('user', 'league')
 
 
 @receiver(post_save, sender=Match, dispatch_uid="update-scores")

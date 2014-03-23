@@ -28,3 +28,16 @@ class PredictionForm(forms.ModelForm):
     class Meta:
         model = Prediction
         fields = ('home_goals', 'away_goals')
+
+
+class InviteFriendsForm(forms.Form):
+
+    emails = forms.CharField()
+
+    def clean_emails(self):
+        cleaned_data = super(InviteFriendsForm, self).clean_fields()
+        emails = map(str.strip, cleaned_data['emails'].split(','))
+        for e in emails:
+            validate_email(e)
+
+        return cleaned_data

@@ -70,12 +70,29 @@ class Migration(SchemaMigration):
             ('name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=200)),
             ('slug', self.gf('django.db.models.fields.SlugField')(unique=True, max_length=200)),
             ('tournament', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['ega.Tournament'])),
-            ('owner', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+            ('created', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.utcnow)),
         ))
         db.send_create_signal(u'ega', ['League'])
 
+        # Adding model 'LeagueMember'
+        db.create_table(u'ega_leaguemember', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+            ('league', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['ega.League'])),
+            ('is_owner', self.gf('django.db.models.fields.BooleanField')()),
+            ('date_joined', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.utcnow)),
+            ('origin', self.gf('django.db.models.fields.CharField')(max_length=10)),
+        ))
+        db.send_create_signal(u'ega', ['LeagueMember'])
+
+        # Adding unique constraint on 'LeagueMember', fields ['user', 'league']
+        db.create_unique(u'ega_leaguemember', ['user_id', 'league_id'])
+
 
     def backwards(self, orm):
+        # Removing unique constraint on 'LeagueMember', fields ['user', 'league']
+        db.delete_unique(u'ega_leaguemember', ['user_id', 'league_id'])
+
         # Removing unique constraint on 'Prediction', fields ['user', 'match']
         db.delete_unique(u'ega_prediction', ['user_id', 'match_id'])
 
@@ -96,6 +113,9 @@ class Migration(SchemaMigration):
 
         # Deleting model 'League'
         db.delete_table(u'ega_league')
+
+        # Deleting model 'LeagueMember'
+        db.delete_table(u'ega_leaguemember')
 
 
     models = {
@@ -137,11 +157,21 @@ class Migration(SchemaMigration):
         },
         u'ega.league': {
             'Meta': {'object_name': 'League'},
+            'created': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.utcnow'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'members': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.User']", 'through': u"orm['ega.LeagueMember']", 'symmetrical': 'False'}),
             'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '200'}),
-            'owner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"}),
             'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '200'}),
             'tournament': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['ega.Tournament']"})
+        },
+        u'ega.leaguemember': {
+            'Meta': {'unique_together': "(('user', 'league'),)", 'object_name': 'LeagueMember'},
+            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.utcnow'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'is_owner': ('django.db.models.fields.BooleanField', [], {}),
+            'league': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['ega.League']"}),
+            'origin': ('django.db.models.fields.CharField', [], {'max_length': '10'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
         },
         u'ega.match': {
             'Meta': {'object_name': 'Match'},
