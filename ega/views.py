@@ -12,6 +12,10 @@ from ega.forms import PredictionForm
 from ega.models import Prediction, Tournament
 
 
+def soon(request):
+    return render(request, 'ega/soon.html')
+
+
 @login_required
 def home(request):
     can_tweet = request.user.socialaccount_set.filter(
@@ -57,11 +61,12 @@ def next_matches(request, slug):
     """Return coming matches for the speficied tournament."""
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
 
-    # create predictions for user, then get formset
     matches = tournament.next_matches()
+    # select related positions
     for m in matches:
+        # create prediction for user if missing
         Prediction.objects.get_or_create(user=request.user, match=m)
-    predictions = Prediction.objects.filter(match__in=matches)
+        # get trends (save pred L E V?))
 
     PredictionFormSet = modelformset_factory(
         Prediction, form=PredictionForm, extra=0)
@@ -73,6 +78,8 @@ def next_matches(request, slug):
             return HttpResponseRedirect(
                 reverse('ega-next-matches', args=[slug]))
     else:
+        predictions = Prediction.objects.filter(
+            user=request.user, match__in=matches)
         formset = PredictionFormSet(queryset=predictions)
 
     return render(

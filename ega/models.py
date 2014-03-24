@@ -55,6 +55,9 @@ class Match(models.Model):
     location = models.CharField(max_length=200, blank=True)
     referee = models.CharField(max_length=200, blank=True)
 
+    class Meta:
+        ordering = ('when',)
+
     def __unicode__(self):
         return u"%s: %s vs %s" % (
             self.tournament, self.home.name, self.away.name)
@@ -80,6 +83,7 @@ class Prediction(models.Model):
     score = models.IntegerField(null=True, blank=True)
 
     class Meta:
+        ordering = ('match__when',)
         unique_together = ('user', 'match')
 
     def __unicode__(self):
