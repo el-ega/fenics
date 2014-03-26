@@ -1,9 +1,13 @@
 {% extends 'base.html' %}
 {% load humanize %}
 
+
+{% block content-title %}Próximos partidos{% endblock %}
+
+
 {% block content %}
 
-<h3>{{ tournament.name }}</h3>
+<h2>{{ tournament.name }}</h2>
 
 {% regroup formset.forms by instance.match.when as form_list %}
 
@@ -88,9 +92,8 @@
     {% endfor %}
 
     <div class="row">
-        <div class="col-xs-4 col-xs-offset-4 text-center">
-            <button name="save" type="submit" class="btn btn-lg btn-block btn-primary">Guardar</button>
-            <button name="back" type="submit" class="btn btn-lg btn-block btn-default">Volver</button>
+        <div class="col-xs-12 text-center">
+            <button name="save" type="submit" class="btn btn-lg btn-primary">Guardar</button>
         </div>
     </div>
 

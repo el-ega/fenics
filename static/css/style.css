@@ -6,7 +6,11 @@ html {
 body {
     padding-top: 70px;
     /* Margin bottom by footer height */
-    margin-bottom: 80px;
+    margin-bottom: 90px;
+}
+
+.nav-logo {
+    max-height: 50px;
 }
 
 .team-image {
