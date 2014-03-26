@@ -48,9 +48,12 @@ class InviteFriendsForm(forms.Form):
         widget=forms.TextInput(attrs={'class': 'form-control'}),
     )
     body = forms.CharField(
-        initial=INVITE_BODY,
         widget=forms.Textarea(attrs={'rows': 10, 'class': 'form-control'}),
     )
+
+    def __init__(self, invite_url, *args, **kwargs):
+        super(InviteFriendsForm, self).__init__(*args, **kwargs)
+        self.fields['body'].initial = INVITE_BODY % dict(url=invite_url)
 
     def clean_emails(self):
         emails = []

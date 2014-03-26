@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 
+import random
+import string
+
 from datetime import datetime, timedelta
+from functools import partial
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
@@ -19,9 +23,17 @@ from ega.constants import (
 )
 
 
+ALNUM_CHARS = string.letters + string.digits
+
+
+def rand_str(length=8):
+    return ''.join(random.choice(ALNUM_CHARS) for x in xrange(length))
+
+
 class EgaUser(AbstractUser):
 
-    has_tweeted = models.BooleanField(default=False)
+    invite_key = models.CharField(
+        max_length=10, default=partial(rand_str, 10), unique=True)
 
     def invite_friends(self, emails, subject=None, body=None):
         if subject is None:

@@ -21,7 +21,7 @@ class Migration(SchemaMigration):
             ('is_staff', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('is_active', self.gf('django.db.models.fields.BooleanField')(default=True)),
             ('date_joined', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
-            ('has_tweeted', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('invite_key', self.gf('django.db.models.fields.CharField')(default='V1zMUZeZ2o', unique=True, max_length=10)),
         ))
         db.send_create_signal(u'ega', ['EgaUser'])
 
@@ -189,8 +189,8 @@ class Migration(SchemaMigration):
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'groups': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Group']"}),
-            'has_tweeted': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'invite_key': ('django.db.models.fields.CharField', [], {'default': "'sVAX7fgklU'", 'unique': 'True', 'max_length': '10'}),
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -219,7 +219,7 @@ class Migration(SchemaMigration):
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['ega.EgaUser']"})
         },
         u'ega.match': {
-            'Meta': {'object_name': 'Match'},
+            'Meta': {'ordering': "('when',)", 'object_name': 'Match'},
             'away': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'away_games'", 'to': u"orm['ega.Team']"}),
             'away_goals': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'home': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'home_games'", 'to': u"orm['ega.Team']"}),
@@ -231,7 +231,7 @@ class Migration(SchemaMigration):
             'when': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'})
         },
         u'ega.prediction': {
-            'Meta': {'unique_together': "(('user', 'match'),)", 'object_name': 'Prediction'},
+            'Meta': {'ordering': "('match__when',)", 'unique_together': "(('user', 'match'),)", 'object_name': 'Prediction'},
             'away_goals': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'home_goals': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),

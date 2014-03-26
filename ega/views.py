@@ -1,7 +1,8 @@
 import twitter
 
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.forms.models import modelformset_factory
 from django.http import Http404, HttpResponseRedirect
@@ -11,6 +12,10 @@ from django.views.decorators.http import require_http_methods
 
 from ega.forms import InviteFriendsForm, PredictionForm
 from ega.models import Prediction, Tournament
+
+
+def get_absolute_url(url):
+    return Site.objects.get_current().domain + url
 
 
 def soon(request):
@@ -28,8 +33,10 @@ def invite_friends(request):
     can_tweet = request.user.socialaccount_set.filter(
         provider='twitter').exists()
 
+    invite_url = get_absolute_url(
+        reverse('join', kwargs=dict(key=request.user.invite_key)))
     if request.method == 'POST':
-        form = InviteFriendsForm(request.POST)
+        form = InviteFriendsForm(invite_url, request.POST)
         if form.is_valid():
             emails = form.cleaned_data['emails']
             subject = form.cleaned_data['subject']
@@ -42,24 +49,19 @@ def invite_friends(request):
             messages.success(request, msg)
             return HttpResponseRedirect(reverse('home'))
     else:
-        form = InviteFriendsForm()
+        form = InviteFriendsForm(invite_url)
 
     return render(
         request, 'ega/invite.html', dict(form=form, tweet=True))  # can_tweet))
 
 
 @require_http_methods(('GET', 'POST'))
-@login_required
-def invite_friends_via_email(request):
+def friend_join(request, key):
     if request.method == 'POST':
-        form = InviteFriendsForm(request.POST)
-        if form.is_valid():
-            messages.success(request, 'Friends invited!')
-            return HttpResponseRedirect(reverse('home'))
-    else:
-        form = InviteFriendsForm()
+        messages.success(request, 'Friend joined for key %s' % key)
+        return HttpResponseRedirect(reverse('home'))
 
-    return render(request, 'ega/invite.html', dict(form=form))
+    return render(request, 'ega/join.html')
 
 
 @login_required
