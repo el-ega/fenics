@@ -1,5 +1,12 @@
-from django import forms
+# -*- coding: utf-8 -*-
 
+from __future__ import unicode_literals
+
+from django import forms
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
+
+from ega.constants import EMAILS_PLACEHOLDER, INVITE_BODY, INVITE_SUBJECT
 from ega.models import Prediction
 
 
@@ -32,12 +39,36 @@ class PredictionForm(forms.ModelForm):
 
 class InviteFriendsForm(forms.Form):
 
-    emails = forms.CharField()
+    emails = forms.CharField(
+        widget=forms.Textarea(
+            attrs={'rows': 3, 'class': 'form-control',
+                   'placeholder': EMAILS_PLACEHOLDER}))
+    subject = forms.CharField(
+        initial=INVITE_SUBJECT,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+    )
+    body = forms.CharField(
+        initial=INVITE_BODY,
+        widget=forms.Textarea(attrs={'rows': 10, 'class': 'form-control'}),
+    )
 
     def clean_emails(self):
-        cleaned_data = super(InviteFriendsForm, self).clean_fields()
-        emails = map(str.strip, cleaned_data['emails'].split(','))
-        for e in emails:
-            validate_email(e)
+        emails = []
+        for email in self.cleaned_data['emails'].split(','):
+            emails.extend(e.strip() for e in email.strip().split() if e)
 
-        return cleaned_data
+        errors = []
+        for email in emails:
+            try:
+                validate_email(email)
+            except ValidationError:
+                errors.append(email)
+
+        if len(errors) == 1:
+            raise ValidationError(
+                'El email "%s" no es una dirección válida.' % errors[0])
+        elif len(errors) > 1:
+            raise ValidationError(
+                'Los emails "%s" no son direcciones válidas' % ', '.join(errors))
+
+        return set(emails)

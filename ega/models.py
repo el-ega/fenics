@@ -1,19 +1,34 @@
+# -*- coding: utf-8 -*-
+
 from datetime import datetime, timedelta
 
-from django.contrib.auth.models import User
+from django.conf import settings
+from django.contrib.auth.models import AbstractUser
+from django.core.mail import send_mail
 from django.db import models
 from django.db.models import Q
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from ega import settings as game_settings
+from ega.constants import (
+    EL_EGA_NO_REPLY,
+    INVITE_BODY,
+    INVITE_SUBJECT,
+    LEAGUE_JOIN_CHOICES,
+)
 
 
-LEAGUE_JOIN_CHOICES = [
-    ('tweet', 'Link followed from tweet.'),
-    ('email', 'Link followed from email.'),
-    ('self', 'User joined a league by himself.'),
-]
+class EgaUser(AbstractUser):
+
+    has_tweeted = models.BooleanField(default=False)
+
+    def invite_friends(self, emails, subject=None, body=None):
+        if subject is None:
+            subject = INVITE_SUBJECT
+        if body is None:
+            body = INVITE_BODY
+        send_mail(subject, body, EL_EGA_NO_REPLY, emails)
 
 
 class Tournament(models.Model):
@@ -77,7 +92,7 @@ class Match(models.Model):
 
 class Prediction(models.Model):
     """User prediction for a match."""
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
     match = models.ForeignKey('Match')
 
     home_goals = models.IntegerField(null=True, blank=True)
@@ -123,7 +138,7 @@ class League(models.Model):
     slug = models.SlugField(max_length=200, unique=True)
     tournament = models.ForeignKey('Tournament')
     created = models.DateTimeField(default=datetime.utcnow)
-    members = models.ManyToManyField(User, through='LeagueMember')
+    members = models.ManyToManyField(settings.AUTH_USER_MODEL, through='LeagueMember')
 
     def __unicode__(self):
         return u"%s - $s" % (self.owner, self.name)
@@ -132,7 +147,7 @@ class League(models.Model):
 class LeagueMember(models.Model):
     """A league member."""
 
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
     league = models.ForeignKey(League)
     is_owner = models.BooleanField()
     date_joined = models.DateTimeField(default=datetime.utcnow)

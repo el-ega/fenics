@@ -112,8 +112,6 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-SITE_ID = 1
-
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.debug',
@@ -128,4 +126,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'allauth.socialaccount.context_processors.socialaccount',
 )
 
+AUTH_USER_MODEL = 'ega.EgaUser'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 LOGIN_REDIRECT_URL = 'home'
+SITE_ID = 1
