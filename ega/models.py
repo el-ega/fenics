@@ -33,7 +33,7 @@ def rand_str(length=8):
 class EgaUser(AbstractUser):
 
     invite_key = models.CharField(
-        max_length=10, default=partial(rand_str, 10), unique=True)
+        max_length=10, default=partial(rand_str, 20), unique=True)
 
     def invite_friends(self, emails, subject=None, body=None):
         if subject is None:

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content-title %}Unite a el Ega{% endblock %}
+
+{% block content %}
+
+<p>Tu amigo {{ friend.username }} te invitó a participar de el Ega.</p>
+<p>Para unirte al juego, por favor registrate si no tenés una cuenta,
+o logueate con tus credenciales y empezá a pronosticar!</p>
+
+{% url 'account_login' as login_submit %}
+{% include 'ega/_form_snippet.html' with form=login_form form_submit_name="login" form_submit_value="Ingresá a el Ega" form_action=login_submit %}
+
+{% url 'account_signup' as register_submit %}
+{% include 'ega/_form_snippet.html' with form=register_form form_submit_name="register" form_submit_value="Unite a el Ega" form_action=register_submit %}
+
+{% endblock %}
