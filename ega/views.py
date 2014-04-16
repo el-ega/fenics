@@ -1,15 +1,23 @@
 import twitter
 
-from django.contrib.auth.decorators import login_required
+from allauth.account.forms import LoginForm, SignupForm
 from django.contrib import messages
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.forms.models import modelformset_factory
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.template.response import TemplateResponse
+from django.views.decorators.http import require_http_methods
 
-from ega.forms import PredictionForm
-from ega.models import Prediction, Tournament
+from ega.forms import InviteFriendsForm, PredictionForm
+from ega.models import EgaUser, League, Prediction, Tournament
+
+
+def get_absolute_url(url):
+    return Site.objects.get_current().domain + url
 
 
 def soon(request):
@@ -18,42 +26,49 @@ def soon(request):
 
 @login_required
 def home(request):
-    can_tweet = request.user.socialaccount_set.filter(
-        provider='twitter').exists()
-    return render(request, 'ega/home.html', dict(can_tweet=can_tweet))
+    return render(request, 'ega/home.html')
 
 
+@require_http_methods(('GET', 'POST'))
 @login_required
-def invite_friends_via_twitter(request):
-    twitter_account = request.user.socialaccount_set.filter(
-        provider='twitter')
-    if not twitter_account:
-        return Http404
+def invite_friends(request):
+    invite_url = get_absolute_url(
+        reverse('join', kwargs=dict(key=request.user.invite_key)))
+    if request.method == 'POST':
+        form = InviteFriendsForm(invite_url, request.POST)
+        if form.is_valid():
+            emails = form.cleaned_data['emails']
+            subject = form.cleaned_data['subject']
+            body = form.cleaned_data['body']
+            request.user.invite_friends(emails, subject, body)
+            if len(emails) > 1:
+                msg = '%s amigos invitados!' % len(emails)
+            else:
+                msg = '1 amigo invitado!'
+            messages.success(request, msg)
+            return HttpResponseRedirect(reverse('home'))
+    else:
+        form = InviteFriendsForm(invite_url)
 
-    twitter_account = twitter_account[0]
-    # XXX: filter by non-expired creds
-    creds = twitter_account.socialtoken_set.all()
-    if not creds:
-        messages.warning(
-            request, 'We don\'t have your twitter token to tweet for you.')
+    return render(request, 'ega/invite.html', dict(form=form))
+
+
+@require_http_methods(('GET', 'POST'))
+def friend_join(request, key, league=None):
+    friend = get_object_or_404(EgaUser, invite_key=key)
+
+    if league:
+        league = get_object_or_404(League, slug=league)
+
+    if request.method == 'POST':
+        messages.success(request, 'Te uniste a el Ega!')
         return HttpResponseRedirect(reverse('home'))
 
-    creds = creds[0]
-
-    consumer = creds.app
-    assert consumer.provider == 'twitter'
-    api = twitter.Api(
-        consumer_key=consumer.client_id, consumer_secret=consumer.secret,
-        access_token_key=creds.token, access_token_secret=creds.token_secret,
-    )
-
-    api.PostUpdate(
-        'Come and join me at "el Ega" for the WorldCup 2014! '
-        'Visit http://el-ega.com.ar'
-    )
-
-    messages.info(request, 'Tweet successfully posted for you!')
-    return HttpResponseRedirect(reverse('home'))
+    register_form = SignupForm(email_required=True)  # UserCreationForm()
+    login_form = LoginForm()  # AuthenticationForm()
+    context = dict(
+        friend=friend, register_form=register_form, login_form=login_form)
+    return render(request, 'ega/join.html', context)
 
 
 @login_required

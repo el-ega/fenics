@@ -1,16 +1,1 @@
 {% extends 'base.html' %}
-
-{% block content-title %}
-Invite your friends!
-{% endblock content-title %}
-
-{% block content %}
-<div>
-    {% if can_tweet %}
-    <p>
-        <a href="{% url 'tweet' %}">Tweet</a> about el Ega and invite all your
-        friends to participate!
-    </p>
-    {% endif %}
-</div>
-{% endblock content %}

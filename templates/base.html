@@ -46,6 +46,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     {% if user.is_authenticated %}
+                    <li><a href="{% url 'invite' %}">Invite your friends</a></li>
                     <li><a href="{% url 'account_email' %}"><span class="glyphicon glyphicon-user"></span> {{ user }}</a></li>
                     <li><a href="{% url 'account_logout' %}">{% trans "Logout" %}</a></li>
                     {% else %}

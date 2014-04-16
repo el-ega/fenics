@@ -1,0 +1,24 @@
+<form method="POST" action="{{ form_action }}" class="form-horizontal" role="form">
+    {% csrf_token %}
+
+    {% for field in form.visible_fields %}
+    <div class="form-group {% if field.errors %}has-error{% endif %}">
+    <label class="control-label" for="{{ field.id }}">
+        {{ field.label }}
+    </label>
+    {{ field }}
+    </div>
+    {% endfor %}
+
+    {% for field in form.hidden_fields %}
+    {{ field }}
+    {% endfor %}
+
+    {{ form_next_field }}
+
+    <div class="text-center">
+        <button name="{{ form_submit_name }}" type="submit" class="btn btn-primary">
+            {{ form_submit_value }}
+        </button>
+    </div>
+</form>

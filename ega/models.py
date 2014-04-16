@@ -1,12 +1,46 @@
-from datetime import datetime, timedelta
+# -*- coding: utf-8 -*-
 
-from django.contrib.auth.models import User
+import random
+import string
+
+from datetime import datetime, timedelta
+from functools import partial
+
+from django.conf import settings
+from django.contrib.auth.models import AbstractUser
+from django.core.mail import send_mail
 from django.db import models
 from django.db.models import Q
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from ega import settings as game_settings
+from ega.constants import (
+    EL_EGA_NO_REPLY,
+    INVITE_BODY,
+    INVITE_SUBJECT,
+    LEAGUE_JOIN_CHOICES,
+)
+
+
+ALNUM_CHARS = string.letters + string.digits
+
+
+def rand_str(length=8):
+    return ''.join(random.choice(ALNUM_CHARS) for x in xrange(length))
+
+
+class EgaUser(AbstractUser):
+
+    invite_key = models.CharField(
+        max_length=10, default=partial(rand_str, 20), unique=True)
+
+    def invite_friends(self, emails, subject=None, body=None):
+        if subject is None:
+            subject = INVITE_SUBJECT
+        if body is None:
+            body = INVITE_BODY
+        send_mail(subject, body, EL_EGA_NO_REPLY, emails)
 
 
 class Tournament(models.Model):
@@ -73,7 +107,7 @@ class Match(models.Model):
 
 class Prediction(models.Model):
     """User prediction for a match."""
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
     match = models.ForeignKey('Match')
 
     home_goals = models.IntegerField(null=True, blank=True)
@@ -115,13 +149,29 @@ class Prediction(models.Model):
 
 class League(models.Model):
     """Custom league metadata."""
+
     name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
     tournament = models.ForeignKey('Tournament')
-    owner = models.ForeignKey(User)
+    created = models.DateTimeField(default=datetime.utcnow)
+    members = models.ManyToManyField(settings.AUTH_USER_MODEL, through='LeagueMember')
 
     def __unicode__(self):
         return u"%s - $s" % (self.owner, self.name)
+
+
+class LeagueMember(models.Model):
+    """A league member."""
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    league = models.ForeignKey(League)
+    is_owner = models.BooleanField()
+    date_joined = models.DateTimeField(default=datetime.utcnow)
+    origin = models.CharField(
+        max_length=10, choices=LEAGUE_JOIN_CHOICES)
+
+    class Meta:
+        unique_together = ('user', 'league')
 
 
 @receiver(post_save, sender=Match, dispatch_uid="update-scores")
