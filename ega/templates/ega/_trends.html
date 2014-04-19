@@ -1,0 +1,13 @@
+{% if values %}
+    <div class="progress">
+        <div class="progress-bar progress-bar-success progress-local" style="width: {{ values.L }}%">
+        Local {{ values.L }}%
+        </div>
+        <div class="progress-bar progress-bar-danger progress-tie" style="width: {{ values.E }}%">
+        Empate {{ values.E }}%
+        </div>
+        <div class="progress-bar progress-bar-info progress-away" style="width: {{ values.V }}%">
+        Visitante {{ values.V }}%
+        </div>
+    </div>
+{% endif %}

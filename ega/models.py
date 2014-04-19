@@ -107,11 +107,14 @@ class Match(models.Model):
 
 class Prediction(models.Model):
     """User prediction for a match."""
+    TRENDS = ('L', 'E', 'V')
+
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     match = models.ForeignKey('Match')
 
     home_goals = models.IntegerField(null=True, blank=True)
     away_goals = models.IntegerField(null=True, blank=True)
+    trend = models.CharField(max_length=1, editable=False)
     starred = models.BooleanField(default=False)
 
     score = models.IntegerField(null=True, blank=True)
@@ -122,6 +125,17 @@ class Prediction(models.Model):
 
     def __unicode__(self):
         return u"%s: %s" % (self.user, self.match)
+
+    def save(self, *args, **kwargs):
+        # set trend value before saving
+        if self.home_goals is not None and self.away_goals is not None:
+            if self.home_goals > self.away_goals:
+                self.trend = 'L'
+            elif self.home_goals < self.away_goals:
+                self.trend = 'V'
+            else:
+                self.trend = 'E'
+        super(Prediction, self).save(*args, **kwargs)
 
     def update_score(self):
         """Updates the score from the real result."""
