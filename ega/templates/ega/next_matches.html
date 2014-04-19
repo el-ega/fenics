@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
+{% load ega_tags %}
 {% load humanize %}
 
-
 {% block content-title %}Próximos partidos{% endblock %}
-
 
 {% block content %}
 
@@ -28,20 +27,12 @@
         {{ form.id }}
         {{ form.match }}
 
+        {% with match=form.instance.match %}
+        {% with home=match.home away=match.away %}
         <div class="panel-body">
             <div class="row">
                 <div class="col-md-12 text-center">
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-success progress-local" style="width: 35%">
-                        Local 35%
-                        </div>
-                        <div class="progress-bar progress-bar-danger progress-tie" style="width: 20%">
-                        Empate 20%
-                        </div>
-                        <div class="progress-bar progress-bar-info progress-away" style="width: 45%">
-                        Visitante 45%
-                        </div>
-                    </div>
+                    {% show_prediction_trends match %}
                 </div>
             </div>
 
@@ -50,8 +41,10 @@
                     <div class="panel panel-success">
                         <div class="panel-heading">
                             <h6 class="panel-title">
-                            <strong>{{ form.instance.match.home }}</strong>
-                            <img class="team-image-small pull-right" src="{{ form.instance.match.home.image.url }}" /></h6>
+                            <strong>{{ home }}</strong>
+                            {% if home.image %}
+                            <img class="team-image-small pull-right" src="{{ home.image.url }}" />
+                            {% endif %}</h6>
                         </div>
                         <div class="panel-body text-left">
                             <small><strong>1ero</strong> | 1 ganado, 2 empates, 0 perdidos<br/>
@@ -69,11 +62,15 @@
                     <div class="panel panel-info">
                         <div class="panel-heading">
                             <h6 class="panel-title text-right hidden-xs">
-                            <strong>{{ form.instance.match.away }}</strong>
-                            <img class="team-image-small pull-left" src="{{ form.instance.match.away.image.url }}" /></h6>
+                            <strong>{{ away }}</strong>
+                            {% if away.image %}
+                            <img class="team-image-small pull-left" src="{{ away.image.url }}" />
+                            {% endif %}</h6>
                             <h6 class="panel-title text-left visible-xs">
-                            <strong>{{ form.instance.match.away }}</strong>
-                            <img class="team-image-small pull-right" src="{{ form.instance.match.away.image.url }}" /></h6>
+                            <strong>{{ away }}</strong>
+                            {% if away.image %}
+                            <img class="team-image-small pull-right" src="{{ away.image.url }}" />
+                            {% endif %}</h6>
                         </div>
                         <div class="panel-body text-right hidden-xs">
                             <small><strong>1ero</strong> | 1 ganado, 2 empates, 0 perdidos<br/>
@@ -87,6 +84,8 @@
                 </div>
             </div>
         </div>
+        {% endwith %}
+        {% endwith %}
     {% endfor %}
     </div>
     {% endfor %}

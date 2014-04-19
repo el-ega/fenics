@@ -77,7 +77,6 @@ def next_matches(request, slug):
     for m in matches:
         # create prediction for user if missing
         Prediction.objects.get_or_create(user=request.user, match=m)
-        # get trends (save pred L E V?))
 
     PredictionFormSet = modelformset_factory(
         Prediction, form=PredictionForm, extra=0)
