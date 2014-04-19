@@ -20,10 +20,6 @@ def get_absolute_url(url):
     return Site.objects.get_current().domain + url
 
 
-def soon(request):
-    return render(request, 'ega/soon.html')
-
-
 @login_required
 def home(request):
     return render(request, 'ega/home.html')
