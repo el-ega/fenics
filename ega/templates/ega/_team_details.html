@@ -1,0 +1,23 @@
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h6 class="panel-title {{ condition }}-stats">
+        <strong>{{ team }}</strong>
+        {% if team.image %}
+        <img class="team-image-small {{ condition }}-image" src="{{ team.image.url }}" />
+        {% endif %}</h6>
+    </div>
+    <div class="panel-body {{ condition }}-stats">
+        <small>{# <strong>1ero</strong> | #}
+        {{ stats.won }} ganado{{ stats.won|pluralize }},
+        {{ stats.tie }} empatado{{ stats.tie|pluralize }},
+        {{ stats.lost }} perdido{{ stats.lost|pluralize }}
+        {% if team.latest_matches %}
+        <br/><strong>Últimos resultados:</strong>
+        {% for m in team.latest_matches|slice:':3' %}
+        {% if m.home == team %}{{ m.home_goals }} - {{ m.away_goals }} ({{ m.away.name }})
+        {% else %}{{ m.away_goals }} - {{ m.home_goals }} ({{ m.home.name }}){% endif %}
+        {% endfor %}
+        {% endif %}
+        </small>
+    </div>
+</div>

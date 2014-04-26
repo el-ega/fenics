@@ -26,6 +26,31 @@ body {
     margin-top: 15px;
 }
 
+.home-stats {
+    text-align: left;
+}
+
+.home-image {
+    float: right;
+}
+
+.away-stats {
+    text-align: right;
+}
+
+.away-image {
+    float: left;
+}
+
+@media (max-width: 768px) {
+    .away-stats {
+        text-align: left;
+    }
+    .away-image {
+        float: right;
+    }
+}
+
 .progress-bar {
     border: 0;
     box-shadow: none;
