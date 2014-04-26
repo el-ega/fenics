@@ -21,7 +21,7 @@ class Migration(SchemaMigration):
             ('is_staff', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('is_active', self.gf('django.db.models.fields.BooleanField')(default=True)),
             ('date_joined', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
-            ('invite_key', self.gf('django.db.models.fields.CharField')(default='V1zMUZeZ2o', unique=True, max_length=10)),
+            ('invite_key', self.gf('django.db.models.fields.CharField')(default='PomFonanjkUgk7riyKe2', unique=True, max_length=10)),
         ))
         db.send_create_signal(u'ega', ['EgaUser'])
 
@@ -89,15 +89,28 @@ class Migration(SchemaMigration):
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['ega.EgaUser'])),
             ('match', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['ega.Match'])),
-            ('home_goals', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
-            ('away_goals', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
+            ('home_goals', self.gf('django.db.models.fields.PositiveIntegerField')(null=True, blank=True)),
+            ('away_goals', self.gf('django.db.models.fields.PositiveIntegerField')(null=True, blank=True)),
+            ('trend', self.gf('django.db.models.fields.CharField')(max_length=1)),
             ('starred', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('score', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
+            ('score', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
         ))
         db.send_create_signal(u'ega', ['Prediction'])
 
         # Adding unique constraint on 'Prediction', fields ['user', 'match']
         db.create_unique(u'ega_prediction', ['user_id', 'match_id'])
+
+        # Adding model 'TeamStats'
+        db.create_table(u'ega_teamstats', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('team', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['ega.Team'])),
+            ('tournament', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['ega.Tournament'])),
+            ('won', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
+            ('tie', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
+            ('lost', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
+            ('points', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
+        ))
+        db.send_create_signal(u'ega', ['TeamStats'])
 
         # Adding model 'League'
         db.create_table(u'ega_league', (
@@ -155,6 +168,9 @@ class Migration(SchemaMigration):
         # Deleting model 'Prediction'
         db.delete_table(u'ega_prediction')
 
+        # Deleting model 'TeamStats'
+        db.delete_table(u'ega_teamstats')
+
         # Deleting model 'League'
         db.delete_table(u'ega_league')
 
@@ -190,7 +206,7 @@ class Migration(SchemaMigration):
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'groups': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Group']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'invite_key': ('django.db.models.fields.CharField', [], {'default': "'sVAX7fgklU'", 'unique': 'True', 'max_length': '10'}),
+            'invite_key': ('django.db.models.fields.CharField', [], {'default': "'uXjtpH2ZqRvfxuA597eR'", 'unique': 'True', 'max_length': '10'}),
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -232,12 +248,13 @@ class Migration(SchemaMigration):
         },
         u'ega.prediction': {
             'Meta': {'ordering': "('match__when',)", 'unique_together': "(('user', 'match'),)", 'object_name': 'Prediction'},
-            'away_goals': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'home_goals': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'away_goals': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'home_goals': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'match': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['ega.Match']"}),
-            'score': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'score': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'starred': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'trend': ('django.db.models.fields.CharField', [], {'max_length': '1'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['ega.EgaUser']"})
         },
         u'ega.team': {
@@ -246,6 +263,16 @@ class Migration(SchemaMigration):
             'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '200'}),
             'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '200'})
+        },
+        u'ega.teamstats': {
+            'Meta': {'object_name': 'TeamStats'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'lost': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
+            'points': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
+            'team': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['ega.Team']"}),
+            'tie': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
+            'tournament': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['ega.Tournament']"}),
+            'won': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'})
         },
         u'ega.tournament': {
             'Meta': {'object_name': 'Tournament'},

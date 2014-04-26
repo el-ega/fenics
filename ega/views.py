@@ -73,7 +73,6 @@ def next_matches(request, slug):
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
 
     matches = tournament.next_matches()
-    # select related positions
     for m in matches:
         # create prediction for user if missing
         Prediction.objects.get_or_create(user=request.user, match=m)

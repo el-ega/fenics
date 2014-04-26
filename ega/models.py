@@ -10,7 +10,7 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.mail import send_mail
 from django.db import models
-from django.db.models import Q
+from django.db.models import F, Q
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -21,6 +21,7 @@ from ega.constants import (
     INVITE_SUBJECT,
     LEAGUE_JOIN_CHOICES,
 )
+from ega.managers import PredictionManager
 
 
 ALNUM_CHARS = string.letters + string.digits
@@ -73,7 +74,7 @@ class Team(models.Model):
         """Return team previously played matches."""
         now = datetime.now()
         matches = Match.objects.filter(
-            Q(away=self)|Q(home=self), date__lte=now)
+            Q(away=self)|Q(home=self), when__lte=now)
         return matches
 
 
@@ -112,12 +113,14 @@ class Prediction(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     match = models.ForeignKey('Match')
 
-    home_goals = models.IntegerField(null=True, blank=True)
-    away_goals = models.IntegerField(null=True, blank=True)
+    home_goals = models.PositiveIntegerField(null=True, blank=True)
+    away_goals = models.PositiveIntegerField(null=True, blank=True)
     trend = models.CharField(max_length=1, editable=False)
     starred = models.BooleanField(default=False)
 
-    score = models.IntegerField(null=True, blank=True)
+    score = models.PositiveIntegerField(default=0)
+
+    objects = PredictionManager()
 
     class Meta:
         ordering = ('match__when',)
@@ -126,39 +129,74 @@ class Prediction(models.Model):
     def __unicode__(self):
         return u"%s: %s" % (self.user, self.match)
 
+    @property
+    def home_team_stats(self):
+        stats, _ = self.match.home.teamstats_set.get_or_create(
+            tournament=self.match.tournament)
+        return stats
+
+    @property
+    def away_team_stats(self):
+        stats, _ = self.match.away.teamstats_set.get_or_create(
+            tournament=self.match.tournament)
+        return stats
+
     def save(self, *args, **kwargs):
         # set trend value before saving
         if self.home_goals is not None and self.away_goals is not None:
             if self.home_goals > self.away_goals:
-                self.trend = 'L'
+                self.trend = self.TRENDS[0]
             elif self.home_goals < self.away_goals:
-                self.trend = 'V'
+                self.trend = self.TRENDS[2]
             else:
-                self.trend = 'E'
+                self.trend = self.TRENDS[1]
         super(Prediction, self).save(*args, **kwargs)
 
-    def update_score(self):
-        """Updates the score from the real result."""
-        home = self.match.home_goals
-        away = self.match.away_goals
 
-        score = 0
-        if home is None or away is None:
-            score = 0
-        elif self.home_goals == home and self.away_goals == away:
-            score = game_settings.EXACTLY_MATCH_POINTS
-        elif self.home_goals > self.away_goals and home > away:
-            score = game_settings.WINNER_MATCH_POINTS
-        elif self.home_goals < self.away_goals and home < away:
-            score = game_settings.WINNER_MATCH_POINTS
-        elif self.home_goals == self.away_goals and home == away:
-            score = game_settings.WINNER_MATCH_POINTS
+class TeamStats(models.Model):
+    """Stats for a team in a given tournament."""
 
-        if score and self.starred:
-            score += game_settings.STARRED_MATCH_POINTS
+    team = models.ForeignKey(Team)
+    tournament = models.ForeignKey(Tournament)
 
-        self.score = score
+    won = models.PositiveIntegerField(default=0)
+    tie = models.PositiveIntegerField(default=0)
+    lost = models.PositiveIntegerField(default=0)
+
+    points = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ('-points',)
+
+    def __unicode__(self):
+        return u"%s - %s" % (self.team, self.tournament)
+
+    def sync(self):
+        """Update team stats for tournament."""
+        home = Match.objects.filter(
+            tournament=self.tournament, home=self.team,
+            home_goals__isnull=False, away_goals__isnull=False)
+        away = Match.objects.filter(
+            tournament=self.tournament, away=self.team,
+            home_goals__isnull=False, away_goals__isnull=False)
+
+        self.won = (
+            home.filter(home_goals__gt=F('away_goals')).count() +
+            away.filter(away_goals__gt=F('home_goals')).count())
+        self.tie = (
+            home.filter(home_goals=F('away_goals')).count() +
+            away.filter(away_goals=F('home_goals')).count())
+        self.lost = (
+            home.filter(home_goals__lt=F('away_goals')).count() +
+            away.filter(away_goals__lt=F('home_goals')).count())
+
+        self.points = self._points()
         self.save()
+
+    def _points(self):
+        return (self.won * game_settings.MATCH_WON_POINTS +
+                self.tie * game_settings.MATCH_TIE_POINTS + 
+                self.lost * game_settings.MATCH_LOST_POINTS)
 
 
 class League(models.Model):
@@ -171,7 +209,7 @@ class League(models.Model):
     members = models.ManyToManyField(settings.AUTH_USER_MODEL, through='LeagueMember')
 
     def __unicode__(self):
-        return u"%s - $s" % (self.owner, self.name)
+        return u"%s - %s" % (self.owner, self.name)
 
 
 class LeagueMember(models.Model):
@@ -191,6 +229,39 @@ class LeagueMember(models.Model):
 @receiver(post_save, sender=Match, dispatch_uid="update-scores")
 def update_related_predictions(sender, instance, **kwargs):
     """Update score for predictions related to the changed match."""
-    predictions = instance.prediction_set.all()
-    for prediction in predictions:
-        prediction.update_score()
+    home_goals = instance.home_goals
+    away_goals = instance.away_goals
+    predictions = instance.prediction_set
+
+    # update exact predictions
+    predictions.filter(home_goals=home_goals, away_goals=away_goals).update(
+        score=game_settings.EXACTLY_MATCH_POINTS)
+
+    # update winner predictions
+    if home_goals > away_goals:
+        predictions.exclude(
+            home_goals=home_goals, away_goals=away_goals).filter(
+                home_goals__gt=F('away_goals')).update(
+                    score=game_settings.WINNER_MATCH_POINTS)
+    elif home_goals < away_goals:
+        predictions.exclude(
+            home_goals=home_goals, away_goals=away_goals).filter(
+                home_goals__lt=F('away_goals')).update(
+                    score=game_settings.WINNER_MATCH_POINTS)
+    else:
+        predictions.exclude(
+            home_goals=home_goals, away_goals=away_goals).filter(
+                home_goals=F('away_goals')).update(
+                    score=game_settings.WINNER_MATCH_POINTS)
+
+    # update starred predictions
+    predictions.filter(score__gt=0, starred=True).update(score=F('score') + 1)
+
+
+@receiver(post_save, sender=Match, dispatch_uid="update-stats")
+def update_related_stats(sender, instance, **kwargs):
+    """Update team stats related to the changed match."""
+    for team in (instance.home, instance.away):
+        stats, created = TeamStats.objects.get_or_create(
+            team=team, tournament=instance.tournament)
+        stats.sync()

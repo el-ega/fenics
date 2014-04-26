@@ -8,94 +8,67 @@
 
 <h2>{{ tournament.name }}</h2>
 
-{% regroup formset.forms by instance.match.when as form_list %}
+{% if formset.forms %}
 
-<form method="POST" action="">
-    {% csrf_token %}
-    {{ formset.management_form }}
+    {% regroup formset.forms by instance.match.when as form_list %}
 
-    {% for group in form_list %}
+    <form method="POST" action="">
+        {% csrf_token %}
+        {{ formset.management_form }}
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h6 class="panel-title">
-            <small>{{ group.grouper|date:"l d F f" }} |
-                   DEADLINE: {{ group.list.0.instance.match.deadline|naturaltime }}</small></h6>
-        </div>
+        {% for group in form_list %}
 
-    {% for form in group.list %}
-        {{ form.id }}
-        {{ form.match }}
-
-        {% with match=form.instance.match %}
-        {% with home=match.home away=match.away %}
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    {% show_prediction_trends match %}
-                </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h6 class="panel-title">
+                <small>{{ group.grouper|date:"l d F f" }} |
+                    DEADLINE: {{ group.list.0.instance.match.deadline|naturaltime }}</small></h6>
             </div>
 
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="panel panel-success">
-                        <div class="panel-heading">
-                            <h6 class="panel-title">
-                            <strong>{{ home }}</strong>
-                            {% if home.image %}
-                            <img class="team-image-small pull-right" src="{{ home.image.url }}" />
-                            {% endif %}</h6>
-                        </div>
-                        <div class="panel-body text-left">
-                            <small><strong>1ero</strong> | 1 ganado, 2 empates, 0 perdidos<br/>
-                            <strong>Últimos resultados:</strong> 3 - 1 (River) | 1 - 2 (Vélez)</small>
-                        </div>
+        {% for form in group.list %}
+            {{ form.id }}
+            {{ form.match }}
+
+            {% with match=form.instance.match %}
+            {% with home=match.home away=match.away %}
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        {% show_prediction_trends match %}
                     </div>
                 </div>
-                <div class="col-md-2 text-center">
-                    <p style="padding-bottom: 10px">{{ form.home_goals }}</p>
-                </div>
-                <div class="col-md-2 text-center">
-                    <p style="padding-bottom: 10px">{{ form.away_goals }}</p>
-                </div>
-                <div class="col-md-4">
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            <h6 class="panel-title text-right hidden-xs">
-                            <strong>{{ away }}</strong>
-                            {% if away.image %}
-                            <img class="team-image-small pull-left" src="{{ away.image.url }}" />
-                            {% endif %}</h6>
-                            <h6 class="panel-title text-left visible-xs">
-                            <strong>{{ away }}</strong>
-                            {% if away.image %}
-                            <img class="team-image-small pull-right" src="{{ away.image.url }}" />
-                            {% endif %}</h6>
-                        </div>
-                        <div class="panel-body text-right hidden-xs">
-                            <small><strong>1ero</strong> | 1 ganado, 2 empates, 0 perdidos<br/>
-                            <strong>Últimos resultados:</strong> 3 - 1 (River) | 1 - 2 (Vélez)</small>
-                        </div>
-                        <div class="panel-body text-left visible-xs">
-                            <small><strong>1ero</strong> | 1 ganado, 2 empates, 0 perdidos<br/>
-                            <strong>Últimos resultados:</strong> 3 - 1 (River) | 1 - 2 (Vélez)</small>
-                        </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        {% include "ega/_team_details.html" with condition="home" team=home stats=form.instance.home_team_stats %}
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <p style="padding-bottom: 10px">{{ form.home_goals }}</p>
+                    </div>
+                    <div class="col-md-2 text-center">
+                        <p style="padding-bottom: 10px">{{ form.away_goals }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        {% include "ega/_team_details.html" with condition="away" team=away stats=form.instance.away_team_stats %}
                     </div>
                 </div>
             </div>
+            {% endwith %}
+            {% endwith %}
+        {% endfor %}
         </div>
-        {% endwith %}
-        {% endwith %}
-    {% endfor %}
-    </div>
-    {% endfor %}
+        {% endfor %}
 
-    <div class="row">
-        <div class="col-xs-12 text-center">
-            <button name="save" type="submit" class="btn btn-lg btn-primary">Guardar</button>
+        <div class="row">
+            <div class="col-xs-12 text-center">
+                <button name="save" type="submit" class="btn btn-lg btn-primary">Guardar</button>
+            </div>
         </div>
-    </div>
 
-</form>
+    </form>
+
+{% else %}
+    <p>No hay partidos para jugar.</p>
+{% endif %}
 
 {% endblock %}
