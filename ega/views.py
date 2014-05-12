@@ -94,3 +94,13 @@ def next_matches(request, slug):
     return render(
         request, 'ega/next_matches.html',
         {'tournament': tournament, 'formset': formset})
+
+
+@login_required
+def ranking(request, slug):
+    tournament = get_object_or_404(Tournament, slug=slug, published=True)
+    ranking = tournament.ranking()
+
+    return render(
+        request, 'ega/ranking.html',
+        {'tournament': tournament, 'ranking': ranking})
