@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.models import Site
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.forms.models import modelformset_factory
 from django.http import Http404, HttpResponseRedirect
@@ -12,6 +13,7 @@ from django.shortcuts import get_object_or_404, render
 from django.template.response import TemplateResponse
 from django.views.decorators.http import require_http_methods
 
+from ega import settings as game_settings
 from ega.forms import InviteFriendsForm, PredictionForm
 from ega.models import EgaUser, League, Prediction, Tournament
 
@@ -69,7 +71,7 @@ def friend_join(request, key, league=None):
 
 @login_required
 def next_matches(request, slug):
-    """Return coming matches for the speficied tournament."""
+    """Return coming matches for the specified tournament."""
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
 
     matches = tournament.next_matches()
@@ -94,3 +96,26 @@ def next_matches(request, slug):
     return render(
         request, 'ega/next_matches.html',
         {'tournament': tournament, 'formset': formset})
+
+
+@login_required
+def ranking(request, slug):
+    """Return ranking and stats for the specified tournament."""
+    tournament = get_object_or_404(Tournament, slug=slug, published=True)
+
+    scores = tournament.ranking()
+    paginator = Paginator(scores, game_settings.RANKING_TEAMS_PER_PAGE)
+
+    page = request.GET.get('page')
+    try:
+        ranking = paginator.page(page)
+    except PageNotAnInteger:
+        ranking = paginator.page(1)
+    except EmptyPage:
+        ranking = paginator.page(paginator.num_pages)
+
+    stats = request.user.stats(tournament)
+
+    return render(
+        request, 'ega/ranking.html',
+        {'tournament': tournament, 'ranking': ranking, 'stats': stats})

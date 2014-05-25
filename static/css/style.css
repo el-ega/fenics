@@ -13,6 +13,24 @@ body {
     max-height: 50px;
 }
 
+table.ranking tbody tr td {
+    vertical-align: middle;
+}
+
+table.ranking {
+    font-size: 1.1em;
+}
+
+.ranking .avatar {
+    max-width: 50px;
+    max-height: 50px;
+}
+
+.user-avatar {
+    max-width: 75px;
+    max-height: 75px;
+}
+
 .team-image {
     max-width: 65px;
 }
