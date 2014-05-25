@@ -71,7 +71,7 @@ def friend_join(request, key, league=None):
 
 @login_required
 def next_matches(request, slug):
-    """Return coming matches for the speficied tournament."""
+    """Return coming matches for the specified tournament."""
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
 
     matches = tournament.next_matches()
@@ -100,6 +100,7 @@ def next_matches(request, slug):
 
 @login_required
 def ranking(request, slug):
+    """Return ranking and stats for the specified tournament."""
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
 
     scores = tournament.ranking()
