@@ -32,6 +32,7 @@ def rand_str(length=8):
 
 
 class EgaUser(AbstractUser):
+    # TODO: add avatar
 
     invite_key = models.CharField(
         max_length=10, default=partial(rand_str, 20), unique=True)
@@ -42,6 +43,17 @@ class EgaUser(AbstractUser):
         if body is None:
             body = INVITE_BODY
         send_mail(subject, body, EL_EGA_NO_REPLY, emails)
+
+    def stats(self, tournament):
+        """User stats for given tournament."""
+        stats = {}
+        ranking = Prediction.objects.filter(
+            match__tournament=tournament, user=self, score__gt=0)
+        stats['winners'] = len(ranking)
+        stats['score'] = sum(r.score for r in ranking)
+        stats['exacts'] = sum(1 for r in ranking
+                              if r.score == game_settings.EXACTLY_MATCH_POINTS)
+        return stats
 
 
 class Tournament(models.Model):
@@ -61,6 +73,7 @@ class Tournament(models.Model):
         return self.match_set.filter(when__range=(now, until))
 
     def ranking(self):
+        """Users ranking in the tournament."""
         ranking = Prediction.objects.filter(
             match__tournament=self).values('user__username').annotate(
                 total=Sum('score'), count=Count('id')).order_by('-total')

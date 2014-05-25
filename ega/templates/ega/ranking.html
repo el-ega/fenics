@@ -1,20 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
-{% block extra-head %}
-<style>
-
-table.ranking tbody tr td {
-    vertical-align: middle;
-}
-
-table.ranking {
-    font-size: 1.1em;
-}
-
-</style>
-{% endblock %}
-
 {% block content-title %}Posiciones{% endblock %}
 
 {% block content %}
@@ -25,8 +11,10 @@ table.ranking {
     <div class="col-md-8">
         <ul class="nav nav-tabs">
         <li class="active"><a href="#">General</a></li>
+        {% comment %}
         <li><a href="#">Mi Liga 1</a></li>
         <li><a href="#">Mi Liga 2</a></li>
+        {% endcomment %}
         </ul>
     </div>
 </div>
@@ -46,7 +34,7 @@ table.ranking {
             {% for row in ranking %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
-                    <td><img style="max-width: 50px; max-height: 50px" src="{% static 'images/logo.gif' %}" /></td>
+                    <td><img class="avatar" src="{% static 'images/logo.gif' %}" /></td>
                     <td>{{ row.user__username }}</td>
                     <td class="text-right" style="padding-right: 25px"><strong>{{ row.total }}</strong></td>
                 </tr>
@@ -56,13 +44,17 @@ table.ranking {
 
         <div class="text-center">
             <ul class="pagination">
-                <li><a href="#">&laquo;</a></li>
-                <li><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-                <li><a href="#">&raquo;</a></li>
+                {% if ranking.has_previous %}
+                    <li><a href="?page={{ ranking.previous_page_number }}">&laquo;</a></li>
+                {% endif %}
+                {% if ranking.paginator.num_pages > 1 %}
+                {% for p in ranking.paginator.page_range %}
+                    <li><a href="?page={{ p }}">{{ p }}</a></li>
+                {% endfor %}
+                {% endif %}
+                {% if ranking.has_next %}
+                    <li><a href="?page={{ ranking.next_page_number }}">&raquo;</a></li>
+                {% endif %}
             </ul>
         </div>
 
@@ -71,16 +63,14 @@ table.ranking {
     <div class="col-md-4">
         <div data-spy="affix">
             <div class="media well" style="width:300px">
-                <a class="pull-right" href="#">
-                    <img class="media-object" style="max-width: 100px; max-height: 100px" src="{% static 'images/logo.gif' %}" />
-                </a>
+                <span class="pull-right">
+                    <img class="media-object user-avatar" src="{% static 'images/logo.gif' %}" />
+                </span>
                 <div class="media-body">
-                    <h4 class="media-heading">Matías B. (YOU)</h4>
-                    Alguna frase o comentario?<br/>
-                    Aciertos:<br/>
-                    Exactos:<br/>
-                    Puntos:<br/>
-                    Posicion:
+                    <h4 class="media-heading">{{ user.username }}</h4>
+                    <strong>{{ stats.score }} punto{{ stats.score|pluralize }}</strong><br/>
+                    {{ stats.winners }} acierto{{ stats.winners|pluralize }},
+                    {{ stats.exacts }} exacto{{ stats.exacts|pluralize }}<br/>
                 </div>
             </div>
 
