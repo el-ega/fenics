@@ -11,11 +11,17 @@ from django.forms.models import modelformset_factory
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.template.response import TemplateResponse
-from django.views.decorators.http import require_http_methods
+from django.utils.text import slugify
+from django.views.decorators.http import require_GET, require_http_methods
 
 from ega import settings as game_settings
-from ega.forms import InviteFriendsForm, PredictionForm
-from ega.models import EgaUser, League, Prediction, Tournament
+from ega.forms import (
+    InviteFriendsForm,
+    CreateLeagueForm,
+    LeagueForm,
+    PredictionForm,
+)
+from ega.models import EgaUser, League, LeagueMember, Prediction, Tournament
 
 
 def get_absolute_url(url):
@@ -29,18 +35,20 @@ def home(request):
 
 @require_http_methods(('GET', 'POST'))
 @login_required
-def invite_friends(request):
-    invite_url = get_absolute_url(
-        reverse('join', kwargs=dict(key=request.user.invite_key)))
+def invite_friends(request, league_slug=None):
+    kwargs = dict(key=request.user.invite_key)
+    league = None
+    if league_slug:
+        league = get_object_or_404(League, slug=league_slug)
+        kwargs['league_slug'] = league.slug
+
+    invite_url = get_absolute_url(reverse('join', kwargs=kwargs))
     if request.method == 'POST':
         form = InviteFriendsForm(invite_url, request.POST)
         if form.is_valid():
-            emails = form.cleaned_data['emails']
-            subject = form.cleaned_data['subject']
-            body = form.cleaned_data['body']
-            request.user.invite_friends(emails, subject, body)
-            if len(emails) > 1:
-                msg = '%s amigos invitados!' % len(emails)
+            emails = form.invite(sender=request.user)
+            if emails > 1:
+                msg = '%s amigos invitados!' % emails
             else:
                 msg = '1 amigo invitado!'
             messages.success(request, msg)
@@ -48,25 +56,52 @@ def invite_friends(request):
     else:
         form = InviteFriendsForm(invite_url)
 
-    return render(request, 'ega/invite.html', dict(form=form))
+    return render(request, 'ega/invite.html', dict(form=form, league=league))
+
+
+@require_GET
+@login_required
+def friend_join(request, key, league_slug=None):
+    friend = get_object_or_404(EgaUser, invite_key=key)
+
+    if league_slug:
+        league = get_object_or_404(League, slug=league_slug)
+        member, created = LeagueMember.objects.get_or_create(
+            user=request.user, league=league)
+        if created:
+            messages.success(
+                request, 'Te uniste a el Ega, en la liga %s!' % league)
+        else:
+            messages.warning(request, 'Ya sos miembro de la liga %s.' % league)
+    else:
+        messages.success(request, 'Te uniste a el Ega!')
+    return HttpResponseRedirect(reverse('home'))
 
 
 @require_http_methods(('GET', 'POST'))
-def friend_join(request, key, league=None):
-    friend = get_object_or_404(EgaUser, invite_key=key)
-
-    if league:
-        league = get_object_or_404(League, slug=league)
-
+@login_required
+def create_league(request):
     if request.method == 'POST':
-        messages.success(request, 'Te uniste a el Ega!')
-        return HttpResponseRedirect(reverse('home'))
+        form = LeagueForm(request.POST)
+        if form.is_valid():
+            league = form.save(commit=False)
+            league.slug = slugify(league.name)
+            league.save()
+            LeagueMember.objects.create(
+                user=request.user, league=league, is_owner=True)
+            return HttpResponseRedirect(
+                reverse('invite-league', kwargs=dict(league_slug=league.slug)))
+    else:
+        form = LeagueForm()
 
-    register_form = SignupForm(email_required=True)  # UserCreationForm()
-    login_form = LoginForm()  # AuthenticationForm()
-    context = dict(
-        friend=friend, register_form=register_form, login_form=login_form)
-    return render(request, 'ega/join.html', context)
+    return render(request, 'ega/league.html', dict(form=form))
+
+
+@require_http_methods(('GET', 'POST'))
+@login_required
+def leagues(request):
+    leagues = League.objects.filter(members=request.user)
+    return render(request, 'ega/leagues.html', dict(leagues=leagues))
 
 
 @login_required

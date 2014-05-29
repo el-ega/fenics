@@ -1,15 +1,9 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block content-title %}
-{% if league %}
-Invitar amigos a la liga {{ league}}
-{% else %}
-Invitar amigos a el Ega{% endif %}
-{% endblock %}
+{% block content-title %}Liga de amigos{% endblock %}
 
 {% block content %}
-
 <form method="POST" action="" class="form-horizontal" role="form">
     {% csrf_token %}
 
@@ -17,15 +11,14 @@ Invitar amigos a el Ega{% endif %}
     <div class="form-group {% if field.errors %}has-error{% endif %}">
     <label class="pull-left control-label" for="{{ field.id }}">
         {{ field.label }}
+        {{ field.errors }}
     </label>
     {{ field }}
     </div>
     {% endfor %}
     <div class="text-center">
-        <button name="invite" type="submit" class="btn btn-primary">Invitar amigos</button>
+        <button name="create" type="submit" class="btn btn-primary">Crear liga</button>
         </br>
-        <small>Una copia de este email será enviado a los administradores del
-        sitio.</small>
     </div>
 </form>
 

@@ -44,7 +44,7 @@ INSTALLED_APPS = (
     'south',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.facebook',
+    # 'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.twitter',
 )
@@ -126,6 +126,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'allauth.socialaccount.context_processors.socialaccount',
 )
 
+ADMINS = [
+    ('Natalia', 'natalia@gmail.com'),
+    ('Matias', 'matias@gmail.com'),
+]
 AUTH_USER_MODEL = 'ega.EgaUser'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 LOGIN_REDIRECT_URL = 'home'

@@ -8,7 +8,7 @@ from functools import partial
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-from django.core.mail import send_mail
+from django.core.mail.message import EmailMessage
 from django.db import models
 from django.db.models import Count, F, Q, Sum
 from django.db.models.signals import post_save
@@ -35,14 +35,24 @@ class EgaUser(AbstractUser):
     # TODO: add avatar
 
     invite_key = models.CharField(
-        max_length=10, default=partial(rand_str, 20), unique=True)
+        max_length=20, default=partial(rand_str, 20), unique=True)
 
     def invite_friends(self, emails, subject=None, body=None):
         if subject is None:
             subject = INVITE_SUBJECT
         if body is None:
             body = INVITE_BODY
-        send_mail(subject, body, EL_EGA_NO_REPLY, emails)
+        # include admins
+        emails.add(e for i, e in settings.ADMINS)
+        EmailMessage(
+            subject, body, from_email=EL_EGA_NO_REPLY, to=[self.email],
+            bcc=emails).send()
+
+    def visible_name(self):
+        result = self.get_full_name()
+        if not result:
+            result = self.username
+        return result
 
     def stats(self, tournament):
         """User stats for given tournament."""
@@ -214,7 +224,7 @@ class TeamStats(models.Model):
 
     def _points(self):
         return (self.won * game_settings.MATCH_WON_POINTS +
-                self.tie * game_settings.MATCH_TIE_POINTS + 
+                self.tie * game_settings.MATCH_TIE_POINTS +
                 self.lost * game_settings.MATCH_LOST_POINTS)
 
 
@@ -223,12 +233,13 @@ class League(models.Model):
 
     name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
-    tournament = models.ForeignKey('Tournament')
+    tournament = models.ForeignKey(Tournament)
     created = models.DateTimeField(default=datetime.utcnow)
-    members = models.ManyToManyField(settings.AUTH_USER_MODEL, through='LeagueMember')
+    members = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, through='LeagueMember')
 
     def __unicode__(self):
-        return u"%s - %s" % (self.owner, self.name)
+        return self.name
 
     def ranking(self):
         ranking = self.tournament.ranking().filter(user__in=self.members)
@@ -240,10 +251,8 @@ class LeagueMember(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     league = models.ForeignKey(League)
-    is_owner = models.BooleanField()
+    is_owner = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=datetime.utcnow)
-    origin = models.CharField(
-        max_length=10, choices=LEAGUE_JOIN_CHOICES)
 
     class Meta:
         unique_together = ('user', 'league')

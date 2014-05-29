@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content-title %}Tus ligas de amigos{% endblock %}
+
+{% block content %}
+
+<ul>
+{% for l in leagues %}
+    <li>{{ l }}</li>
+    Miembros actuales:
+    <ul>
+        {% for m in l.members.all %}
+        <li>{{ m }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'invite-league' l.slug %}">Invitá amigos</a></li>
+{% endfor %}
+</ul>
+
+{% endblock %}

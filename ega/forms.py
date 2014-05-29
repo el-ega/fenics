@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 
 from ega.constants import EMAILS_PLACEHOLDER, INVITE_BODY, INVITE_SUBJECT
-from ega.models import Prediction
+from ega.models import League, Prediction, Tournament
 
 
 class PredictionForm(forms.ModelForm):
@@ -75,3 +75,26 @@ class InviteFriendsForm(forms.Form):
                 'Los emails "%s" no son direcciones válidas' % ', '.join(errors))
 
         return set(emails)
+
+    def invite(self, sender):
+        emails = self.cleaned_data['emails']
+        subject = self.cleaned_data['subject']
+        body = self.cleaned_data['body']
+        sender.invite_friends(emails, subject, body)
+        return len(emails)
+
+
+class CreateLeagueForm(InviteFriendsForm):
+    pass
+
+
+class LeagueForm(forms.ModelForm):
+
+    name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+    )
+
+    class Meta:
+        model = League
+        fields = ('name', 'tournament')
+
