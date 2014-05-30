@@ -17,6 +17,9 @@ Invitar amigos a el Ega{% endif %}
     <div class="form-group {% if field.errors %}has-error{% endif %}">
     <label class="pull-left control-label" for="{{ field.id }}">
         {{ field.label }}
+    {% for error in field.errors %}
+        {{ error }}
+    {% endfor %}
     </label>
     {{ field }}
     </div>

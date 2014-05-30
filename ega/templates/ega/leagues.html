@@ -1,21 +1,53 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load humanize %}
 
 {% block content-title %}Tus ligas de amigos{% endblock %}
 
 {% block content %}
 
-<ul>
 {% for l in leagues %}
-    <li>{{ l }}</li>
-    Miembros actuales:
-    <ul>
-        {% for m in l.members.all %}
-        <li>{{ m }}</li>
+<div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">{{ l }}
+        <a class="pull-right" href="{% url 'invite-league' l.slug %}">Invitá más amigos</a></h3>
+    </div>
+    <div class="panel-body">
+    Creada {{ l.created|naturalday }} para el torneo {{ l.tournament }}, con
+    los siguientes participantes:
+    </div>
+    <ul class="list-group">
+        {% for m in l.leaguemember_set.all %}
+        <li class="list-group-item">
+            {{ m.user.visible_name }}
+            {% ifequal m.user user %}<span class="badge">vos</span>{% endifequal %}
+            {% if m.is_owner %}<span class="badge">creador</span>{% endif %}
+        </li>
         {% endfor %}
     </ul>
-    <a href="{% url 'invite-league' l.slug %}">Invitá amigos</a></li>
+</div>
+{% empty %}
+    <p>No tenés ligas de amigos... create una ahora!</p>
 {% endfor %}
 </ul>
+
+<h2 class="text-muted">Nueva liga</h2>
+
+<form method="POST" action="{% url 'leagues' %}" class="form-inline" role="form">
+    {% csrf_token %}
+
+    {% for field in form %}
+    <div class="form-group {% if field.errors %}has-error{% endif %}">
+        <label class="control-label" for="{{ field.id }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+        <span class="control-label">
+        {% for error in field.errors %}{{ error }}{% endfor %}
+        </span>
+        {% endif %}
+    </div>
+    {% endfor %}
+    <button name="create" type="submit" class="btn btn-primary">Crear liga</button>
+</form>
 
 {% endblock %}

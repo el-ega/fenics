@@ -5,7 +5,6 @@ urlpatterns = patterns(
     'ega.views',
     url(r'^$', 'home', name='home'),
     url(r'^league/$', 'leagues', name='leagues'),
-    url(r'^league/add/$', 'create_league', name='create-league'),
     url(r'^invite/$', 'invite_friends', name='invite'),
     url(r'^invite/(?P<league_slug>[\w-]+)/$', 'invite_friends',
         name='invite-league'),

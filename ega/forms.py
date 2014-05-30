@@ -84,14 +84,16 @@ class InviteFriendsForm(forms.Form):
         return len(emails)
 
 
-class CreateLeagueForm(InviteFriendsForm):
-    pass
-
-
 class LeagueForm(forms.ModelForm):
 
     name = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label='Nombre',
+    )
+    tournament = forms.ModelChoiceField(
+        queryset=Tournament.objects.filter(published=True),
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        label='Torneo',
     )
 
     class Meta:

@@ -15,12 +15,7 @@ from django.utils.text import slugify
 from django.views.decorators.http import require_GET, require_http_methods
 
 from ega import settings as game_settings
-from ega.forms import (
-    InviteFriendsForm,
-    CreateLeagueForm,
-    LeagueForm,
-    PredictionForm,
-)
+from ega.forms import InviteFriendsForm, LeagueForm, PredictionForm
 from ega.models import EgaUser, League, LeagueMember, Prediction, Tournament
 
 
@@ -80,7 +75,7 @@ def friend_join(request, key, league_slug=None):
 
 @require_http_methods(('GET', 'POST'))
 @login_required
-def create_league(request):
+def leagues(request):
     if request.method == 'POST':
         form = LeagueForm(request.POST)
         if form.is_valid():
@@ -93,15 +88,9 @@ def create_league(request):
                 reverse('invite-league', kwargs=dict(league_slug=league.slug)))
     else:
         form = LeagueForm()
-
-    return render(request, 'ega/league.html', dict(form=form))
-
-
-@require_http_methods(('GET', 'POST'))
-@login_required
-def leagues(request):
     leagues = League.objects.filter(members=request.user)
-    return render(request, 'ega/leagues.html', dict(leagues=leagues))
+    return render(
+        request, 'ega/leagues.html', dict(leagues=leagues, form=form))
 
 
 @login_required
