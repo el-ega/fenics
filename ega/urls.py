@@ -14,4 +14,5 @@ urlpatterns = patterns(
     url(r'^(?P<slug>[\w-]+)/matches/$', 'next_matches',
         name='ega-next-matches'),
     url(r'^(?P<slug>[\w-]+)/ranking/$', 'ranking', name='ega-ranking'),
+    url(r'^(?P<slug>[\w-]+)/history/$', 'history', name='ega-history'),
 )

@@ -37,20 +37,22 @@
                         {% show_prediction_trends match %}
                     </div>
                 </div>
-
                 <div class="row">
                     <div class="col-md-4">
                         {% include "ega/_team_details.html" with condition="home" team=home stats=form.instance.home_team_stats %}
                     </div>
                     <div class="col-md-2 text-center">
-                        <p style="padding-bottom: 10px">{{ form.home_goals }}</p>
+                        <p class="goals-input">{{ form.home_goals }}</p>
                     </div>
                     <div class="col-md-2 text-center">
-                        <p style="padding-bottom: 10px">{{ form.away_goals }}</p>
+                        <p class="goals-input">{{ form.away_goals }}</p>
                     </div>
                     <div class="col-md-4">
                         {% include "ega/_team_details.html" with condition="away" team=away stats=form.instance.away_team_stats %}
                     </div>
+                </div>
+                <div class="text-center hidden-xs match-metadata">
+                    <small>Grupo H | Estadio Foo</small>
                 </div>
             </div>
             {% endwith %}
