@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content-title %}Historial{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-7">
+            {% include 'ega/_predictions.html' with history=predictions %}
+
+            <div class="text-center">
+                <ul class="pagination">
+                    {% if predictions.has_previous %}
+                        <li><a href="?page={{ predictions.previous_page_number }}">&laquo;</a></li>
+                    {% endif %}
+                    {% if predictions.paginator.num_pages > 1 %}
+                    {% for p in predictions.paginator.page_range %}
+                        <li><a href="?page={{ p }}">{{ p }}</a></li>
+                    {% endfor %}
+                    {% endif %}
+                    {% if predictions.has_next %}
+                        <li><a href="?page={{ predictions.next_page_number }}">&raquo;</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+
+        </div>
+        <div class="col-md-4 hidden-xs">
+            {% include 'ega/_user_stats.html' %}
+        </div>
+    </div>
+
+{% endblock %}

@@ -14,12 +14,18 @@ from django.db.models import Count, F, Q, Sum
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from ega import settings as game_settings
 from ega.constants import (
     EL_EGA_NO_REPLY,
+    EXACTLY_MATCH_POINTS,
+    HOURS_TO_DEADLINE,
     INVITE_BODY,
     INVITE_SUBJECT,
     LEAGUE_JOIN_CHOICES,
+    MATCH_WON_POINTS,
+    MATCH_TIE_POINTS,
+    MATCH_LOST_POINTS,
+    NEXT_MATCHES_DAYS,
+    WINNER_MATCH_POINTS,
 )
 from ega.managers import PredictionManager
 
@@ -54,15 +60,24 @@ class EgaUser(AbstractUser):
             result = self.username
         return result
 
+    def history(self, tournament):
+        """Return matches predictions for given tournament."""
+        now = datetime.utcnow()
+        predictions = Prediction.objects.filter(
+            match__tournament=tournament, user=self, match__when__lte=now,
+            match__home_goals__isnull=False, match__away_goals__isnull=False)
+        return predictions
+
     def stats(self, tournament):
         """User stats for given tournament."""
         stats = {}
         ranking = Prediction.objects.filter(
-            match__tournament=tournament, user=self, score__gt=0)
-        stats['winners'] = len(ranking)
+            match__tournament=tournament, user=self, score__gte=0)
+        stats['count'] = len(ranking)
         stats['score'] = sum(r.score for r in ranking)
+        stats['winners'] = sum(r.score for r in ranking if r.score > 0)
         stats['exacts'] = sum(1 for r in ranking
-                              if r.score == game_settings.EXACTLY_MATCH_POINTS)
+                              if r.score == EXACTLY_MATCH_POINTS)
         return stats
 
 
@@ -76,7 +91,7 @@ class Tournament(models.Model):
     def __unicode__(self):
         return self.name
 
-    def next_matches(self, days=game_settings.NEXT_MATCHES_DAYS):
+    def next_matches(self, days=NEXT_MATCHES_DAYS):
         """Return matches in the next days."""
         now = datetime.utcnow()
         until = now + timedelta(days=days)
@@ -131,7 +146,7 @@ class Match(models.Model):
         """Return deadline datetime or None if match date is not set."""
         ret = None
         if self.when:
-            ret = self.when - timedelta(hours=game_settings.HOURS_TO_DEADLINE)
+            ret = self.when - timedelta(hours=HOURS_TO_DEADLINE)
         return ret
 
 
@@ -223,9 +238,9 @@ class TeamStats(models.Model):
         self.save()
 
     def _points(self):
-        return (self.won * game_settings.MATCH_WON_POINTS +
-                self.tie * game_settings.MATCH_TIE_POINTS +
-                self.lost * game_settings.MATCH_LOST_POINTS)
+        return (self.won * MATCH_WON_POINTS +
+                self.tie * MATCH_TIE_POINTS +
+                self.lost * MATCH_LOST_POINTS)
 
 
 class League(models.Model):
@@ -267,24 +282,24 @@ def update_related_predictions(sender, instance, **kwargs):
 
     # update exact predictions
     predictions.filter(home_goals=home_goals, away_goals=away_goals).update(
-        score=game_settings.EXACTLY_MATCH_POINTS)
+        score=EXACTLY_MATCH_POINTS)
 
     # update winner predictions
     if home_goals > away_goals:
         predictions.exclude(
             home_goals=home_goals, away_goals=away_goals).filter(
                 home_goals__gt=F('away_goals')).update(
-                    score=game_settings.WINNER_MATCH_POINTS)
+                    score=WINNER_MATCH_POINTS)
     elif home_goals < away_goals:
         predictions.exclude(
             home_goals=home_goals, away_goals=away_goals).filter(
                 home_goals__lt=F('away_goals')).update(
-                    score=game_settings.WINNER_MATCH_POINTS)
+                    score=WINNER_MATCH_POINTS)
     else:
         predictions.exclude(
             home_goals=home_goals, away_goals=away_goals).filter(
-                home_goals=F('away_goals')).update(
-                    score=game_settings.WINNER_MATCH_POINTS)
+                home_goals=F('away_goals'), home_goals__isnull=False).update(
+                    score=WINNER_MATCH_POINTS)
 
     # update starred predictions
     predictions.filter(score__gt=0, starred=True).update(score=F('score') + 1)

@@ -1,1 +1,68 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content-title %}{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="visible-xs">
+                {% include 'ega/_user_stats.html' %}
+            </div>
+
+            <h3 class="title">
+                Posiciones
+                <small><a class="pull-right title-action" href="{% url 'ega-ranking' tournament.slug %}">ver tabla completa</a></small>
+            </h3>
+            {% include 'ega/_ranking_table.html' with ranking=top_ranking delta=1 %}
+        </div>
+
+        <div class="col-md-5">
+            {% if history %}
+                <h3 class="title">
+                    Últimos resultados
+                    <small><a class="pull-right title-action" href="{% url 'ega-history' tournament.slug %}">ver historial</a></small>
+                </h3>
+                {% include 'ega/_predictions.html' %}
+            {% endif %}
+
+            {% if matches %}
+                <h3 class="title">
+                    Próximos partidos
+                    <small><a class="pull-right title-action" href="{% url 'ega-next-matches' tournament.slug %}">jugar</a></small>
+                </h3>
+                {% include 'ega/_next_matches.html' %}
+            {% endif %}
+        </div>
+
+        <div class="col-md-3">
+            <div class="hidden-xs">
+                {% include 'ega/_user_stats.html' %}
+            </div>
+
+            <h3 class="title">Noticias <small>fifa.com</small></h3>
+            <p>
+            <strong>Ryan, de una caravana a ir a Brasil con los Socceroos</strong><br/>
+            <small>A sus 22 años, Mat Ryan será el encargado de guardar la portería australiana en Brasil 2014. FIFA.com te invita a conocer la fulgurante trayectoria de un arquero diferente. "Tengo el mejor trabajo del mundo", nos asegura.<br/><a href="#">Leer más</a></small></p>
+        </div>
+    </div>
+
+    <hr/>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="disqus_thread"></div>
+            <script type="text/javascript">
+                var disqus_shortname = 'elega-staging';
+
+                /* * * DON'T EDIT BELOW THIS LINE * * */
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            </script>
+        </div>
+    </div>
+
+{% endblock %}

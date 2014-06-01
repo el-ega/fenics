@@ -12,7 +12,7 @@ from django.template.response import TemplateResponse
 from django.utils.text import slugify
 from django.views.decorators.http import require_GET, require_http_methods
 
-from ega import settings as game_settings
+from ega.constants import DEFAULT_TOURNAMENT, RANKING_TEAMS_PER_PAGE
 from ega.forms import InviteFriendsForm, LeagueForm, PredictionForm
 from ega.models import EgaUser, League, LeagueMember, Prediction, Tournament
 
@@ -23,7 +23,17 @@ def get_absolute_url(url):
 
 @login_required
 def home(request):
-    return render(request, 'ega/home.html')
+    tournament = get_object_or_404(
+        Tournament, slug=DEFAULT_TOURNAMENT, published=True)
+
+    top_ranking = tournament.ranking()[:10]
+    matches = tournament.next_matches()[:3]
+    history = request.user.history(tournament)[:3]
+    stats = request.user.stats(tournament)
+
+    return render(request, 'ega/home.html',
+                  {'tournament': tournament, 'top_ranking': top_ranking,
+                   'matches': matches, 'history': history, 'stats': stats})
 
 
 @require_http_methods(('GET', 'POST'))
@@ -126,7 +136,7 @@ def ranking(request, slug):
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
 
     scores = tournament.ranking()
-    paginator = Paginator(scores, game_settings.RANKING_TEAMS_PER_PAGE)
+    paginator = Paginator(scores, RANKING_TEAMS_PER_PAGE)
 
     page = request.GET.get('page')
     try:
@@ -141,3 +151,26 @@ def ranking(request, slug):
     return render(
         request, 'ega/ranking.html',
         {'tournament': tournament, 'ranking': ranking, 'stats': stats})
+
+
+@login_required
+def history(request, slug):
+    """Return history for the specified tournament."""
+    tournament = get_object_or_404(Tournament, slug=slug, published=True)
+
+    user_history = request.user.history(tournament)
+    paginator = Paginator(user_history, RANKING_TEAMS_PER_PAGE)
+
+    page = request.GET.get('page')
+    try:
+        predictions = paginator.page(page)
+    except PageNotAnInteger:
+        predictions = paginator.page(1)
+    except EmptyPage:
+        predictions = paginator.page(paginator.num_pages)
+
+    stats = request.user.stats(tournament)
+
+    return render(
+        request, 'ega/history.html',
+        {'tournament': tournament, 'predictions': predictions, 'stats': stats})

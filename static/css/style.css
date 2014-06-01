@@ -9,8 +9,25 @@ body {
     margin-bottom: 90px;
 }
 
+.title {
+    border-bottom: 1px solid #EEE;
+    margin-bottom: 20px;
+}
+
+.title-action {
+    padding-top: 8px;
+}
+
 .nav-logo {
     max-height: 50px;
+}
+
+.user-stats {
+    width: 100%;
+}
+
+.homepage-match-row {
+    margin-top: 10px;
 }
 
 table.ranking tbody tr td {
@@ -26,6 +43,10 @@ table.ranking {
     max-height: 50px;
 }
 
+.ranking .score {
+    padding-right: 25px;
+}
+
 .user-avatar {
     max-width: 75px;
     max-height: 75px;
@@ -35,6 +56,10 @@ table.ranking {
     max-width: 65px;
 }
 
+.team-image-xsmall {
+    max-width: 35px;
+}
+
 .team-image-small {
     max-width: 65px;
     margin-top: -20px;
@@ -42,6 +67,15 @@ table.ranking {
 
 .team-panel-name {
     margin-top: 15px;
+}
+
+.goals-input {
+    padding-bottom: 10px;
+}
+
+.match-metadata {
+    position: relative;
+    top: -50px;
 }
 
 .home-stats {
