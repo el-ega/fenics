@@ -1,0 +1,48 @@
+{% extends "account/base.html" %}
+
+{% load url from future %}
+{% load i18n %}
+{% load account %}
+
+{% block content-title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+
+{% if socialaccount.providers  %}
+<p>Podés loguearte con algunos de los proveedores listados a continuación (si
+ya tenés una cuenta):</p>
+<div class="socialaccount_ballot">
+
+  <ul class="socialaccount_providers">
+    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+  </ul>
+
+</div>
+
+{% include "socialaccount/snippets/login_extra.html" %}
+
+<p>O podés registrarte en {{ site.name }} siguiendo
+<a href="{{ signup_url }}">este link</a> y luego iniciando sesión acá:</p>
+
+{% else %}
+<p>{% blocktrans %}If you have not created an account yet, then please
+<a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+{% endif %}
+
+<form method="POST" action="{% url 'account_login' %}" role="form">
+    {% csrf_token %}
+
+    {% include 'ega/_form_errors_all_snippet.html' %}
+
+    {% for field in form %}
+    {% include 'ega/_field_snippet.html' %}
+    {% endfor %}
+
+    {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    {% endif %}
+    <a href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+    <button type="submit" class="btn btn-default">{% trans "Sign In" %}</button>
+</form>
+
+{% endblock %}

@@ -2,12 +2,7 @@
     {% csrf_token %}
 
     {% for field in form.visible_fields %}
-    <div class="form-group {% if field.errors %}has-error{% endif %}">
-    <label class="control-label" for="{{ field.id }}">
-        {{ field.label }}
-    </label>
-    {{ field }}
-    </div>
+    {% include 'ega/_field_snippet.html' %}
     {% endfor %}
 
     {% for field in form.hidden_fields %}
