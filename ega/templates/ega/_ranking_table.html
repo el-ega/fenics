@@ -12,7 +12,7 @@
     <tbody>
     {% for row in ranking %}
         <tr>
-            <td>{{ forloop.counter }}</td>
+            <td>{{ forloop.counter0|add:delta }}</td>
             <td><img class="avatar" src="{% static 'images/logo.gif' %}" /></td>
             <td>{{ row.user__username }}</td>
             <td class="text-right score"><strong>{{ row.total }}</strong></td>

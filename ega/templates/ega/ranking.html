@@ -21,7 +21,7 @@
 
 <div class="row">
     <div class="col-md-8">
-        {% include 'ega/_ranking_table.html' %}
+        {% include 'ega/_ranking_table.html' with delta=ranking.start_index %}
 
         <div class="text-center">
             <ul class="pagination">

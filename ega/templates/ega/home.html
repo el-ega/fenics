@@ -15,7 +15,7 @@
                 Posiciones
                 <small><a class="pull-right title-action" href="{% url 'ega-ranking' tournament.slug %}">ver tabla completa</a></small>
             </h3>
-            {% include 'ega/_ranking_table.html' with ranking=top_ranking %}
+            {% include 'ega/_ranking_table.html' with ranking=top_ranking delta=1 %}
         </div>
 
         <div class="col-md-5">
