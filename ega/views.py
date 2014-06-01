@@ -1,5 +1,3 @@
-import twitter
-
 from allauth.account.forms import LoginForm, SignupForm
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm

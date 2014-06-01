@@ -13,17 +13,12 @@ Invitar amigos a el Ega{% endif %}
 <form method="POST" action="" class="form-horizontal" role="form">
     {% csrf_token %}
 
+    {% include 'ega/_form_errors_all_snippet.html' %}
+
     {% for field in form %}
-    <div class="form-group {% if field.errors %}has-error{% endif %}">
-    <label class="pull-left control-label" for="{{ field.id }}">
-        {{ field.label }}
-    {% for error in field.errors %}
-        {{ error }}
+    {% include 'ega/_field_snippet.html' %}
     {% endfor %}
-    </label>
-    {{ field }}
-    </div>
-    {% endfor %}
+
     <div class="text-center">
         <button name="invite" type="submit" class="btn btn-primary">Invitar amigos</button>
         </br>

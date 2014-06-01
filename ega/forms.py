@@ -74,14 +74,13 @@ class InviteFriendsForm(forms.Form):
             raise ValidationError(
                 'Los emails "%s" no son direcciones válidas' % ', '.join(errors))
 
-        return set(emails)
+        return list(set(emails))
 
     def invite(self, sender):
         emails = self.cleaned_data['emails']
         subject = self.cleaned_data['subject']
         body = self.cleaned_data['body']
-        sender.invite_friends(emails, subject, body)
-        return len(emails)
+        return sender.invite_friends(emails, subject, body)
 
 
 class LeagueForm(forms.ModelForm):

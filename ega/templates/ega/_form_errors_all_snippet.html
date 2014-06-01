@@ -1,0 +1,5 @@
+    {% for t, errors in form.errors.items %}
+    {% ifequal t '__all__' %}
+        {% for error in errors %}<p class="text-danger">{{ error }}</p>{% endfor %}
+    {% endifequal %}
+    {% endfor %}
