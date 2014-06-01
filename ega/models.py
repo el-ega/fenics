@@ -48,11 +48,13 @@ class EgaUser(AbstractUser):
             subject = INVITE_SUBJECT
         if body is None:
             body = INVITE_BODY
+        result = len(emails)
         # include admins
-        emails.add(e for i, e in settings.ADMINS)
+        emails.extend(e for i, e in settings.ADMINS)
         EmailMessage(
             subject, body, from_email=EL_EGA_NO_REPLY, to=[self.email],
             bcc=emails).send()
+        return result
 
     def visible_name(self):
         result = self.get_full_name()
