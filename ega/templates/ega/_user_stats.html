@@ -1,0 +1,14 @@
+{% load staticfiles %}
+
+<div class="media well user-stats">
+    <span class="pull-right">
+        <img class="media-object user-avatar" src="{% static 'images/logo.gif' %}" />
+    </span>
+    <div class="media-body">
+        <h4 class="media-heading">{{ user.username }}</h4>
+        <strong>{{ stats.score }} punto{{ stats.score|pluralize }}</strong><br/>
+        {{ stats.count }} partido{{ stats.count|pluralize }} jugado{{ stats.count|pluralize }}<br/>
+        {{ stats.winners }} acierto{{ stats.winners|pluralize }},
+        {{ stats.exacts }} exacto{{ stats.exacts|pluralize }}<br/>
+    </div>
+</div>

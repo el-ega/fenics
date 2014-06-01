@@ -1,0 +1,39 @@
+{% for prediction in history %}
+    {% with match=prediction.match %}
+    {% with home=match.home away=match.away %}
+        <div class="row text-center homepage-match-row">
+            <div class="col-xs-2 col-xs-offset-1">
+                {% if home.image %}
+                <img class="team-image-xsmall" src="{{ home.image.url }}" />
+                {% endif %}
+            </div>
+            <div class="col-xs-2">
+                <strong>{{ home }}</strong>
+            </div>
+            <div class="col-xs-1">
+                <strong>{{ match.home_goals }}</strong>
+            </div>
+            <div class="col-xs-1">
+                <strong>{{ match.away_goals }}</strong>
+            </div>
+            <div class="col-xs-2">
+                <strong>{{ away }}</strong>
+            </div>
+            <div class="col-xs-2">
+                {% if away.image %}
+                <img class="team-image-xsmall" src="{{ away.image.url }}" />
+                {% endif %}
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-xs-10 col-xs-offset-1">
+                {% if prediction.home_goals != None and prediction.away_goals != None %}
+                <small>
+                Pronóstico: {{ prediction.home_goals }} - {{ prediction.away_goals }}
+                ({{ prediction.score }} punto{{ prediction.score|pluralize }})</small>
+                {% endif %}
+            </div>
+        </div>
+    {% endwith %}
+    {% endwith %}
+{% endfor %}

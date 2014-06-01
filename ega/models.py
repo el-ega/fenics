@@ -60,13 +60,22 @@ class EgaUser(AbstractUser):
             result = self.username
         return result
 
+    def history(self, tournament):
+        """Return matches predictions for given tournament."""
+        now = datetime.utcnow()
+        predictions = Prediction.objects.filter(
+            match__tournament=tournament, user=self, match__when__lte=now,
+            match__home_goals__isnull=False, match__away_goals__isnull=False)
+        return predictions
+
     def stats(self, tournament):
         """User stats for given tournament."""
         stats = {}
         ranking = Prediction.objects.filter(
-            match__tournament=tournament, user=self, score__gt=0)
-        stats['winners'] = len(ranking)
+            match__tournament=tournament, user=self, score__gte=0)
+        stats['count'] = len(ranking)
         stats['score'] = sum(r.score for r in ranking)
+        stats['winners'] = sum(r.score for r in ranking if r.score > 0)
         stats['exacts'] = sum(1 for r in ranking
                               if r.score == EXACTLY_MATCH_POINTS)
         return stats
@@ -289,7 +298,7 @@ def update_related_predictions(sender, instance, **kwargs):
     else:
         predictions.exclude(
             home_goals=home_goals, away_goals=away_goals).filter(
-                home_goals=F('away_goals')).update(
+                home_goals=F('away_goals'), home_goals__isnull=False).update(
                     score=WINNER_MATCH_POINTS)
 
     # update starred predictions
