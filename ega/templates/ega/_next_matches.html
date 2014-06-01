@@ -1,0 +1,29 @@
+{% for match in matches %}
+    {% with home=match.home away=match.away %}
+        <div class="row text-center homepage-match-row">
+            <div class="col-xs-2 col-xs-offset-1">
+                {% if home.image %}
+                <img class="team-image-xsmall" src="{{ home.image.url }}" />
+                {% endif %}
+            </div>
+            <div class="col-xs-2">
+                <strong>{{ home }}</strong>
+            </div>
+            <div class="col-xs-2">
+            </div>
+            <div class="col-xs-2">
+                <strong>{{ away }}</strong>
+            </div>
+            <div class="col-xs-2">
+                {% if away.image %}
+                <img class="team-image-xsmall" src="{{ away.image.url }}" />
+                {% endif %}
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-xs-10 col-xs-offset-1">
+                <small>Grupo H | {{ match.when|date:"l d F f" }} | Estadio Foo</small>
+            </div>
+        </div>
+    {% endwith %}
+{% endfor %}

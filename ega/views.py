@@ -14,7 +14,7 @@ from django.template.response import TemplateResponse
 from django.utils.text import slugify
 from django.views.decorators.http import require_GET, require_http_methods
 
-from ega.constants import RANKING_TEAMS_PER_PAGE
+from ega.constants import DEFAULT_TOURNAMENT, RANKING_TEAMS_PER_PAGE
 from ega.forms import InviteFriendsForm, LeagueForm, PredictionForm
 from ega.models import EgaUser, League, LeagueMember, Prediction, Tournament
 
@@ -26,7 +26,7 @@ def get_absolute_url(url):
 @login_required
 def home(request):
     tournament = get_object_or_404(
-        Tournament, slug=game_settings.DEFAULT_TOURNAMENT, published=True)
+        Tournament, slug=DEFAULT_TOURNAMENT, published=True)
 
     top_ranking = tournament.ranking()[:10]
     matches = tournament.next_matches()[:3]
@@ -161,7 +161,7 @@ def history(request, slug):
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
 
     user_history = request.user.history(tournament)
-    paginator = Paginator(user_history, game_settings.RANKING_TEAMS_PER_PAGE)
+    paginator = Paginator(user_history, RANKING_TEAMS_PER_PAGE)
 
     page = request.GET.get('page')
     try:
