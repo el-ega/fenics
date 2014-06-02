@@ -2,14 +2,12 @@
     {{ field }}
 {% else %}
 <div class="form-group {% if field.errors %}has-error{% endif %}">
-    <label class="col-sm-2 col-sm-offset-1" for="{{ field.id }}">{{ field.label }}</label>
-    <div class="col-sm-8">
-        {{ field }}
-        {% if field.errors %}
-            <span class="control-label">
-                {% for error in field.errors %}{{ error }}{% endfor %}
-            </span>
-        {% endif %}
-    </div>
+    <label for="{{ field.id_for_label }}">{{ field.label }}</label><br/>
+    {{ field }}
+    {% if field.errors %}
+        <span class="control-label">
+            {% for error in field.errors %}{{ error }}{% endfor %}
+        </span>
+    {% endif %}
 </div>
 {% endif %}

@@ -14,12 +14,10 @@
 <p>Por favor confirmá que <a href="mailto:{{email}}">{{ confirmation.email_address.email }}</a>
 es una dirección válida para el usuario {{ user_display }}.</p>
 
-<form method="POST" action="{% url 'account_confirm_email' confirmation.key %}" class="form-horizontal">
+<form method="POST" action="{% url 'account_confirm_email' confirmation.key %}">
     {% csrf_token %}
     <div class="form-group">
-        <div class="col-sm-offset-3 col-sm-4">
-            <button type="submit" class="btn btn-primary">{% trans 'Confirm' %}</button>
-        </div>
+        <button type="submit" class="btn btn-primary">{% trans 'Confirm' %}</button>
     </div>
 </form>
 
