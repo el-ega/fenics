@@ -1,0 +1,29 @@
+{% extends "socialaccount/base.html" %}
+
+{% load i18n %}
+{% load url from future %}
+
+{% block content-title %}{% trans "Sign Up" %}{% endblock %}
+
+{% block content %}
+
+<p>Estás por loguearte en {{ site.name }} usando tu cuenta de
+{{ account.get_provider.name }}, lo único que falta es que por favor
+completes los siguientes datos:</p>
+
+<form id="signup_form" method="POST" action="{% url 'socialaccount_signup' %}">
+    {% csrf_token %}
+
+    {% include 'ega/_form_errors_all_snippet.html' %}
+
+    {% for field in form %}
+    {% include 'ega/_field_snippet.html' %}
+    {% endfor %}
+
+    {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    {% endif %}
+    <button type="submit" class="btn btn-primary">{% trans "Sign Up" %}</button>
+</form>
+
+{% endblock %}
