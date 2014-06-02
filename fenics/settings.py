@@ -132,6 +132,7 @@ ADMINS = [
 ]
 AUTH_USER_MODEL = 'ega.EgaUser'
 ACCOUNT_EMAIL_REQUIRED = True
+SOCIALACCOUNT_QUERY_EMAIL = True
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 LOGIN_REDIRECT_URL = 'home'
 SITE_ID = 1
