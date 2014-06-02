@@ -30,6 +30,14 @@ body {
     margin-top: 10px;
 }
 
+.providers-login {
+    margin: 25px;
+}
+
+.login-form {
+    max-width: 175px;
+}
+
 table.ranking tbody tr td {
     vertical-align: middle;
 }

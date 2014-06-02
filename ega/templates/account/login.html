@@ -10,7 +10,7 @@
 
 {% block content %}
 
-<div class="text-center" style="margin-bottom: 50px">
+<div class="text-center">
     <h2>El mundial está cerca...</h2>
     <p><small>el Ega | El juego de pronósticos deportivos</small></p>
 
@@ -19,7 +19,7 @@
 </div>
 
 {% if socialaccount.providers  %}
-<div class="text-center" style="margin-bottom: 20px">
+<div class="text-center providers-login">
     <p><label>Logueate con</label></p>
     <div>
     {% for provider in socialaccount.providers %}
@@ -53,7 +53,7 @@
 
     {% include 'ega/_form_errors_all_snippet.html' %}
 
-    <div class="center-block" style="max-width: 180px;text-align:left">
+    <div class="center-block text-left login-form">
     {% for field in form %}
         {% if field.name == 'remember' %}
             {{ field }}
