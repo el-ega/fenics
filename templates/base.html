@@ -49,17 +49,7 @@
                     <li><a href="{% url 'invite' %}">Invitá gente</a></li>
                     <li><a href="{% url 'leagues' %}">Ligas de amigos</a></li>
                     <li><a href="{% url 'account_email' %}"><span class="glyphicon glyphicon-user"></span> {{ user }}</a></li>
-                    <li>
-
-<form method="POST" action="{% url 'account_logout' %}" class="navbar-form navbar-left">
-    {% csrf_token %}
-    {% if redirect_field_value %}
-    <input type="hidden" name="{{redirect_field_name}}" value="{{redirect_field_value}}"/>
-    {% endif %}
-    <button type="submit" class="btn btn-link">{% trans "Sign Out" %}</button>
-</form>
-
-                    </li>
+                    <li><a href="{% url 'logout' %}">{% trans "Sign Out" %}</a></li>
                     {% else %}
                     <li><a href="{% url 'account_login' %}">{% trans "Sign In" %}</a></li>
                     <li><a href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a></li>

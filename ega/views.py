@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
+
 from allauth.account.forms import LoginForm, SignupForm
-from django.contrib import messages
+from django.contrib import auth, messages
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.models import Site
@@ -20,6 +22,11 @@ from ega.models import EgaUser, League, LeagueMember, Prediction, Tournament
 def get_absolute_url(url):
     return Site.objects.get_current().domain + url
 
+
+def logout(request):
+    auth.logout(request)
+    messages.success(request, 'Cerraste sesión exitosamente! Vuelva prontos.')
+    return HttpResponseRedirect(reverse('home'))
 
 @login_required
 def home(request):
