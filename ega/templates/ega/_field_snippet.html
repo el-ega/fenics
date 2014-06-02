@@ -1,13 +1,15 @@
-    {% if field.is_hidden %}
+{% if field.is_hidden %}
     {{ field }}
-    {% else %}
-    <div class="form-group {% if field.errors %}has-error{% endif %}">
-    <label class="control-label" for="{{ field.id }}">{{ field.label }}</label>
-    {{ field }}
-    {% if field.errors %}
-    <span class="control-label">
-    {% for error in field.errors %}{{ error }}{% endfor %}
-    </span>
-    {% endif %}
+{% else %}
+<div class="form-group {% if field.errors %}has-error{% endif %}">
+    <label class="col-sm-2 col-sm-offset-1" for="{{ field.id }}">{{ field.label }}</label>
+    <div class="col-sm-8">
+        {{ field }}
+        {% if field.errors %}
+            <span class="control-label">
+                {% for error in field.errors %}{{ error }}{% endfor %}
+            </span>
+        {% endif %}
     </div>
-    {% endif %}
+</div>
+{% endif %}
