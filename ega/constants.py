@@ -10,12 +10,18 @@ EMAILS_PLACEHOLDER = 'Los emails de tus amigos, separados por coma'
 INVITE_BODY = """Hola!
 
 Estoy jugando en el Ega, donde pronosticamos torneos varios de fútbol.
-Estamos a full arrancando con el mundial Brasil 2014, estaría bueno si
-venís a participar conmigo.
-
+Estamos a full arrancando con el mundial Brasil 2014, estaría bueno si venís a
+participar conmigo.
+%(extra_text)s
 Podés unirte siguiendo el link: %(url)s
 
 Saludos!
+%(inviter)s"""
+
+INVITE_LEAGUE = """
+Para hacer las cosas más interesantes, creé una liga de amigos, en donde vamos
+a tener una tabla de posiciones separada de la general y vamos a poder comentar
+y discutir opiniones entre nosotros. Esta liga se llama %(league_name)s.
 """
 
 INVITE_SUBJECT = 'Sumate a "el Ega"'
