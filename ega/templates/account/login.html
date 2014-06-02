@@ -3,26 +3,45 @@
 {% load url from future %}
 {% load i18n %}
 {% load account %}
+{% load socialaccount %}
+{% load staticfiles %}
 
-{% block content-title %}{% trans "Sign In" %}{% endblock %}
+{% block content-title %}{% endblock %}
 
 {% block content %}
 
-{% if socialaccount.providers  %}
-<p>Podés loguearte con algunos de los proveedores listados a continuación (si
-ya tenés una cuenta):</p>
-<div class="socialaccount_ballot">
+<div class="text-center">
+    <h2>El mundial está cerca...</h2>
+    <p><small>el Ega | El juego de pronósticos deportivos</small></p>
 
-  <ul class="socialaccount_providers">
-    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-  </ul>
-
+    <iframe style="width: 149px; height: 28px;" data-twttr-rendered="true" title="Twitter Follow Button" class="twitter-follow-button twitter-follow-button" src="http://platform.twitter.com/widgets/follow_button.1401325387.html#_=1401746795122&amp;id=twitter-widget-0&amp;lang=en&amp;screen_name=elEgaOk&amp;show_count=false&amp;show_screen_name=true&amp;size=l" allowtransparency="true" scrolling="no" id="twitter-widget-0" frameborder="0"></iframe>
+    <script src="//platform.twitter.com/widgets.js" id="twitter-wjs"></script><script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 </div>
 
-{% include "socialaccount/snippets/login_extra.html" %}
+{% if socialaccount.providers  %}
+<div class="text-center providers-login">
+    <p><label>Logueate con</label></p>
+    <div>
+    {% for provider in socialaccount.providers %}
+        {% if provider.id == 'twitter' %}
+        <a title="Twitter" href="{% provider_login_url 'twitter' process='login' %}">
+            <img src="{% static 'images/twitter.png' %}" /></a>
+        {% endif %}
+        {% if provider.id == 'google' %}
+        <a title="Google" href="{% provider_login_url 'google' process='login' %}">
+            <img src="{% static 'images/google.png' %}" /></a>
+        {% endif %}
+        {% if provider.id == 'facebook' %}
+        <a title="Facebook" href="{# provider_login_url 'facebook' process='login' #}">
+            <img src="{% static 'images/facebook.png' %}" /></a>
+        {% endif %}
+    {% endfor %}
+    </div>
+    {% include "socialaccount/snippets/login_extra.html" %}
+</div>
 
-<p>O podés registrarte en {{ site.name }} siguiendo
-<a href="{{ signup_url }}">este link</a> y luego iniciando sesión acá:</p>
+<div class="text-center">
+<p>O podés <a href="{{ signup_url }}">registrarte</a> y luego iniciar sesión acá:</p>
 
 {% else %}
 <p>{% blocktrans %}If you have not created an account yet, then please
@@ -34,15 +53,25 @@ ya tenés una cuenta):</p>
 
     {% include 'ega/_form_errors_all_snippet.html' %}
 
+    <div class="center-block text-left login-form">
     {% for field in form %}
-    {% include 'ega/_field_snippet.html' %}
+        {% if field.name == 'remember' %}
+            {{ field }}
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {% else %}
+            {% include 'ega/_field_snippet.html' %}
+        {% endif %}
     {% endfor %}
+    </div>
 
     {% if redirect_field_value %}
     <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
     {% endif %}
-    <a href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
-    <button type="submit" class="btn btn-default">{% trans "Sign In" %}</button>
-</form>
 
+    <div class="form-group">
+        <button type="submit" class="btn btn-default">{% trans "Sign In" %}</button><br/>
+        <a href="{% url 'account_reset_password' %}">Olvidaste tu contraseña?</a>
+    </div>
+</form>
+</div>
 {% endblock %}

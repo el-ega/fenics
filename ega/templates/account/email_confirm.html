@@ -16,7 +16,9 @@ es una dirección válida para el usuario {{ user_display }}.</p>
 
 <form method="POST" action="{% url 'account_confirm_email' confirmation.key %}">
     {% csrf_token %}
-    <button type="submit" class="btn btn-primary">{% trans 'Confirm' %}</button>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">{% trans 'Confirm' %}</button>
+    </div>
 </form>
 
 {% else %}
