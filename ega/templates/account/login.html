@@ -32,7 +32,7 @@
             <img src="{% static 'images/google.png' %}" /></a>
         {% endif %}
         {% if provider.id == 'facebook' %}
-        <a title="Facebook" href="{# provider_login_url 'facebook' process='login' #}">
+        <a title="Facebook" href="{% provider_login_url 'facebook' process='login' %}">
             <img src="{% static 'images/facebook.png' %}" /></a>
         {% endif %}
     {% endfor %}
