@@ -11,10 +11,15 @@ from django.forms.models import modelformset_factory
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.template.response import TemplateResponse
-from django.utils.text import slugify
 from django.views.decorators.http import require_GET, require_http_methods
 
-from ega.constants import DEFAULT_TOURNAMENT, RANKING_TEAMS_PER_PAGE
+from ega.constants import (
+    DEFAULT_TOURNAMENT,
+    INVITE_BODY,
+    INVITE_LEAGUE,
+    INVITE_SUBJECT,
+    RANKING_TEAMS_PER_PAGE,
+)
 from ega.forms import InviteFriendsForm, LeagueForm, PredictionForm
 from ega.models import EgaUser, League, LeagueMember, Prediction, Tournament
 
@@ -52,9 +57,8 @@ def invite_friends(request, league_slug=None):
         league = get_object_or_404(League, slug=league_slug)
         kwargs['league_slug'] = league.slug
 
-    invite_url = get_absolute_url(reverse('join', kwargs=kwargs))
     if request.method == 'POST':
-        form = InviteFriendsForm(invite_url, request.POST)
+        form = InviteFriendsForm(request.POST)
         if form.is_valid():
             emails = form.invite(sender=request.user)
             if emails > 1:
@@ -64,7 +68,20 @@ def invite_friends(request, league_slug=None):
             messages.success(request, msg)
             return HttpResponseRedirect(reverse('home'))
     else:
-        form = InviteFriendsForm(invite_url)
+        subject = INVITE_SUBJECT
+        extra_text = ''
+        if league:
+            subject += ', jugando en mi liga de amigos %s' % league.name
+            extra_text = INVITE_LEAGUE % dict(league_name=league.name)
+
+        invite_url = get_absolute_url(reverse('join', kwargs=kwargs))
+        initial = dict(
+            subject=subject,
+            body=INVITE_BODY % dict(
+                extra_text=extra_text, url=invite_url,
+                inviter=request.user.visible_name()),
+        )
+        form = InviteFriendsForm(initial=initial)
 
     return render(request, 'ega/invite.html', dict(form=form, league=league))
 
@@ -94,9 +111,7 @@ def leagues(request):
     if request.method == 'POST':
         form = LeagueForm(request.POST)
         if form.is_valid():
-            league = form.save(commit=False)
-            league.slug = slugify(league.name)
-            league.save()
+            league = form.save()
             LeagueMember.objects.create(
                 user=request.user, league=league, is_owner=True)
             return HttpResponseRedirect(

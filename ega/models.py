@@ -9,10 +9,11 @@ from functools import partial
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.mail.message import EmailMessage
-from django.db import models
+from django.db import IntegrityError, models
 from django.db.models import Count, F, Q, Sum
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils.text import slugify
 
 from ega.constants import (
     EL_EGA_NO_REPLY,
@@ -48,13 +49,12 @@ class EgaUser(AbstractUser):
             subject = INVITE_SUBJECT
         if body is None:
             body = INVITE_BODY
-        result = len(emails)
-        # include admins
-        emails.extend(e for i, e in settings.ADMINS)
-        EmailMessage(
-            subject, body, from_email=EL_EGA_NO_REPLY, to=[self.email],
-            bcc=emails).send()
-        return result
+        for email in emails:
+            # include admins
+            EmailMessage(
+                subject, body, from_email=EL_EGA_NO_REPLY, to=[email],
+                cc=[e for _, e in settings.ADMINS]).send()
+        return len(emails)
 
     def visible_name(self):
         result = self.get_full_name()
@@ -261,6 +261,20 @@ class League(models.Model):
     def ranking(self):
         ranking = self.tournament.ranking().filter(user__in=self.members)
         return ranking
+
+    def save(self, *args, **kwargs):
+        # generate slug
+        counter = 0
+        self.slug = slug = slugify(self.name)
+        while True:
+            try:
+                result = super(League, self).save(*args, **kwargs)
+            except IntegrityError:
+                counter += 1
+                self.slug = '%s-%s' % (slug, counter)
+            else:
+                break
+        return result
 
 
 class LeagueMember(models.Model):
