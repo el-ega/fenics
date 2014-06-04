@@ -9,6 +9,10 @@ body {
     margin-bottom: 90px;
 }
 
+dt {
+    margin-top: 10px;
+}
+
 .title {
     border-bottom: 1px solid #EEE;
     margin-bottom: 20px;
