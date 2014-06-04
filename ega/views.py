@@ -15,7 +15,12 @@ from django.utils.text import slugify
 from django.views.decorators.http import require_GET, require_http_methods
 
 from ega.constants import DEFAULT_TOURNAMENT, RANKING_TEAMS_PER_PAGE
-from ega.forms import InviteFriendsForm, LeagueForm, PredictionForm
+from ega.forms import (
+    EgaUserForm,
+    InviteFriendsForm,
+    LeagueForm,
+    PredictionForm,
+)
 from ega.models import EgaUser, League, LeagueMember, Prediction, Tournament
 
 
@@ -41,6 +46,21 @@ def home(request):
     return render(request, 'ega/home.html',
                   {'tournament': tournament, 'top_ranking': top_ranking,
                    'matches': matches, 'history': history, 'stats': stats})
+
+@require_http_methods(('GET', 'POST'))
+@login_required
+def profile(request):
+    if request.method == 'POST':
+        form = EgaUserForm(
+            instance=request.user, data=request.POST, files=request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request, 'Profile actualizado.')
+            return HttpResponseRedirect(reverse('profile'))
+    else:
+        form = EgaUserForm(instance=request.user)
+    return render(request, 'ega/profile.html', dict(form=form))
 
 
 @require_http_methods(('GET', 'POST'))

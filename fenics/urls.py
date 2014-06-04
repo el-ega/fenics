@@ -8,7 +8,6 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', 'ega.views.home'),
-    url(r'^accounts/logout/', 'ega.views.logout', name='logout'),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^ega/', include('ega.urls')),

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content-title %}{% endblock %}
+
+{% block content %}
+
+<div class="media">
+    <span class="pull-right">
+        <img class="media-object user-avatar" src="{{ request.user.avatar.url }}" />
+    </span>
+    <div class="media-body">
+
+        <form method="POST" action="" class="form-horizontal" role="form" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {% include 'ega/_form_errors_all_snippet.html' %}
+
+            {% for field in form %}
+            {% include 'ega/_field_snippet.html' %}
+            {% endfor %}
+
+            <div class="text-center">
+                <button name="update" type="submit" class="btn btn-primary">Actualizar profile</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}
