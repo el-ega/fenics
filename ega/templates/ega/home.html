@@ -5,18 +5,18 @@
 
 {% block content %}
     <div class="row">
-        {% if matches.count == 0%}
+        {% if matches.count == 0 %}
         <div class="col-md-9 text-center">
             <img style="margin-top: 50px" src="{% static 'images/logo.gif' %}" />
             <p><h3>Los partidos estarán disponibles en los próximos días</h3></p>
         </div>
         {% else %}
         <div class="col-md-4">
-            {% if top_ranking %}
-                <div class="visible-xs">
-                    {% include 'ega/_user_stats.html' %}
-                </div>
+            <div class="visible-xs">
+                {% include 'ega/_user_stats.html' %}
+            </div>
 
+            {% if top_ranking %}
                 <h3 class="title">
                     Posiciones
                     <small><a class="pull-right title-action" href="{% url 'ega-ranking' tournament.slug %}">ver tabla completa</a></small>
