@@ -41,19 +41,14 @@ class InviteFriendsForm(forms.Form):
 
     emails = forms.CharField(
         widget=forms.Textarea(
-            attrs={'rows': 3, 'class': 'form-control',
+            attrs={'rows': 1, 'class': 'form-control',
                    'placeholder': EMAILS_PLACEHOLDER}))
     subject = forms.CharField(
-        initial=INVITE_SUBJECT,
         widget=forms.TextInput(attrs={'class': 'form-control'}),
     )
     body = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 10, 'class': 'form-control'}),
     )
-
-    def __init__(self, invite_url, *args, **kwargs):
-        super(InviteFriendsForm, self).__init__(*args, **kwargs)
-        self.fields['body'].initial = INVITE_BODY % dict(url=invite_url)
 
     def clean_emails(self):
         emails = []
@@ -72,7 +67,8 @@ class InviteFriendsForm(forms.Form):
                 'El email "%s" no es una dirección válida.' % errors[0])
         elif len(errors) > 1:
             raise ValidationError(
-                'Los emails "%s" no son direcciones válidas' % ', '.join(errors))
+                'Los emails "%s" no son direcciones válidas' % ', '.join(
+                    errors))
 
         return list(set(emails))
 

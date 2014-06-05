@@ -1,13 +1,13 @@
-    {% if field.is_hidden %}
+{% if field.is_hidden %}
     {{ field }}
-    {% else %}
-    <div class="form-group {% if field.errors %}has-error{% endif %}">
-    <label class="control-label" for="{{ field.id }}">{{ field.label }}</label>
+{% else %}
+<div class="form-group {% if field.errors %}has-error{% endif %}">
+    <label for="{{ field.id_for_label }}">{{ field.label }}</label><br/>
     {{ field }}
     {% if field.errors %}
-    <span class="control-label">
-    {% for error in field.errors %}{{ error }}{% endfor %}
-    </span>
+        <span class="control-label">
+            {% for error in field.errors %}{{ error }}{% endfor %}
+        </span>
     {% endif %}
-    </div>
-    {% endif %}
+</div>
+{% endif %}
