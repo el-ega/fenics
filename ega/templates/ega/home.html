@@ -8,7 +8,9 @@
         {% if matches.count == 0 %}
         <div class="col-md-9 text-center">
             <img style="margin-top: 50px" src="{% static 'images/logo.gif' %}" />
-            <p><h3>Los partidos estarán disponibles en los próximos días</h3></p>
+            <p><h3>Los partidos estarán disponibles en los próximos días</h3>
+               Mientras podés ir armando tus <a href="{% url 'leagues' %}">ligas de amigos</a>!
+            </p>
         </div>
         {% else %}
         <div class="col-md-4">
@@ -49,10 +51,12 @@
                 {% include 'ega/_user_stats.html' %}
             </div>
 
+            {% comment %}
             <h3 class="title">Noticias <small>fifa.com</small></h3>
             <p>
             <strong>Ryan, de una caravana a ir a Brasil con los Socceroos</strong><br/>
             <small>A sus 22 años, Mat Ryan será el encargado de guardar la portería australiana en Brasil 2014. FIFA.com te invita a conocer la fulgurante trayectoria de un arquero diferente. "Tengo el mejor trabajo del mundo", nos asegura.<br/><a href="#">Leer más</a></small></p>
+            {% endcomment %}
         </div>
     </div>
 
@@ -61,7 +65,7 @@
         <div class="col-md-12">
             <div id="disqus_thread"></div>
             <script type="text/javascript">
-                var disqus_shortname = 'elega-staging';
+                var disqus_shortname = '{{ DISQUS_SHORTNAME }}';
 
                 /* * * DON'T EDIT BELOW THIS LINE * * */
                 (function() {
