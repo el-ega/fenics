@@ -300,6 +300,9 @@ class LeagueMember(models.Model):
     class Meta:
         unique_together = ('user', 'league')
 
+    def __unicode__(self):
+        return unicode(self.user)
+
 
 @receiver(post_save, sender=Match, dispatch_uid="update-scores")
 def update_related_predictions(sender, instance, **kwargs):
