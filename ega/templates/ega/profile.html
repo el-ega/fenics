@@ -7,7 +7,11 @@
 
 <div>
     <span class="pull-right">
+        {% if request.user.avatar %}
         <img class="user-avatar-big" src="{{ request.user.avatar.url }}" />
+        {% else %}
+        <img class="user-avatar-big" src="{% static 'images/unknown.png' %}" />
+        {% endif %}
     </span>
     <div>
         <label>Emails</label>
