@@ -259,11 +259,18 @@ class League(models.Model):
     members = models.ManyToManyField(
         settings.AUTH_USER_MODEL, through='LeagueMember')
 
+    class Meta:
+        ordering = ['name']
+
     def __unicode__(self):
         return self.name
 
+    @property
+    def owner(self):
+        return LeagueMember.objects.get(league=self, is_owner=True).user
+
     def ranking(self):
-        ranking = self.tournament.ranking().filter(user__in=self.members)
+        ranking = self.tournament.ranking().filter(user__in=self.members.all())
         return ranking
 
     def save(self, *args, **kwargs):

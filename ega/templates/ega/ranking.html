@@ -10,11 +10,13 @@
 <div class="row">
     <div class="col-md-8">
         <ul class="nav nav-tabs">
-        <li class="active"><a href="#">General</a></li>
-        {% comment %}
-        <li><a href="#">Mi Liga 1</a></li>
-        <li><a href="#">Mi Liga 2</a></li>
-        {% endcomment %}
+        <li class="{% if not league %}active{% endif %}">
+            <a href="{% url 'ega-ranking' tournament.slug %}">General</a></li>
+        {% for l in request.user.league_set.all %}
+            <li class="{% if league == l %}active{% endif %}">
+                <a href="{% url 'ega-league-ranking' tournament.slug l.slug %}">{{ l.name }}</a>
+            </li>
+        {% endfor %}
         </ul>
     </div>
 </div>

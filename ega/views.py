@@ -78,6 +78,8 @@ def invite_friends(request, league_slug=None):
     league = None
     if league_slug:
         league = get_object_or_404(League, slug=league_slug)
+        if league.owner != request.user:
+            raise Http404
         kwargs['league_slug'] = league.slug
     invite_url = get_absolute_url(reverse('join', kwargs=kwargs))
 
@@ -147,6 +149,21 @@ def leagues(request):
         request, 'ega/leagues.html', dict(leagues=leagues, form=form))
 
 
+@require_GET
+@login_required
+def league_home(request, slug, league_slug):
+    tournament = get_object_or_404(Tournament, slug=slug, published=True)
+    league = get_object_or_404(
+        League, tournament=tournament, slug=league_slug, members=request.user)
+
+    top_ranking = league.ranking()[:10]
+    stats = request.user.stats(tournament)
+
+    return render(request, 'ega/league_home.html',
+                  {'tournament': tournament, 'league': league,
+                   'top_ranking': top_ranking, 'stats': stats})
+
+
 @login_required
 def next_matches(request, slug):
     """Return coming matches for the specified tournament."""
@@ -177,11 +194,16 @@ def next_matches(request, slug):
 
 
 @login_required
-def ranking(request, slug):
+def ranking(request, slug, league_slug=None):
     """Return ranking and stats for the specified tournament."""
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
+    league = None
 
-    scores = tournament.ranking()
+    if league_slug is not None:
+        league = get_object_or_404(
+            League, tournament=tournament, slug=league_slug)
+
+    scores = league.ranking() if league else tournament.ranking()
     paginator = Paginator(scores, RANKING_TEAMS_PER_PAGE)
 
     page = request.GET.get('page')
@@ -196,7 +218,8 @@ def ranking(request, slug):
 
     return render(
         request, 'ega/ranking.html',
-        {'tournament': tournament, 'ranking': ranking, 'stats': stats})
+        {'tournament': tournament, 'league': league,
+         'ranking': ranking, 'stats': stats})
 
 
 @login_required
