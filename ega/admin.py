@@ -3,6 +3,7 @@ from django.contrib import admin
 from ega.models import (
     EgaUser,
     League,
+    LeagueMember,
     Match,
     Prediction,
     Team,
@@ -11,8 +12,14 @@ from ega.models import (
 )
 
 
+class LeagueMemberInline(admin.TabularInline):
+    model = LeagueMember
+    extra = 0
+
+
 class LeagueAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug')
+    inlines = [LeagueMemberInline]
 
 
 class TeamAdmin(admin.ModelAdmin):

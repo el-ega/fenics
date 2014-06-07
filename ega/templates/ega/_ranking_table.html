@@ -13,7 +13,12 @@
     {% for row in ranking %}
         <tr>
             <td>{{ forloop.counter0|add:delta }}</td>
-            <td><img class="avatar" src="{% static 'images/logo.gif' %}" /></td>
+            <td>{% if row.user__avatar %}
+                <img class="avatar" src="{{ MEDIA_URL }}{{ row.user__avatar }}" />
+                {% else %}
+                <img class="avatar" src="{% static 'images/unknown.png' %}" />
+                {% endif %}
+            </td>
             <td>{{ row.user__username }}</td>
             <td class="text-right score"><strong>{{ row.total }}</strong></td>
         </tr>
