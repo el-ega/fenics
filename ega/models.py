@@ -57,7 +57,7 @@ class EgaUser(AbstractUser):
                 subject, body, from_email=settings.EL_EGA_NO_REPLY,
                 to=[settings.EL_EGA_ADMIN],
                 bcc=emails + [e for _, e in settings.ADMINS],
-                headers = {'Reply-To': self.email}).send()
+                headers={'Reply-To': self.email}).send()
         return len(emails)
 
     def visible_name(self):
