@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load news_tags %}
 {% load staticfiles %}
 
 {% block content-title %}{% endblock %}
@@ -50,9 +51,7 @@
             </div>
 
             <h3 class="title">Noticias <small>fifa.com</small></h3>
-            <p>
-            <strong>Ryan, de una caravana a ir a Brasil con los Socceroos</strong><br/>
-            <small>A sus 22 años, Mat Ryan será el encargado de guardar la portería australiana en Brasil 2014. FIFA.com te invita a conocer la fulgurante trayectoria de un arquero diferente. "Tengo el mejor trabajo del mundo", nos asegura.<br/><a href="#">Leer más</a></small></p>
+            {% latest_news latest=2 %}
         </div>
     </div>
 

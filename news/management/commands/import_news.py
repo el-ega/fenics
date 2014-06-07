@@ -21,8 +21,6 @@ class Command(BaseCommand):
         counter = 0
 
         for entry in feed['entries']:
-            tags = [t['term'] for t in entry.get('tags', [])]
-
             news_date = datetime.datetime(year=entry.updated_parsed.tm_year,
                                           month=entry.updated_parsed.tm_mon,
                                           day=entry.updated_parsed.tm_mday,
