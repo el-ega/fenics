@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 
+EL_EGA_ADMIN = 'admin@el-ega.com.ar'
 EL_EGA_NO_REPLY = 'noreply@el-ega.com.ar'
 
 EMAILS_PLACEHOLDER = 'Los emails de tus amigos, separados por coma'
