@@ -147,6 +147,20 @@ def leagues(request):
         request, 'ega/leagues.html', dict(leagues=leagues, form=form))
 
 
+@require_GET
+@login_required
+def league_home(request, slug, league_slug):
+    tournament = get_object_or_404(Tournament, slug=slug, published=True)
+    league = get_object_or_404(League, tournament=tournament, slug=league_slug)
+
+    top_ranking = league.ranking()[:10]
+    stats = request.user.stats(tournament)
+
+    return render(request, 'ega/league_home.html',
+                  {'tournament': tournament, 'league': league,
+                   'top_ranking': top_ranking, 'stats': stats})
+
+
 @login_required
 def next_matches(request, slug):
     """Return coming matches for the specified tournament."""

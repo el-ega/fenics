@@ -9,6 +9,8 @@ urlpatterns = patterns(
     url(r'^profile/verify/(?P<email>.+)/$', 'verify_email',
         name='verify-email'),
     url(r'^league/$', 'leagues', name='leagues'),
+    url(r'^(?P<slug>[\w-]+)/(?P<league_slug>[\w-]+)/$', 'league_home',
+        name='league-home'),
     url(r'^invite/$', 'invite_friends', name='invite'),
     url(r'^invite/(?P<league_slug>[\w-]+)/$', 'invite_friends',
         name='invite-league'),

@@ -6,6 +6,15 @@
 
 {% block content %}
     <div class="row">
+        <div class="col-md-3">
+            {% include 'ega/_user_stats.html' %}
+
+            <div class="hidden-xs">
+                <h3 class="title">Noticias <small>fifa.com</small></h3>
+                {% latest_news latest=2 %}
+            </div>
+        </div>
+
         {% if matches.count == 0 %}
         <div class="col-md-9 text-center">
             <img style="margin-top: 50px" src="{% static 'images/logo.gif' %}" />
@@ -14,20 +23,6 @@
             </p>
         </div>
         {% else %}
-        <div class="col-md-4">
-            <div class="visible-xs">
-                {% include 'ega/_user_stats.html' %}
-            </div>
-
-            {% if top_ranking %}
-                <h3 class="title">
-                    Posiciones
-                    <small><a class="pull-right title-action" href="{% url 'ega-ranking' tournament.slug %}">ver tabla completa</a></small>
-                </h3>
-                {% include 'ega/_ranking_table.html' with ranking=top_ranking delta=1 %}
-            {% endif %}
-        </div>
-
         <div class="col-md-5">
             {% if history %}
                 <h3 class="title">
@@ -45,16 +40,21 @@
                 {% include 'ega/_next_matches.html' %}
             {% endif %}
         </div>
+
+        <div class="col-md-4">
+            {% include 'ega/_user_stats.html' %}
+
+            {% if top_ranking %}
+                <h3 class="title">
+                    Posiciones
+                    <small><a class="pull-right title-action" href="{% url 'ega-ranking' tournament.slug %}">ver tabla completa</a></small>
+                </h3>
+                {% include 'ega/_ranking_table.html' with ranking=top_ranking delta=1 %}
+            {% endif %}
+        </div>
+
         {% endif %}
 
-        <div class="col-md-3">
-            <div class="hidden-xs">
-                {% include 'ega/_user_stats.html' %}
-            </div>
-
-            <h3 class="title">Noticias <small>fifa.com</small></h3>
-            {% latest_news latest=2 %}
-        </div>
     </div>
 
     <hr/>

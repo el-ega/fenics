@@ -33,7 +33,7 @@
 
 <h2 class="text-muted">Nueva liga</h2>
 
-<form method="POST" action="{% url 'leagues' %}" class="form-inline" role="form">
+<form method="POST" action="{% url 'leagues' %}" class="form-inline" role="form" id="new-league">
     {% csrf_token %}
 
     {% for field in form %}
