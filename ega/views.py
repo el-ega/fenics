@@ -54,6 +54,7 @@ def home(request):
                   {'tournament': tournament, 'top_ranking': top_ranking,
                    'matches': matches, 'history': history, 'stats': stats})
 
+
 @require_http_methods(('GET', 'POST'))
 @login_required
 def profile(request):
@@ -68,7 +69,6 @@ def profile(request):
     else:
         form = EgaUserForm(instance=request.user)
     return render(request, 'ega/profile.html', dict(form=form))
-
 
 
 @require_http_methods(('GET', 'POST'))
