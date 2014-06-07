@@ -64,7 +64,7 @@ def profile(request):
         if form.is_valid():
             form.save()
             messages.success(
-                request, 'Profile actualizado.')
+                request, 'Perfil actualizado.')
             return HttpResponseRedirect(reverse('profile'))
     else:
         form = EgaUserForm(instance=request.user)
@@ -156,7 +156,7 @@ def league_home(request, slug, league_slug):
     league = get_object_or_404(
         League, tournament=tournament, slug=league_slug, members=request.user)
 
-    top_ranking = league.ranking()[:10]
+    top_ranking = league.ranking()[:5]
     stats = request.user.stats(tournament)
 
     return render(request, 'ega/league_home.html',

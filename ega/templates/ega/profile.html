@@ -1,19 +1,19 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
-{% block content-title %}Tu perfil{% endblock %}
+{% block content-title %}{% endblock %}
 
 {% block content %}
 
-<div>
-    <span class="pull-right">
+<div class="row">
+    <div class="col-md-3 text-center">
         {% if request.user.avatar %}
         <img class="user-avatar-big" src="{{ request.user.avatar.url }}" />
         {% else %}
         <img class="user-avatar-big" src="{% static 'images/unknown.png' %}" />
         {% endif %}
-    </span>
-    <div>
+    </div>
+    <div class="col-md-6">
         <label>Emails</label>
         <ul class="list-unstyled">
         {% for email in request.user.emailaddress_set.all %}
@@ -35,8 +35,8 @@
                 {% include 'ega/_field_snippet.html' %}
             {% endfor %}
 
-            <div class="text-center">
-                <button name="update" type="submit" class="btn btn-primary">Actualizar profile</button>
+            <div>
+                <button name="update" type="submit" class="btn btn-primary">Actualizar perfil</button>
             </div>
         </form>
     </div>

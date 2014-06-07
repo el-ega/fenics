@@ -106,7 +106,8 @@ class Tournament(models.Model):
     def ranking(self):
         """Users ranking in the tournament."""
         ranking = Prediction.objects.filter(
-            match__tournament=self).values('user__username').annotate(
+            match__tournament=self).values(
+                'user__username', 'user__avatar').annotate(
                 total=Sum('score'), count=Count('id')).order_by('-total')
         return ranking
 
