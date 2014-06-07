@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load staticfiles %}
 
 {% block content-title %}
 {% if league %}
@@ -9,6 +10,15 @@ Invitar amigos a el Ega{% endif %}
 {% endblock %}
 
 {% block content %}
+
+<p>Invitá a tus amigos compartiendo un link en
+    <a href="https://twitter.com/share?url=http%3A%2F%2F{{ invite_url|iriencode }}&amp;text=Sumate!" target="_blank">
+    <img src="{% static 'images/twitter.png'%}"></a>
+    <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F{{ invite_url|iriencode }}" target="_blank">
+    <img src="{% static 'images/facebook.png' %}"></a>
+    <a href="https://plus.google.com/share?url=http%3A%2F%2F{{ invite_url|iriencode }}" target="_blank">
+    <img src="{% static 'images/google.png' %}"></a>
+y/o vía email usando el siguiente formulario:</p>
 
 <form method="POST" action="" class="form-horizontal" role="form">
     {% csrf_token %}

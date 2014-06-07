@@ -46,7 +46,7 @@ INSTALLED_APPS = (
     'south',
     'allauth.account',
     'allauth.socialaccount',
-    # 'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.twitter',
 )
@@ -127,6 +127,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     # allauth specific context processors
     'allauth.account.context_processors.account',
     'allauth.socialaccount.context_processors.socialaccount',
+    'fenics.context_processors.disqus_shortname',
 )
 
 ADMINS = [
@@ -140,6 +141,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 LOGIN_REDIRECT_URL = 'home'
 SITE_ID = 1
 
+DISQUS_SHORTNAME = 'elega-staging'
 
 try:
     from local_settings import *
