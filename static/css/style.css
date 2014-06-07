@@ -16,6 +16,11 @@ dt {
 .title {
     border-bottom: 1px solid #EEE;
     margin-bottom: 20px;
+    margin-top: 10px;
+}
+
+.history-section {
+    margin-top: 50px;
 }
 
 .title-action {
@@ -111,15 +116,6 @@ table.ranking {
     float: left;
 }
 
-@media (max-width: 768px) {
-    .away-stats {
-        text-align: left;
-    }
-    .away-image {
-        float: right;
-    }
-}
-
 .progress-bar {
     border: 0;
     box-shadow: none;
@@ -146,4 +142,19 @@ table.ranking {
     width: 100%;
     /* Set the fixed height of the footer here */
     height: 80px;
+}
+
+
+/* Responsive customizations */
+
+@media (max-width: 768px) {
+    .away-stats {
+        text-align: left;
+    }
+    .away-image {
+        float: right;
+    }
+    .title {
+        margin-top: 50px;
+    }
 }

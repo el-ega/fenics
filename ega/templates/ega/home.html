@@ -6,7 +6,7 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-4">
             {% include 'ega/_user_stats.html' %}
 
             <div class="hidden-xs">
@@ -16,22 +16,14 @@
         </div>
 
         {% if matches.count == 0 %}
-        <div class="col-md-9 text-center">
+        <div class="col-md-8 text-center">
             <img style="margin-top: 50px" src="{% static 'images/logo.gif' %}" />
             <p><h3>Los partidos estarán disponibles en los próximos días</h3>
                Mientras podés ir armando tus <a href="{% url 'leagues' %}">ligas de amigos</a>!
             </p>
         </div>
         {% else %}
-        <div class="col-md-5">
-            {% if history %}
-                <h3 class="title">
-                    Últimos resultados
-                    <small><a class="pull-right title-action" href="{% url 'ega-history' tournament.slug %}">ver historial</a></small>
-                </h3>
-                {% include 'ega/_predictions.html' %}
-            {% endif %}
-
+        <div class="col-md-4">
             {% if matches %}
                 <h3 class="title">
                     Próximos partidos
@@ -39,11 +31,17 @@
                 </h3>
                 {% include 'ega/_next_matches.html' %}
             {% endif %}
+
+            {% if history %}
+                <h3 class="title history-section">
+                    Últimos resultados
+                    <small><a class="pull-right title-action" href="{% url 'ega-history' tournament.slug %}">ver historial</a></small>
+                </h3>
+                {% include 'ega/_predictions.html' %}
+            {% endif %}
         </div>
 
         <div class="col-md-4">
-            {% include 'ega/_user_stats.html' %}
-
             {% if top_ranking %}
                 <h3 class="title">
                     Posiciones
