@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from allauth.account.forms import LoginForm, SignupForm
+from allauth.account.models import EmailAddress
 from django.contrib import auth, messages
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.decorators import login_required
@@ -66,6 +66,7 @@ def profile(request):
     else:
         form = EgaUserForm(instance=request.user)
     return render(request, 'ega/profile.html', dict(form=form))
+
 
 
 @require_http_methods(('GET', 'POST'))
@@ -216,3 +217,12 @@ def history(request, slug):
     return render(
         request, 'ega/history.html',
         {'tournament': tournament, 'predictions': predictions, 'stats': stats})
+
+@login_required
+def verify_email(request, email):
+    import pdb; pdb.set_trace()
+    email_address = get_object_or_404(
+        EmailAddress, user=request.user, email=email)
+    email_address.send_confirmation(request)
+    messages.success(request, 'Confirmación enviada a %s' % email)
+    return HttpResponseRedirect(reverse('profile'))

@@ -6,7 +6,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 
-from ega.constants import EMAILS_PLACEHOLDER, INVITE_BODY, INVITE_SUBJECT
+from ega.constants import EMAILS_PLACEHOLDER
 from ega.models import EgaUser, League, Prediction, Tournament
 
 
