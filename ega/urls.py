@@ -6,7 +6,7 @@ urlpatterns = patterns(
     url(r'^$', 'home', name='home'),
     url(r'^logout/$', 'logout', name='logout'),
     url(r'^profile/$', 'profile', name='profile'),
-    url(r'^profile/verify/(?P<email>[\w\.\-_@0-9]+)/$', 'verify_email',
+    url(r'^profile/verify/(?P<email>.+)/$', 'verify_email',
         name='verify-email'),
     url(r'^league/$', 'leagues', name='leagues'),
     url(r'^invite/$', 'invite_friends', name='invite'),

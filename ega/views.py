@@ -79,6 +79,7 @@ def invite_friends(request, league_slug=None):
     if league_slug:
         league = get_object_or_404(League, slug=league_slug)
         kwargs['league_slug'] = league.slug
+    invite_url = get_absolute_url(reverse('join', kwargs=kwargs))
 
     if request.method == 'POST':
         form = InviteFriendsForm(request.POST)
@@ -97,7 +98,6 @@ def invite_friends(request, league_slug=None):
             subject += ', jugando en mi liga de amigos %s' % league.name
             extra_text = INVITE_LEAGUE % dict(league_name=league.name)
 
-        invite_url = get_absolute_url(reverse('join', kwargs=kwargs))
         initial = dict(
             subject=subject,
             body=INVITE_BODY % dict(

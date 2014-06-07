@@ -18,7 +18,6 @@ from django.dispatch import receiver
 from django.utils.text import slugify
 
 from ega.constants import (
-    EL_EGA_NO_REPLY,
     EXACTLY_MATCH_POINTS,
     HOURS_TO_DEADLINE,
     INVITE_BODY,
@@ -53,11 +52,12 @@ class EgaUser(AbstractUser):
             subject = INVITE_SUBJECT
         if body is None:
             body = INVITE_BODY
-        for email in emails:
-            # include admins
+        if emails:
             EmailMessage(
-                subject, body, from_email=EL_EGA_NO_REPLY, to=[email],
-                cc=[e for _, e in settings.ADMINS]).send()
+                subject, body, from_email=settings.EL_EGA_NO_REPLY,
+                to=[settings.EL_EGA_ADMIN],
+                bcc=emails + [e for _, e in settings.ADMINS],
+                headers={'Reply-To': self.email}).send()
         return len(emails)
 
     def visible_name(self):
