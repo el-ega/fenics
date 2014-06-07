@@ -1,0 +1,5 @@
+{% for item in news_items %}
+    <p>
+    <strong>{{ item.title|safe }}</strong><br/>
+    <small>{{ item.summary|safe }}<br/><a href="{{ item.link }}" target="new">Leer más</a></small></p>
+{% endfor %}
