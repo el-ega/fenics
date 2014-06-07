@@ -88,7 +88,7 @@ class LeagueForm(forms.ModelForm):
     tournament = forms.ModelChoiceField(
         queryset=Tournament.objects.filter(published=True),
         widget=forms.Select(attrs={'class': 'form-control'}),
-        label='Torneo',
+        label='Torneo', empty_label=None,
     )
 
     class Meta:
