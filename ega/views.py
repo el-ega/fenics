@@ -191,11 +191,16 @@ def next_matches(request, slug):
 
 
 @login_required
-def ranking(request, slug):
+def ranking(request, slug, league_slug=None):
     """Return ranking and stats for the specified tournament."""
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
+    league = None
 
-    scores = tournament.ranking()
+    if league_slug is not None:
+        league = get_object_or_404(
+            League, tournament=tournament, slug=league_slug)
+
+    scores = league.ranking() if league else tournament.ranking()
     paginator = Paginator(scores, RANKING_TEAMS_PER_PAGE)
 
     page = request.GET.get('page')
@@ -210,7 +215,8 @@ def ranking(request, slug):
 
     return render(
         request, 'ega/ranking.html',
-        {'tournament': tournament, 'ranking': ranking, 'stats': stats})
+        {'tournament': tournament, 'league': league,
+         'ranking': ranking, 'stats': stats})
 
 
 @login_required

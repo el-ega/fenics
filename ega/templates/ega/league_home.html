@@ -12,7 +12,7 @@
             {% if top_ranking %}
                 <h3 class="title">
                     Posiciones
-                    <small><a class="pull-right title-action" href="{% url 'ega-ranking' tournament.slug %}">ver tabla completa</a></small>
+                    <small><a class="pull-right title-action" href="{% url 'ega-league-ranking' tournament.slug league.slug %}">ver tabla completa</a></small>
                 </h3>
                 {% include 'ega/_ranking_table.html' with ranking=top_ranking delta=1 %}
             {% endif %}
