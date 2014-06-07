@@ -9,7 +9,9 @@
         {% if matches.count == 0 %}
         <div class="col-md-9 text-center">
             <img style="margin-top: 50px" src="{% static 'images/logo.gif' %}" />
-            <p><h3>Los partidos estarán disponibles en los próximos días</h3></p>
+            <p><h3>Los partidos estarán disponibles en los próximos días</h3>
+               Mientras podés ir armando tus <a href="{% url 'leagues' %}">ligas de amigos</a>!
+            </p>
         </div>
         {% else %}
         <div class="col-md-4">
@@ -60,7 +62,7 @@
         <div class="col-md-12">
             <div id="disqus_thread"></div>
             <script type="text/javascript">
-                var disqus_shortname = 'elega-staging';
+                var disqus_shortname = '{{ DISQUS_SHORTNAME }}';
 
                 /* * * DON'T EDIT BELOW THIS LINE * * */
                 (function() {

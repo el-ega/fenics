@@ -83,7 +83,8 @@ def invite_friends(request, league_slug=None):
         )
         form = InviteFriendsForm(initial=initial)
 
-    return render(request, 'ega/invite.html', dict(form=form, league=league))
+    return render(request, 'ega/invite.html',
+                  dict(form=form, league=league, invite_url=invite_url))
 
 
 @require_GET
