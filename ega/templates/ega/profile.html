@@ -5,17 +5,18 @@
 
 {% block content %}
 
-<div class="media col-md-6">
+<div>
     <span class="pull-right">
-        <img class="media-object user-avatar-big" src="{{ request.user.avatar.url }}" />
+        <img class="user-avatar-big" src="{{ request.user.avatar.url }}" />
     </span>
-    <div class="media-body">
+    <div>
         <label>Emails</label>
         <ul class="list-unstyled">
         {% for email in request.user.emailaddress_set.all %}
             <li>
                 {{ email.email }}
-                {% if not email.verified %}<a href="{% url 'verify-email' email.email %}">verificar</a>{% endif%}
+                {% if not email.verified %}<a href="{% url 'verify-email' email.email %}">verificar</a>
+                {% else %}<span class="badge">verificada</span>{% endif %}
                 {% if email.primary %}<span class="badge">principal</span>{% endif %}
             </li>
         {% endfor%}

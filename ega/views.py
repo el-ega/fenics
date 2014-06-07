@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import unicode_literals
+
 from allauth.account.models import EmailAddress
 from django.contrib import auth, messages
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
@@ -220,9 +222,8 @@ def history(request, slug):
 
 @login_required
 def verify_email(request, email):
-    import pdb; pdb.set_trace()
     email_address = get_object_or_404(
         EmailAddress, user=request.user, email=email)
     email_address.send_confirmation(request)
-    messages.success(request, 'Confirmación enviada a %s' % email)
+    messages.success(request, 'Email de verificación enviado a %s' % email)
     return HttpResponseRedirect(reverse('profile'))
