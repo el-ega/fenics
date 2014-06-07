@@ -2,7 +2,11 @@
 
 <div class="media well user-stats">
     <span class="pull-right">
+        {% if request.user.avatar %}
         <img class="media-object user-avatar" src="{{ request.user.avatar.url }}" />
+        {% else %}
+        <img class="media-object user-avatar" src="{% static 'images/unknown.png' %}" />
+        {% endif %}
     </span>
     <div class="media-body">
         <h4 class="media-heading">{{ user.username }}</h4>
