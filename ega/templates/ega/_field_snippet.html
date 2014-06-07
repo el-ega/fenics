@@ -9,5 +9,6 @@
             {% for error in field.errors %}{{ error }}{% endfor %}
         </span>
     {% endif %}
+    <p class="help-block">{{ field.help_text }}</p>
 </div>
 {% endif %}

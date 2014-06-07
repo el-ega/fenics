@@ -48,7 +48,7 @@
                     {% if user.is_authenticated %}
                     <li><a href="{% url 'invite' %}">Invitá gente</a></li>
                     <li><a href="{% url 'leagues' %}">Ligas de amigos</a></li>
-                    <li><a href="{% url 'account_email' %}"><span class="glyphicon glyphicon-user"></span> {{ user }}</a></li>
+                    <li><a href="{% url 'profile' %}"><span class="glyphicon glyphicon-user"></span> {{ user }}</a></li>
                     <li><a href="{% url 'logout' %}">{% trans "Sign Out" %}</a></li>
                     {% else %}
                     <li><a href="{% url 'account_login' %}">{% trans "Sign In" %}</a></li>

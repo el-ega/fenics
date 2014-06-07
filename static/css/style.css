@@ -64,6 +64,11 @@ table.ranking {
     max-height: 75px;
 }
 
+.user-avatar-big {
+    max-width: 130px;
+    max-height: 130px;
+}
+
 .team-image {
     max-width: 65px;
 }

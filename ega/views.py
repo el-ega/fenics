@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from allauth.account.forms import LoginForm, SignupForm
+from __future__ import unicode_literals
+
+from allauth.account.models import EmailAddress
 from django.contrib import auth, messages
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.decorators import login_required
@@ -20,7 +22,12 @@ from ega.constants import (
     INVITE_SUBJECT,
     RANKING_TEAMS_PER_PAGE,
 )
-from ega.forms import InviteFriendsForm, LeagueForm, PredictionForm
+from ega.forms import (
+    EgaUserForm,
+    InviteFriendsForm,
+    LeagueForm,
+    PredictionForm,
+)
 from ega.models import EgaUser, League, LeagueMember, Prediction, Tournament
 
 
@@ -46,6 +53,22 @@ def home(request):
     return render(request, 'ega/home.html',
                   {'tournament': tournament, 'top_ranking': top_ranking,
                    'matches': matches, 'history': history, 'stats': stats})
+
+
+@require_http_methods(('GET', 'POST'))
+@login_required
+def profile(request):
+    if request.method == 'POST':
+        form = EgaUserForm(
+            instance=request.user, data=request.POST, files=request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request, 'Profile actualizado.')
+            return HttpResponseRedirect(reverse('profile'))
+    else:
+        form = EgaUserForm(instance=request.user)
+    return render(request, 'ega/profile.html', dict(form=form))
 
 
 @require_http_methods(('GET', 'POST'))
@@ -197,3 +220,11 @@ def history(request, slug):
     return render(
         request, 'ega/history.html',
         {'tournament': tournament, 'predictions': predictions, 'stats': stats})
+
+@login_required
+def verify_email(request, email):
+    email_address = get_object_or_404(
+        EmailAddress, user=request.user, email=email)
+    email_address.send_confirmation(request)
+    messages.success(request, 'Email de verificación enviado a %s' % email)
+    return HttpResponseRedirect(reverse('profile'))

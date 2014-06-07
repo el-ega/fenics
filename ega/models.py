@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import unicode_literals
+
 import random
 import string
 
@@ -39,8 +41,10 @@ def rand_str(length=8):
 
 
 class EgaUser(AbstractUser):
-    # TODO: add avatar
 
+    avatar = models.ImageField(
+        upload_to='avatars', null=True, blank=True,
+        help_text='Se recomienda subir una imagen de (al menos) 100x100')
     invite_key = models.CharField(
         max_length=20, default=partial(rand_str, 20), unique=True)
 

@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 
 from ega.constants import EMAILS_PLACEHOLDER
-from ega.models import League, Prediction, Tournament
+from ega.models import EgaUser, League, Prediction, Tournament
 
 
 class PredictionForm(forms.ModelForm):
@@ -95,3 +95,9 @@ class LeagueForm(forms.ModelForm):
         model = League
         fields = ('name', 'tournament')
 
+
+class EgaUserForm(forms.ModelForm):
+
+    class Meta:
+        model = EgaUser
+        fields = ('first_name', 'last_name', 'avatar')
