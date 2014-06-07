@@ -17,7 +17,7 @@ urlpatterns = patterns(
     url(r'^history/(?P<slug>[\w-]+)/$', 'history', name='ega-history'),
 
     url(r'^league/$', 'leagues', name='leagues'),
-    url(r'^(?P<slug>[\w-]+)/(?P<league_slug>[\w-]+)/$', 'league_home',
+    url(r'^league/(?P<slug>[\w-]+)/(?P<league_slug>[\w-]+)/$', 'league_home',
         name='league-home'),
 
     url(r'^invite/$', 'invite_friends', name='invite'),

@@ -10,7 +10,10 @@
 <div class="panel panel-default">
     <div class="panel-heading">
       <h3 class="panel-title">{{ l }}
-        <a class="pull-right" href="{% url 'invite-league' l.slug %}">Invitá más amigos</a></h3>
+        {% if l.owner == request.user %}
+        <a class="pull-right" href="{% url 'invite-league' l.slug %}">Invitá más amigos</a>
+        {% endif %}
+      </h3>
     </div>
     <div class="panel-body">
     Creada {{ l.created|naturalday }} para el torneo {{ l.tournament }}, con

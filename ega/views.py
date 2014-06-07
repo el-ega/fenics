@@ -78,6 +78,8 @@ def invite_friends(request, league_slug=None):
     league = None
     if league_slug:
         league = get_object_or_404(League, slug=league_slug)
+        if league.owner != request.user:
+            raise Http404
         kwargs['league_slug'] = league.slug
     invite_url = get_absolute_url(reverse('join', kwargs=kwargs))
 
@@ -151,7 +153,8 @@ def leagues(request):
 @login_required
 def league_home(request, slug, league_slug):
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
-    league = get_object_or_404(League, tournament=tournament, slug=league_slug)
+    league = get_object_or_404(
+        League, tournament=tournament, slug=league_slug, members=request.user)
 
     top_ranking = league.ranking()[:10]
     stats = request.user.stats(tournament)
