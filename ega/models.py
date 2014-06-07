@@ -39,7 +39,6 @@ def rand_str(length=8):
 
 
 class EgaUser(AbstractUser):
-    # TODO: add avatar
 
     avatar = models.ImageField(upload_to='avatars', null=True, blank=True)
     invite_key = models.CharField(
