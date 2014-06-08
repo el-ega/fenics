@@ -45,14 +45,27 @@ def home(request):
     tournament = get_object_or_404(
         Tournament, slug=DEFAULT_TOURNAMENT, published=True)
 
-    top_ranking = tournament.ranking()[:10]
-    matches = tournament.next_matches()[:3]
+    matches = tournament.next_matches()
+    played = Prediction.objects.filter(user=request.user, match__in=matches,
+                                       home_goals__isnull=False,
+                                       away_goals__isnull=False )
+    pending = matches.count() - played.count()
+
+    matches = matches[:3]
+    for m in matches:
+        try:
+            m.user_prediction = played.get(match=m)
+        except Prediction.DoesNotExist:
+            m.user_prediction = None
+
+    top_ranking = tournament.ranking()[:7]
     history = request.user.history(tournament)[:3]
     stats = request.user.stats(tournament)
 
     return render(request, 'ega/home.html',
                   {'tournament': tournament, 'top_ranking': top_ranking,
-                   'matches': matches, 'history': history, 'stats': stats})
+                   'pending': pending, 'matches': matches,
+                   'history': history, 'stats': stats})
 
 
 @require_http_methods(('GET', 'POST'))
@@ -181,6 +194,7 @@ def next_matches(request, slug):
         formset = PredictionFormSet(request.POST)
         if formset.is_valid():
             formset.save()
+            messages.success(request, 'Pronósticos actualizados.')
             return HttpResponseRedirect(
                 reverse('ega-next-matches', args=[slug]))
     else:

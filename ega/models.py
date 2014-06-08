@@ -313,6 +313,9 @@ def update_related_predictions(sender, instance, **kwargs):
     away_goals = instance.away_goals
     predictions = instance.prediction_set
 
+    if home_goals is None or away_goals is None:
+        return
+
     # update exact predictions
     predictions.filter(home_goals=home_goals, away_goals=away_goals).update(
         score=EXACTLY_MATCH_POINTS)

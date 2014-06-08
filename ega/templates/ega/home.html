@@ -5,6 +5,11 @@
 {% block content-title %}{% endblock %}
 
 {% block content %}
+    {% if pending > 0 %}
+    <div class="alert alert-info">
+        Tenés <a class="alert-link" href="{% url 'ega-next-matches' tournament.slug %}#pending-match">{{ pending }} partido{{ pending|pluralize }}</a> disponibles para pronosticar.
+    </div>
+    {% endif %}
     <div class="row">
         <div class="col-md-4">
             {% include 'ega/_user_stats.html' %}
@@ -15,29 +20,21 @@
             </div>
         </div>
 
-        {% if matches.count == 0 %}
-        <div class="col-md-8 text-center">
-            <img style="margin-top: 50px" src="{% static 'images/logo.gif' %}" />
-            <p><h3>Los partidos estarán disponibles en los próximos días</h3>
-               Mientras podés ir armando tus <a href="{% url 'leagues' %}">ligas de amigos</a>!
-            </p>
-        </div>
-        {% else %}
         <div class="col-md-4">
             {% if matches %}
                 <h3 class="title">
                     Próximos partidos
-                    <small><a class="pull-right title-action" href="{% url 'ega-next-matches' tournament.slug %}">jugar</a></small>
                 </h3>
                 {% include 'ega/_next_matches.html' %}
+                <p class="title-main-action"><strong><a href="{% url 'ega-next-matches' tournament.slug %}">mis pronósticos <span class="glyphicon glyphicon-chevron-right"></span></a></strong></p>
             {% endif %}
 
             {% if history %}
                 <h3 class="title history-section">
                     Últimos resultados
-                    <small><a class="pull-right title-action" href="{% url 'ega-history' tournament.slug %}">ver historial</a></small>
                 </h3>
                 {% include 'ega/_predictions.html' with use_code=1 %}
+                <p class="title-action"><strong><a href="{% url 'ega-history' tournament.slug %}">ver historial</a></strong></p>
             {% endif %}
         </div>
 
@@ -45,13 +42,11 @@
             {% if top_ranking %}
                 <h3 class="title">
                     Posiciones
-                    <small><a class="pull-right title-action" href="{% url 'ega-ranking' tournament.slug %}">ver tabla completa</a></small>
                 </h3>
                 {% include 'ega/_ranking_table.html' with ranking=top_ranking delta=1 %}
+                <p class="title-action"><strong><a href="{% url 'ega-ranking' tournament.slug %}">ver tabla completa</a></strong></p>
             {% endif %}
         </div>
-
-        {% endif %}
 
     </div>
 

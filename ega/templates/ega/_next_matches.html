@@ -9,8 +9,16 @@
             <div class="col-xs-2">
                 <strong>{% firstof home.code home.name %}</strong>
             </div>
-            <div class="col-xs-2">
+            {% if match.user_prediction %}
+            <div class="col-xs-1">
+                <strong style="color: grey">{{ match.user_prediction.home_goals }}</strong>
             </div>
+            <div class="col-xs-1">
+                <strong style="color: grey">{{ match.user_prediction.away_goals }}</strong>
+            </div>
+            {% else %}
+            <div class="col-xs-2"></div>
+            {% endif %}
             <div class="col-xs-2">
                 <strong>{% firstof away.code away.name %}</strong>
             </div>
