@@ -137,6 +137,7 @@ class Match(models.Model):
     away_goals = models.IntegerField(null=True, blank=True)
 
     tournament = models.ForeignKey('Tournament')
+    description = models.CharField(max_length=128, blank=True)
     when = models.DateTimeField(null=True, blank=True)
     location = models.CharField(max_length=200, blank=True)
     referee = models.CharField(max_length=200, blank=True)

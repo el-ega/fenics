@@ -21,7 +21,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h6 class="panel-title">
-                <small>{{ group.grouper|date:"l d F f" }} |
+                <small>{{ group.grouper|date:"F j, H:i" }} |
                     DEADLINE: {{ group.list.0.instance.match.deadline|naturaltime }}</small></h6>
             </div>
 
@@ -52,7 +52,9 @@
                     </div>
                 </div>
                 <div class="text-center hidden-xs match-metadata">
-                    <small>Grupo H | Estadio Foo</small>
+                    <small>
+                    {% if match.description %}{{ match.description }} | {% endif %}
+                    {% if match.location %}{{ match.location }}{% endif %}</small>
                 </div>
             </div>
             {% endwith %}
