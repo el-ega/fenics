@@ -37,7 +37,7 @@
                     Últimos resultados
                     <small><a class="pull-right title-action" href="{% url 'ega-history' tournament.slug %}">ver historial</a></small>
                 </h3>
-                {% include 'ega/_predictions.html' %}
+                {% include 'ega/_predictions.html' with use_code=1 %}
             {% endif %}
         </div>
 

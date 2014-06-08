@@ -8,7 +8,9 @@
                 {% endif %}
             </div>
             <div class="col-xs-2">
-                <strong>{{ home }}</strong>
+                <strong>
+                {% if use_code %}{% firstof home.code home.name %}{% else %}{{ home }}{% endif %}
+                </strong>
             </div>
             <div class="col-xs-1">
                 <strong>{{ match.home_goals }}</strong>
@@ -17,7 +19,9 @@
                 <strong>{{ match.away_goals }}</strong>
             </div>
             <div class="col-xs-2">
-                <strong>{{ away }}</strong>
+                <strong>
+                {% if use_code %}{% firstof away.code away.name %}{% else %}{{ away }}{% endif %}
+                </strong>
             </div>
             <div class="col-xs-2">
                 {% if away.image %}
