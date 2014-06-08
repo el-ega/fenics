@@ -115,6 +115,7 @@ class Tournament(models.Model):
 class Team(models.Model):
     """Team metadata."""
     name = models.CharField(max_length=200)
+    code = models.CharField(max_length=8, blank=True)
     slug = models.SlugField(max_length=200, unique=True)
     image = models.ImageField(upload_to='teams', null=True, blank=True)
 
