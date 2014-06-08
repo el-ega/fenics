@@ -22,7 +22,11 @@
         </div>
         <div class="row text-center">
             <div class="col-xs-10 col-xs-offset-1">
-                <small>Grupo H | {{ match.when|date:"l d F f" }} | Estadio Foo</small>
+                <small>
+                    {% if match.description %}{{ match.description }} | {% endif %}
+                    {{ match.when|date:"M j, P" }}
+                    {% if match.location %}| {{ match.location }}{% endif %}
+                </small>
             </div>
         </div>
     {% endwith %}
