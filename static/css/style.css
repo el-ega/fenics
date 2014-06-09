@@ -34,6 +34,10 @@ dt {
     font-size: larger;
 }
 
+.predicted-score {
+    color: grey;
+}
+
 .nav-logo {
     max-height: 50px;
 }

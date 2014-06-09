@@ -26,7 +26,7 @@
                     Próximos partidos
                 </h3>
                 {% include 'ega/_next_matches.html' %}
-                <p class="title-main-action"><strong><a href="{% url 'ega-next-matches' tournament.slug %}">mis pronósticos <span class="glyphicon glyphicon-chevron-right"></span></a></strong></p>
+                <p class="title-main-action"><strong><a href="{% url 'ega-next-matches' tournament.slug %}">{% if pending > 0 %}completar {% endif %}mis pronósticos <span class="glyphicon glyphicon-circle-arrow-right"></span></a></strong></p>
             {% endif %}
 
             {% if history %}
