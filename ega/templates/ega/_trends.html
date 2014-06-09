@@ -1,13 +1,19 @@
 {% if values %}
+    <div class="text-left">
+        <small>La tendencia predice
+            {% if values.L > values.E and values.L > values.V %}que {{ home_team }} gana
+            {% elif values.V > values.E and values.V > values.L %}que {{ away_team }} gana
+            {% else %}un empate {% endif %}
+            ({{ count }} pronóstico{{ count|pluralize }})</small></div>
     <div class="progress">
         <div class="progress-bar progress-bar-success progress-local" style="width: {{ values.L }}%">
-        Local {{ values.L }}%
+        {% firstof home_team.code 'Local' %} {{ values.L }}%
         </div>
         <div class="progress-bar progress-bar-danger progress-tie" style="width: {{ values.E }}%">
         Empate {{ values.E }}%
         </div>
         <div class="progress-bar progress-bar-info progress-away" style="width: {{ values.V }}%">
-        Visitante {{ values.V }}%
+        {% firstof away_team.code 'Visitante' %} {{ values.V }}%
         </div>
     </div>
 {% endif %}

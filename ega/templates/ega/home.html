@@ -7,7 +7,7 @@
 {% block content %}
     {% if pending > 0 %}
     <div class="alert alert-info">
-        Tenés <a class="alert-link" href="{% url 'ega-next-matches' tournament.slug %}#pending-match">{{ pending }} partido{{ pending|pluralize }}</a> disponibles para pronosticar.
+        Tenés <a class="alert-link" href="{% url 'ega-next-matches' tournament.slug %}#pending-match">{{ pending }} partido{{ pending|pluralize }}</a> pendiente{{ pending|pluralize }} para pronosticar.
     </div>
     {% endif %}
     <div class="row">
