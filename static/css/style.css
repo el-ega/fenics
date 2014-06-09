@@ -127,6 +127,10 @@ table.ranking {
     float: left;
 }
 
+dl.latest-results {
+    margin-bottom: 0px;
+}
+
 .progress-bar {
     border: 0;
     box-shadow: none;

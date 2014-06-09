@@ -1,9 +1,9 @@
 {% if values %}
     <div class="text-left">
-        <small>La tendencia predice
-            {% if values.L > values.E and values.L > values.V %}que {{ home_team }} gana
-            {% elif values.V > values.E and values.V > values.L %}que {{ away_team }} gana
-            {% else %}un empate {% endif %}
+        <small>Tendencia:
+            {% if values.L > values.E and values.L > values.V %}gana {{ home_team }}
+            {% elif values.V > values.E and values.V > values.L %}gana {{ away_team }}
+            {% else %}empate {% endif %}
             ({{ count }} pronóstico{{ count|pluralize }})</small></div>
     <div class="progress">
         <div class="progress-bar progress-bar-success progress-local" style="width: {{ values.L }}%">

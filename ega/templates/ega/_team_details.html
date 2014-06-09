@@ -12,11 +12,13 @@
         {{ stats.tie }} empatado{{ stats.tie|pluralize }},
         {{ stats.lost }} perdido{{ stats.lost|pluralize }}
         {% if team.latest_matches %}
-        <br/><strong>Últimos resultados:</strong>
-        {% for m in team.latest_matches|slice:':3' %}
-        {% if m.home == team %}{{ m.home_goals }} - {{ m.away_goals }} ({{ m.away.name }})
-        {% else %}{{ m.away_goals }} - {{ m.home_goals }} ({{ m.home.name }}){% endif %}
-        {% endfor %}
+        <br/>
+        <dl class="latest-results">
+        <dt>Últimos resultados</dt>
+        <dd>{% for m in team.latest_matches|slice:':3' %}
+            {{ m.home.name }} vs. {{ m.away.name }}: {{ m.home_goals }} - {{ m.away_goals }}
+            {% if not forloop.last %}<br/>{% endif %}
+        {% endfor %}</dd></dl>
         {% endif %}
         </small>
     </div>
