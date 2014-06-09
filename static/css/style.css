@@ -127,8 +127,12 @@ table.ranking {
     float: left;
 }
 
-dl.latest-results {
+table.latest-results {
     margin-bottom: 0px;
+}
+
+table.latest-results thead th, table.latest-results tbody td {
+    border: 0px;
 }
 
 .progress-bar {
