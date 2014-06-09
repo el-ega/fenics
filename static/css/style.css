@@ -24,7 +24,18 @@ dt {
 }
 
 .title-action {
-    padding-top: 8px;
+    text-align: right;
+    margin-top: 10px;
+}
+
+.title-main-action {
+    text-align: right;
+    margin-top: 10px;
+    font-size: larger;
+}
+
+.predicted-score {
+    color: grey;
 }
 
 .nav-logo {
