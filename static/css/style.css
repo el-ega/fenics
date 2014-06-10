@@ -127,6 +127,20 @@ table.ranking {
     float: left;
 }
 
+table.latest-results {
+    margin-bottom: 0px;
+}
+
+table.latest-results thead th {
+    border-bottom: 1px solid #EEE;
+    padding: 2px;
+}
+
+table.latest-results tbody td {
+    border: 0px;
+    padding: 2px;
+}
+
 .progress-bar {
     border: 0;
     box-shadow: none;
