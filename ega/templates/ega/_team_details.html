@@ -7,10 +7,10 @@
         {% endif %}</h6>
     </div>
     <div class="panel-body {{ condition }}-stats">
-        <p>{# <strong>1ero</strong> | #}
+        <p><small>{# <strong>1ero</strong> | #}
         {{ stats.won }} ganado{{ stats.won|pluralize }},
         {{ stats.tie }} empatado{{ stats.tie|pluralize }},
-        {{ stats.lost }} perdido{{ stats.lost|pluralize }}</p>
+        {{ stats.lost }} perdido{{ stats.lost|pluralize }}</small></p>
         {% if team.latest_matches %}
         <small>
         <table class="table table-condensed latest-results">
