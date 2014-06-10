@@ -17,4 +17,4 @@ def show_prediction_trends(match):
         diff = 100 - sum(values.values())
         values[values.keys()[-1]] += diff
     return {'home_team': match.home, 'away_team': match.away,
-            'count': len(trends), 'values': values}
+            'count': total, 'values': values}
