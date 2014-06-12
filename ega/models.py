@@ -16,6 +16,7 @@ from django.db.models import Count, F, Q, Sum
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
+from django.utils.timezone import now
 
 from ega.constants import (
     EXACTLY_MATCH_POINTS,
@@ -68,9 +69,9 @@ class EgaUser(AbstractUser):
 
     def history(self, tournament):
         """Return matches predictions for given tournament."""
-        now = datetime.utcnow()
+        tz_now = now() + timedelta(hours=HOURS_TO_DEADLINE)
         predictions = Prediction.objects.filter(
-            match__tournament=tournament, user=self, match__when__lte=now,
+            match__tournament=tournament, user=self, match__when__lte=tz_now,
             match__home_goals__isnull=False, match__away_goals__isnull=False)
         return predictions
 
@@ -100,9 +101,9 @@ class Tournament(models.Model):
 
     def next_matches(self, days=NEXT_MATCHES_DAYS):
         """Return matches in the next days."""
-        now = datetime.utcnow()
-        until = now + timedelta(days=days)
-        return self.match_set.filter(when__range=(now, until))
+        tz_now = now() + timedelta(hours=HOURS_TO_DEADLINE)
+        until = tz_now + timedelta(days=days)
+        return self.match_set.filter(when__range=(tz_now, until))
 
     def ranking(self):
         """Users ranking in the tournament."""
@@ -125,9 +126,9 @@ class Team(models.Model):
 
     def latest_matches(self, tournament=None):
         """Return team previously played matches."""
-        now = datetime.now()
+        tz_now = now()
         matches = Match.objects.filter(
-            Q(away=self)|Q(home=self), when__lte=now)
+            Q(away=self)|Q(home=self), when__lte=tz_now)
         return matches
 
 
@@ -259,7 +260,7 @@ class League(models.Model):
     name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
     tournament = models.ForeignKey(Tournament)
-    created = models.DateTimeField(default=datetime.utcnow)
+    created = models.DateTimeField(default=now)
     members = models.ManyToManyField(
         settings.AUTH_USER_MODEL, through='LeagueMember')
 
@@ -298,7 +299,7 @@ class LeagueMember(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     league = models.ForeignKey(League)
     is_owner = models.BooleanField(default=False)
-    date_joined = models.DateTimeField(default=datetime.utcnow)
+    date_joined = models.DateTimeField(default=now)
 
     class Meta:
         unique_together = ('user', 'league')

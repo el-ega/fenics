@@ -11,7 +11,7 @@ from ega.models import EgaUser, League, Prediction, Tournament
 
 
 class PredictionForm(forms.ModelForm):
-    GOAL_CHOICES = [('', '-')] + [(i,i) for i in range(10)]
+    GOAL_CHOICES = [('', '-')] + [(i,i) for i in range(100)]
 
     home_goals = forms.ChoiceField(
         choices=GOAL_CHOICES, required=False,
