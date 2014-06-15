@@ -13,10 +13,10 @@
                 </strong>
             </div>
             <div class="col-xs-1">
-                <strong>{{ match.home_goals }}</strong>
+                <strong>{{ match.home_goals|default_if_none:'-' }}</strong>
             </div>
             <div class="col-xs-1">
-                <strong>{{ match.away_goals }}</strong>
+                <strong>{{ match.away_goals|default_if_none:'-' }}</strong>
             </div>
             <div class="col-xs-2">
                 <strong>
@@ -34,7 +34,7 @@
                 {% if prediction.home_goals != None and prediction.away_goals != None %}
                 <small>
                 Pronóstico: {{ prediction.home_goals }} - {{ prediction.away_goals }}
-                ({{ prediction.score }} punto{{ prediction.score|pluralize }})</small>
+                {% if prediction.score >= 0%}({{ prediction.score }} punto{{ prediction.score|pluralize }}){% endif %}</small>
                 {% endif %}
             </div>
         </div>

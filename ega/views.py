@@ -23,6 +23,7 @@ from ega.constants import (
     RANKING_TEAMS_PER_PAGE,
 )
 from ega.forms import (
+    BasePredictionFormSet,
     EgaUserForm,
     InviteFriendsForm,
     LeagueForm,
@@ -188,7 +189,11 @@ def next_matches(request, slug):
         Prediction.objects.get_or_create(user=request.user, match=m)
 
     PredictionFormSet = modelformset_factory(
-        Prediction, form=PredictionForm, extra=0)
+        Prediction, form=PredictionForm, formset=BasePredictionFormSet,
+        extra=0)
+    predictions = Prediction.objects.filter(
+        user=request.user, match__in=matches)
+
 
     if request.method == 'POST':
         formset = PredictionFormSet(request.POST)
@@ -197,9 +202,15 @@ def next_matches(request, slug):
             messages.success(request, 'Pronósticos actualizados.')
             return HttpResponseRedirect(
                 reverse('ega-next-matches', args=[slug]))
+
+        if formset.expired_matches:
+            messages.error(
+                request,
+                'Alguno de los partidos expiró. Los cambios NO se guardaron.')
+            return HttpResponseRedirect(
+                reverse('ega-next-matches', args=[slug]))
+
     else:
-        predictions = Prediction.objects.filter(
-            user=request.user, match__in=matches)
         formset = PredictionFormSet(queryset=predictions)
 
     return render(

@@ -5,6 +5,10 @@
 {% block content-title %}Próximos partidos{% endblock %}
 
 {% block content %}
+{% if formset.errors %}
+    <div class="alert alert-danger">Los pronósticos NO se guardaron.
+    Revisá que no te haya quedado alguno incompleto.</div>
+{% endif %}
 
 <h2>{{ tournament.name }}</h2>
 
@@ -43,10 +47,10 @@
                     <div class="col-md-4">
                         {% include "ega/_team_details.html" with condition="home" team=home stats=form.instance.home_team_stats %}
                     </div>
-                    <div class="col-md-2 text-center">
+                    <div class="col-md-2 text-center{% if form.home_goals.errors %} has-error{% endif %}">
                         <p class="goals-input">{{ form.home_goals }}</p>
                     </div>
-                    <div class="col-md-2 text-center">
+                    <div class="col-md-2 text-center{% if form.away_goals.errors %} has-error{% endif %}">
                         <p class="goals-input">{{ form.away_goals }}</p>
                     </div>
                     <div class="col-md-4">

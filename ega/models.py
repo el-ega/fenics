@@ -71,8 +71,7 @@ class EgaUser(AbstractUser):
         """Return matches predictions for given tournament."""
         tz_now = now() + timedelta(hours=HOURS_TO_DEADLINE)
         predictions = Prediction.objects.filter(
-            match__tournament=tournament, user=self, match__when__lte=tz_now,
-            match__home_goals__isnull=False, match__away_goals__isnull=False)
+            match__tournament=tournament, user=self, match__when__lte=tz_now)
         return predictions
 
     def stats(self, tournament):
