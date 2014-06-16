@@ -123,4 +123,4 @@ class EgaUserForm(forms.ModelForm):
 
     class Meta:
         model = EgaUser
-        fields = ('first_name', 'last_name', 'avatar')
+        fields = ('username', 'first_name', 'last_name', 'avatar')
