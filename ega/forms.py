@@ -47,22 +47,17 @@ class PredictionForm(forms.ModelForm):
 
         return cleaned_data
 
+    def save(self, *args, **kwargs):
+        self.expired = False
+        match = self.instance.match
+        if not match.is_expired:
+            super(PredictionForm, self).save(*args, **kwargs)
+        else:
+            self.expired = True
+
     class Meta:
         model = Prediction
         fields = ('home_goals', 'away_goals')
-
-
-class BasePredictionFormSet(BaseModelFormSet):
-
-    def clean(self):
-        """Check matches are not expired."""
-        super(BasePredictionFormSet, self).clean()
-
-        self.expired_matches = False
-        for form in self.forms:
-            if form.instance.match.deadline < now():
-                self.expired_matches = True
-                raise forms.ValidationError('ExpiredMatches')
 
 
 class InviteFriendsForm(forms.Form):

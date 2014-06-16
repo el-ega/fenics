@@ -82,7 +82,7 @@ class EgaUser(AbstractUser):
             home_goals__isnull=False, away_goals__isnull=False)
         stats['count'] = len(ranking)
         stats['score'] = sum(r.score for r in ranking)
-        stats['winners'] = sum(r.score for r in ranking if r.score > 0)
+        stats['winners'] = sum(1 for r in ranking if r.score > 0)
         stats['exacts'] = sum(1 for r in ranking
                               if r.score == EXACTLY_MATCH_POINTS)
         return stats
@@ -158,6 +158,10 @@ class Match(models.Model):
         if self.when:
             ret = self.when - timedelta(hours=HOURS_TO_DEADLINE)
         return ret
+
+    @property
+    def is_expired(self):
+        return self.deadline < now()
 
 
 class Prediction(models.Model):
