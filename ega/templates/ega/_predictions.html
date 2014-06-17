@@ -34,7 +34,7 @@
                 {% if prediction.home_goals != None and prediction.away_goals != None %}
                 <small>
                 Pronóstico: {{ prediction.home_goals }} - {{ prediction.away_goals }}
-                {% if prediction.score >= 0%}({{ prediction.score }} punto{{ prediction.score|pluralize }}){% endif %}</small>
+                {% if prediction.score >= 0 %}({{ prediction.score }} punto{{ prediction.score|pluralize }}){% endif %}</small>
                 {% endif %}
             </div>
         </div>

@@ -5,10 +5,6 @@
 {% block content-title %}Próximos partidos{% endblock %}
 
 {% block content %}
-{% if formset.errors %}
-    <div class="alert alert-danger">Los pronósticos NO se guardaron.
-    Revisá que no te haya quedado alguno incompleto.</div>
-{% endif %}
 
 <h2>{{ tournament.name }}</h2>
 
