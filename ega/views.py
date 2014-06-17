@@ -219,13 +219,12 @@ def ranking(request, slug, league_slug=None):
 
     user = request.user
     scores = league.ranking() if league else tournament.ranking()
-    listing = list(scores)
     try:
-        position = ([r['username'] for r in listing]).index(user.username)
+        position = ([r['username'] for r in scores]).index(user.username)
         position += 1
     except ValueError:
         position = None
-    paginator = Paginator(listing, RANKING_TEAMS_PER_PAGE)
+    paginator = Paginator(scores, RANKING_TEAMS_PER_PAGE)
 
     page = request.GET.get('page')
     try:
