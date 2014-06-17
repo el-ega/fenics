@@ -14,17 +14,6 @@
         {% endif %}
     </div>
     <div class="col-md-6">
-        <label>Emails</label>
-        <ul class="list-unstyled">
-        {% for email in request.user.emailaddress_set.all %}
-            <li>
-                {{ email.email }}
-                {% if not email.verified %}<a href="{% url 'verify-email' email.email %}">verificar</a>
-                {% else %}<span class="badge">verificada</span>{% endif %}
-                {% if email.primary %}<span class="badge">principal</span>{% endif %}
-            </li>
-        {% endfor%}
-        </ul>
 
         <form method="POST" action="" enctype="multipart/form-data">
             {% csrf_token %}
@@ -34,6 +23,18 @@
             {% for field in form %}
                 {% include 'ega/_field_snippet.html' %}
             {% endfor %}
+
+            <label>Emails</label>
+            <ul class="list-unstyled">
+            {% for email in request.user.emailaddress_set.all %}
+                <li>
+                    {{ email.email }}
+                    {% if not email.verified %}<a href="{% url 'verify-email' email.email %}">verificar</a>
+                    {% else %}<span class="badge">verificada</span>{% endif %}
+                    {% if email.primary %}<span class="badge">principal</span>{% endif %}
+                </li>
+            {% endfor%}
+            </ul>
 
             <div>
                 <button name="update" type="submit" class="btn btn-primary">Actualizar perfil</button>

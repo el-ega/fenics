@@ -5,6 +5,8 @@ from __future__ import unicode_literals
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
+from django.forms.models import BaseModelFormSet
+from django.utils.timezone import now
 
 from ega.constants import EMAILS_PLACEHOLDER
 from ega.models import EgaUser, League, Prediction, Tournament
@@ -31,6 +33,27 @@ class PredictionForm(forms.ModelForm):
 
     def clean_away_goals(self):
         return self._clean_goals('away_goals')
+
+    def clean(self):
+        cleaned_data = super(PredictionForm, self).clean()
+        home_goals = cleaned_data.get("home_goals")
+        away_goals = cleaned_data.get("away_goals")
+
+        msg = "Pronóstico incompleto."
+        if (home_goals and not away_goals):
+            self._errors["away_goals"] = self.error_class([msg])
+        if (not home_goals and away_goals):
+            self._errors["home_goals"] = self.error_class([msg])
+
+        return cleaned_data
+
+    def save(self, *args, **kwargs):
+        self.expired = False
+        match = self.instance.match
+        if not match.is_expired:
+            super(PredictionForm, self).save(*args, **kwargs)
+        else:
+            self.expired = True
 
     class Meta:
         model = Prediction
@@ -100,4 +123,4 @@ class EgaUserForm(forms.ModelForm):
 
     class Meta:
         model = EgaUser
-        fields = ('first_name', 'last_name', 'avatar')
+        fields = ('username', 'first_name', 'last_name', 'avatar')

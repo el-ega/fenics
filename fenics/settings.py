@@ -141,6 +141,10 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 LOGIN_REDIRECT_URL = 'home'
 SITE_ID = 1
 
+from django.contrib.messages import constants as message_constants
+MESSAGE_TAGS = {message_constants.ERROR: 'danger'}
+
+
 EL_EGA_ADMIN = 'admin@el-ega.com.ar'
 EL_EGA_NO_REPLY = 'noreply@el-ega.com.ar'
 

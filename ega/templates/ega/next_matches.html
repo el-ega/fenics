@@ -28,12 +28,13 @@
             </div>
 
         {% for form in group.list %}
+            <a name="{% if form.instance.home_goals == None or form.instance.away_goals == None %}pending-match{% endif %}"></a>
             {{ form.id }}
             {{ form.match }}
 
             {% with match=form.instance.match %}
             {% with home=match.home away=match.away %}
-            <div class="panel-body" id="{% if not form.instance.home_goals or not form.instance.away_goals %}pending-match{% endif %}">
+            <div class="panel-body">
                 <div class="row">
                     <div class="col-md-12 text-center">
                         {% show_prediction_trends match %}
@@ -43,10 +44,10 @@
                     <div class="col-md-4">
                         {% include "ega/_team_details.html" with condition="home" team=home stats=form.instance.home_team_stats %}
                     </div>
-                    <div class="col-md-2 text-center">
+                    <div class="col-md-2 text-center{% if form.home_goals.errors %} has-error{% endif %}">
                         <p class="goals-input">{{ form.home_goals }}</p>
                     </div>
-                    <div class="col-md-2 text-center">
+                    <div class="col-md-2 text-center{% if form.away_goals.errors %} has-error{% endif %}">
                         <p class="goals-input">{{ form.away_goals }}</p>
                     </div>
                     <div class="col-md-4">

@@ -189,17 +189,25 @@ def next_matches(request, slug):
 
     PredictionFormSet = modelformset_factory(
         Prediction, form=PredictionForm, extra=0)
+    predictions = Prediction.objects.filter(
+        user=request.user, match__in=matches)
+
 
     if request.method == 'POST':
         formset = PredictionFormSet(request.POST)
         if formset.is_valid():
             formset.save()
             messages.success(request, 'Pronósticos actualizados.')
+
+            expired_matches = [f.instance.match for f in formset if f.expired]
+            for m in expired_matches:
+                msg = "%s - %s: el partido expiró, pronóstico NO actualizado."
+                messages.error(request, msg % (m.home.name, m.away.name))
+
             return HttpResponseRedirect(
                 reverse('ega-next-matches', args=[slug]))
+
     else:
-        predictions = Prediction.objects.filter(
-            user=request.user, match__in=matches)
         formset = PredictionFormSet(queryset=predictions)
 
     return render(
