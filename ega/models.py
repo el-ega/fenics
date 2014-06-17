@@ -118,9 +118,9 @@ class Tournament(models.Model):
         SQL = ("SELECT pred.id, u.username as username, u.avatar as avatar, "
                "SUM(score=1) AS x1, SUM(score=3) AS x3, SUM(score) AS total "
                "FROM ega_prediction pred "
-               "INNER JOIN ega_egauser u ON (pred.user_id=u.id)"
-               "INNER JOIN ega_match match ON (pred.match_id=match.id)"
-               "WHERE match.tournament_id = %s"
+               "INNER JOIN ega_egauser u ON (pred.user_id=u.id) "
+               "INNER JOIN ega_match m ON (pred.match_id=m.id) "
+               "WHERE m.tournament_id = %s "
                "GROUP BY pred.user_id ORDER BY total desc, x3 DESC")
 
         cursor = connection.cursor()
