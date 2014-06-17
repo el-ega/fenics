@@ -1,3 +1,4 @@
+{% load humanize %}
 {% load staticfiles %}
 
 <div class="media well user-stats">
@@ -10,6 +11,7 @@
     </span>
     <div class="media-body">
         <h4 class="media-heading">{{ user.username }}</h4>
+        {% if user_position %}<strong>Posición: {{ user_position|ordinal }}</strong><br/>{% endif %}
         <strong>{{ stats.score }} punto{{ stats.score|pluralize }}</strong><br/>
         {{ stats.count }} partido{{ stats.count|pluralize }} jugado{{ stats.count|pluralize }}<br/>
         {{ stats.winners }} acierto{{ stats.winners|pluralize }}<br/>

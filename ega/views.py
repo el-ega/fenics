@@ -37,7 +37,7 @@ def get_absolute_url(url):
 
 def logout(request):
     auth.logout(request)
-    messages.success(request, 'Cerraste sesión exitosamente! Vuelva prontos.')
+    messages.success(request, 'Cerraste sesión exitosamente!')
     return HttpResponseRedirect(reverse('home'))
 
 @login_required
@@ -225,7 +225,13 @@ def ranking(request, slug, league_slug=None):
         league = get_object_or_404(
             League, tournament=tournament, slug=league_slug)
 
+    user = request.user
     scores = league.ranking() if league else tournament.ranking()
+    try:
+        position = ([r['username'] for r in scores]).index(user.username)
+        position += 1
+    except ValueError:
+        position = None
     paginator = Paginator(scores, RANKING_TEAMS_PER_PAGE)
 
     page = request.GET.get('page')
@@ -236,12 +242,12 @@ def ranking(request, slug, league_slug=None):
     except EmptyPage:
         ranking = paginator.page(paginator.num_pages)
 
-    stats = request.user.stats(tournament)
+    stats = user.stats(tournament)
 
     return render(
         request, 'ega/ranking.html',
         {'tournament': tournament, 'league': league,
-         'ranking': ranking, 'stats': stats})
+         'ranking': ranking, 'user_position': position, 'stats': stats})
 
 
 @login_required

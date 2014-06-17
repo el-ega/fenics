@@ -14,16 +14,14 @@
         {% if team.latest_matches %}
         <small>
         <table class="table table-condensed latest-results">
-            <thead><th class="text-left" colspan="4">Últimos resultados</th></thead>
+            <thead><th colspan="4">Últimos resultados</th></thead>
             <tbody>
             {% for m in team.latest_matches|slice:':3' %}
-            <tr>
-                <td class="text-right">
-                    {{ m.home.name }}</td>
-                <td><strong>{{ m.home_goals }}</strong></td>
-                <td><strong>{{ m.away_goals }}</strong></td>
-                <td class="text-left">
-                    {{ m.away.name }}</td>
+            <tr class="text-center">
+                <td class="team-td">{{ m.home.name }}</td>
+                <td class="result-td"><strong>{{ m.home_goals }}</strong></td>
+                <td class="result-td"><strong>{{ m.away_goals }}</strong></td>
+                <td class="team-td">{{ m.away.name }}</td>
             </tr>
             {% endfor %}
             </tbody>
