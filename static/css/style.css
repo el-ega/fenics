@@ -141,6 +141,14 @@ table.latest-results tbody td {
     padding: 2px;
 }
 
+table.latest-results tbody td.team-td {
+    width: 40%;
+}
+
+table.latest-results tbody td.result-td {
+    width: 10%;
+}
+
 .progress-bar {
     border: 0;
     box-shadow: none;

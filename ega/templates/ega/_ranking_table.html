@@ -6,6 +6,10 @@
             <th>#</th>
             <th></th>
             <th>Usuario</th>
+            {% if score_details %}
+            <th class="text-right">x1</th>
+            <th class="text-right">x3</th>
+            {% endif %}
             <th class="text-right score">Puntos</th>
         </tr>
     </thead>
@@ -13,13 +17,17 @@
     {% for row in ranking %}
         <tr>
             <td>{{ forloop.counter0|add:delta }}</td>
-            <td>{% if row.user__avatar %}
-                <img class="avatar" src="{{ MEDIA_URL }}{{ row.user__avatar }}" />
+            <td>{% if row.user.avatar %}
+                <img class="avatar" src="{{ MEDIA_URL }}{{ row.avatar }}" />
                 {% else %}
                 <img class="avatar" src="{% static 'images/unknown.png' %}" />
                 {% endif %}
             </td>
-            <td>{{ row.user__username }}</td>
+            <td>{{ row.username }}</td>
+            {% if score_details %}
+            <td class="text-right">{{ row.x1 }}</td>
+            <td class="text-right">{{ row.x3 }}</td>
+            {% endif %}
             <td class="text-right score"><strong>{{ row.total }}</strong></td>
         </tr>
     {% endfor %}

@@ -13,17 +13,15 @@
         {{ stats.lost }} perdido{{ stats.lost|pluralize }}</small></p>
         {% if team.latest_matches %}
         <small>
-        <table class="table table-condensed latest-results">
-            <thead><th class="text-left" colspan="4">Últimos resultados</th></thead>
+        <table class="table table-condensed latest-results text-center">
+            <thead><th colspan="4">Últimos resultados</th></thead>
             <tbody>
             {% for m in team.latest_matches|slice:':3' %}
             <tr>
-                <td class="text-right">
-                    {{ m.home.name }}</td>
-                <td><strong>{{ m.home_goals }}</strong></td>
-                <td><strong>{{ m.away_goals }}</strong></td>
-                <td class="text-left">
-                    {{ m.away.name }}</td>
+                <td class="team-td">{{ m.home.name }}</td>
+                <td class="result-td"><strong>{{ m.home_goals }}</strong></td>
+                <td class="result-td"><strong>{{ m.away_goals }}</strong></td>
+                <td class="team-td">{{ m.away.name }}</td>
             </tr>
             {% endfor %}
             </tbody>

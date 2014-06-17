@@ -107,10 +107,14 @@ class Tournament(models.Model):
 
     def ranking(self):
         """Users ranking in the tournament."""
-        ranking = Prediction.objects.filter(
-            match__tournament=self).values(
-                'user__username', 'user__avatar').annotate(
-                total=Sum('score'), count=Count('id')).order_by('-total')
+        SQL = ("SELECT pred.id, u.username as username, u.avatar as avatar, "
+               "SUM(score=1) AS x1, SUM(score=3) AS x3, SUM(score) AS total "
+               "FROM ega_prediction pred "
+               "INNER JOIN ega_egauser u ON (pred.user_id=u.id)"
+               "INNER JOIN ega_match match ON (pred.match_id=match.id)"
+               "WHERE match.tournament_id = %s"
+               "GROUP BY pred.user_id ORDER BY total desc, x3 DESC")
+        ranking = Prediction.objects.raw(SQL, [self.id])
         return ranking
 
 
@@ -275,7 +279,8 @@ class League(models.Model):
         return LeagueMember.objects.get(league=self, is_owner=True).user
 
     def ranking(self):
-        ranking = self.tournament.ranking().filter(user__in=self.members.all())
+        ranking = self.tournament.ranking()
+        ranking = [r for r in ranking if r.user in self.members.all()]
         return ranking
 
     def save(self, *args, **kwargs):

@@ -218,7 +218,13 @@ def ranking(request, slug, league_slug=None):
             League, tournament=tournament, slug=league_slug)
 
     scores = league.ranking() if league else tournament.ranking()
-    paginator = Paginator(scores, RANKING_TEAMS_PER_PAGE)
+    listing = list(scores)
+    try:
+        position = ([r.username for r in listing]).index(request.user.username)
+        position += 1
+    except ValueError:
+        position = None
+    paginator = Paginator(listing, RANKING_TEAMS_PER_PAGE)
 
     page = request.GET.get('page')
     try:
@@ -233,7 +239,7 @@ def ranking(request, slug, league_slug=None):
     return render(
         request, 'ega/ranking.html',
         {'tournament': tournament, 'league': league,
-         'ranking': ranking, 'stats': stats})
+         'ranking': ranking, 'user_position': position, 'stats': stats})
 
 
 @login_required
