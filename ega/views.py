@@ -217,10 +217,11 @@ def ranking(request, slug, league_slug=None):
         league = get_object_or_404(
             League, tournament=tournament, slug=league_slug)
 
+    user = request.user
     scores = league.ranking() if league else tournament.ranking()
     listing = list(scores)
     try:
-        position = ([r.username for r in listing]).index(request.user.username)
+        position = ([r['username'] for r in listing]).index(user.username)
         position += 1
     except ValueError:
         position = None
@@ -234,7 +235,7 @@ def ranking(request, slug, league_slug=None):
     except EmptyPage:
         ranking = paginator.page(paginator.num_pages)
 
-    stats = request.user.stats(tournament)
+    stats = user.stats(tournament)
 
     return render(
         request, 'ega/ranking.html',

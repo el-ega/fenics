@@ -11,7 +11,7 @@ from functools import partial
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.mail.message import EmailMessage
-from django.db import IntegrityError, models
+from django.db import IntegrityError, connection, models
 from django.db.models import Count, F, Q, Sum
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -38,6 +38,15 @@ ALNUM_CHARS = string.letters + string.digits
 
 def rand_str(length=8):
     return ''.join(random.choice(ALNUM_CHARS) for x in xrange(length))
+
+
+def dictfetchall(cursor):
+    """Returns all rows from a cursor as a dict."""
+    desc = cursor.description
+    return [
+        dict(zip([col[0] for col in desc], row))
+        for row in cursor.fetchall()
+    ]
 
 
 class EgaUser(AbstractUser):
@@ -114,7 +123,10 @@ class Tournament(models.Model):
                "INNER JOIN ega_match match ON (pred.match_id=match.id)"
                "WHERE match.tournament_id = %s"
                "GROUP BY pred.user_id ORDER BY total desc, x3 DESC")
-        ranking = Prediction.objects.raw(SQL, [self.id])
+
+        cursor = connection.cursor()
+        cursor.execute(SQL, [self.id])
+        ranking = dictfetchall(cursor)
         return ranking
 
 
@@ -280,7 +292,8 @@ class League(models.Model):
 
     def ranking(self):
         ranking = self.tournament.ranking()
-        ranking = [r for r in ranking if r.user in self.members.all()]
+        users = self.members.values_list('username', flat=True)
+        ranking = [r for r in ranking if r['username'] in users]
         return ranking
 
     def save(self, *args, **kwargs):
