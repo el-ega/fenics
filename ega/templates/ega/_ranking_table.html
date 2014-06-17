@@ -17,7 +17,7 @@
     {% for row in ranking %}
         <tr>
             <td>{{ forloop.counter0|add:delta }}</td>
-            <td>{% if row.user.avatar %}
+            <td>{% if row.avatar %}
                 <img class="avatar" src="{{ MEDIA_URL }}{{ row.avatar }}" />
                 {% else %}
                 <img class="avatar" src="{% static 'images/unknown.png' %}" />
