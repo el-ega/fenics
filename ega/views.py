@@ -37,7 +37,7 @@ def get_absolute_url(url):
 
 def logout(request):
     auth.logout(request)
-    messages.success(request, 'Cerraste sesión exitosamente! Vuelva prontos.')
+    messages.success(request, 'Cerraste sesión exitosamente!')
     return HttpResponseRedirect(reverse('home'))
 
 @login_required
