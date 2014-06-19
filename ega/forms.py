@@ -22,6 +22,10 @@ class PredictionForm(forms.ModelForm):
         choices=GOAL_CHOICES, required=False,
         widget=forms.Select(attrs={'class':'form-control input-lg'}))
 
+    def __init__(self, *args, **kwargs):
+        super(PredictionForm, self).__init__(*args, **kwargs)
+        self.expired = False
+
     def _clean_goals(self, field_name):
         goals = self.cleaned_data.get(field_name)
         if not goals:
@@ -48,12 +52,12 @@ class PredictionForm(forms.ModelForm):
         return cleaned_data
 
     def save(self, *args, **kwargs):
-        self.expired = False
         match = self.instance.match
         if not match.is_expired:
-            super(PredictionForm, self).save(*args, **kwargs)
+            return super(PredictionForm, self).save(*args, **kwargs)
         else:
             self.expired = True
+            return None
 
     class Meta:
         model = Prediction
