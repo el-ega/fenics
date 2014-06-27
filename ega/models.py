@@ -81,6 +81,7 @@ class EgaUser(AbstractUser):
         tz_now = now() + timedelta(hours=HOURS_TO_DEADLINE)
         predictions = Prediction.objects.filter(
             match__tournament=tournament, user=self, match__when__lte=tz_now)
+        predictions = predictions.order_by('-match__when')
         return predictions
 
     def stats(self, tournament):

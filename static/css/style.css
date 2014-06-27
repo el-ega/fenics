@@ -60,6 +60,7 @@ dt {
 
 table.ranking tbody tr td {
     vertical-align: middle;
+    word-break: break-all;
 }
 
 table.ranking {
@@ -125,6 +126,53 @@ table.ranking {
 
 .away-image {
     float: left;
+}
+
+.match-goals {
+    font-size: 50px;
+}
+
+p.home-event {
+    padding-left: 20px;
+    background: url('/static/images/whistle_icon.png') no-repeat;
+}
+
+p.away-event {
+    padding-right: 20px;
+    background: url('/static/images/whistle_icon.png') no-repeat right;
+}
+
+
+p.home-substitution-in {
+    background: url('/static/images/in_icon.png') no-repeat;
+}
+
+p.home-yellow-card {
+    background: url('/static/images/yellow_card_icon.gif') no-repeat;
+}
+
+p.home-red-card {
+    background: url('/static/images/red_card_icon.gif') no-repeat;
+}
+
+p.home-goal, p.home-goal-penalty {
+    background: url('/static/images/ball_icon.png') no-repeat;
+}
+
+p.away-substitution-in {
+    background: url('/static/images/in_icon.png') no-repeat right;
+}
+
+p.away-yellow-card {
+    background: url('/static/images/yellow_card_icon.gif') no-repeat right;
+}
+
+p.away-red-card {
+    background: url('/static/images/red_card_icon.gif') no-repeat right;
+}
+
+p.away-goal, p.away-goal-penalty {
+    background: url('/static/images/ball_icon.png') no-repeat right;
 }
 
 table.latest-results {
