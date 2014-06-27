@@ -14,8 +14,12 @@ urlpatterns = patterns(
     url(r'^matches/(?P<slug>[\w-]+)/(?P<match_id>\d+)/$', 'match_details',
         name='ega-match-details'),
     url(r'^ranking/(?P<slug>[\w-]+)/$', 'ranking', name='ega-ranking'),
+    url(r'^ranking/(?P<slug>[\w-]+)/fase-final/$',
+        'ranking', {'playoffs': True}, name='ega-ranking-playoffs'),
     url(r'^ranking/(?P<slug>[\w-]+)/(?P<league_slug>[\w-]+)/$', 'ranking',
         name='ega-league-ranking'),
+    url(r'^ranking/(?P<slug>[\w-]+)/(?P<league_slug>[\w-]+)/fase-final/$',
+        'ranking', {'playoffs': True}, name='ega-league-ranking-playoffs'),
     url(r'^history/(?P<slug>[\w-]+)/$', 'history', name='ega-history'),
 
     url(r'^league/$', 'leagues', name='leagues'),

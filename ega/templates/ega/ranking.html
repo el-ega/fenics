@@ -5,11 +5,24 @@
 
 {% block content %}
 
-<h2>{{ tournament.name }}</h2>
+<h2>{{ tournament.name }}
+<small>
+{% if playoffs %}Fase Final |
+<a href="{% if league %}{% url 'ega-league-ranking' tournament.slug league.slug %}{% else %}{% url 'ega-ranking' tournament.slug %}{% endif %}">Total</a>{% else %}
+<a href="{% if league %}{% url 'ega-league-ranking-playoffs' tournament.slug league.slug %}{% else %}{% url 'ega-ranking-playoffs' tournament.slug %}{% endif %}">Fase Final</a> | Total{% endif %}</small></h2>
 
 <div class="row">
     <div class="col-md-8">
         <ul class="nav nav-tabs">
+        {% if playoffs %}
+        <li class="{% if not league %}active{% endif %}">
+            <a href="{% url 'ega-ranking-playoffs' tournament.slug %}">General</a></li>
+        {% for l in request.user.league_set.all %}
+            <li class="{% if league == l %}active{% endif %}">
+                <a href="{% url 'ega-league-ranking-playoffs' tournament.slug l.slug %}">{{ l.name }}</a>
+            </li>
+        {% endfor %}
+        {% else %}
         <li class="{% if not league %}active{% endif %}">
             <a href="{% url 'ega-ranking' tournament.slug %}">General</a></li>
         {% for l in request.user.league_set.all %}
@@ -17,6 +30,7 @@
                 <a href="{% url 'ega-league-ranking' tournament.slug l.slug %}">{{ l.name }}</a>
             </li>
         {% endfor %}
+        {% endif %}
         </ul>
     </div>
 </div>

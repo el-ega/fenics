@@ -34,6 +34,7 @@ from ega.managers import PredictionManager
 
 
 ALNUM_CHARS = string.letters + string.digits
+INITIAL_PLAYOFF_ID = 49  # HACK: match id for playoffs
 
 
 def rand_str(length=8):
@@ -84,12 +85,14 @@ class EgaUser(AbstractUser):
         predictions = predictions.order_by('-match__when')
         return predictions
 
-    def stats(self, tournament):
+    def stats(self, tournament, playoffs=False):
         """User stats for given tournament."""
         stats = {}
+        initial_match = 1 if not playoffs else INITIAL_PLAYOFF_ID
         ranking = Prediction.objects.filter(
             match__tournament=tournament, user=self, score__gte=0,
-            home_goals__isnull=False, away_goals__isnull=False)
+            home_goals__isnull=False, away_goals__isnull=False,
+            match__id__gte=initial_match)
         stats['count'] = len(ranking)
         stats['score'] = sum(r.score for r in ranking)
         stats['winners'] = sum(1 for r in ranking if r.score > 0)
@@ -114,18 +117,20 @@ class Tournament(models.Model):
         until = tz_now + timedelta(days=days)
         return self.match_set.filter(when__range=(tz_now, until))
 
-    def ranking(self):
+    def ranking(self, playoffs=False):
         """Users ranking in the tournament."""
+        # HACK: filter playoff matches
+        initial_match = 1 if not playoffs else INITIAL_PLAYOFF_ID
         SQL = ("SELECT pred.id, u.username as username, u.avatar as avatar, "
                "SUM(score=1) AS x1, SUM(score=3) AS x3, SUM(score) AS total "
                "FROM ega_prediction pred "
                "INNER JOIN ega_egauser u ON (pred.user_id=u.id) "
                "INNER JOIN ega_match m ON (pred.match_id=m.id) "
-               "WHERE m.tournament_id = %s "
+               "WHERE m.tournament_id = %s AND m.id >= %s "
                "GROUP BY pred.user_id ORDER BY total desc, x3 DESC")
 
         cursor = connection.cursor()
-        cursor.execute(SQL, [self.id])
+        cursor.execute(SQL, [self.id, initial_match])
         ranking = dictfetchall(cursor)
         return ranking
 
@@ -294,8 +299,8 @@ class League(models.Model):
     def owner(self):
         return LeagueMember.objects.get(league=self, is_owner=True).user
 
-    def ranking(self):
-        ranking = self.tournament.ranking()
+    def ranking(self, playoffs=False):
+        ranking = self.tournament.ranking(playoffs)
         users = self.members.values_list('username', flat=True)
         ranking = [r for r in ranking if r['username'] in users]
         return ranking
