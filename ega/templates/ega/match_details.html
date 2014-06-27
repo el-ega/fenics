@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% load ega_tags %}
+{% load staticfiles %}
+
+
+{% block extra-head %}
+{% if not finished %}
+<script type="text/javascript">
+
+function process_data(data){
+    for (var i = 0; i < data.length; i++){
+        match = data[i];
+        if (match.home_team.code == '{{ match.home.code }}' && match.away_team.code == '{{ match.away.code }}'){
+            break;
+        }
+    }
+
+    if (i == data.length){
+        return;
+    }
+
+    var home_team = match.home_team;
+    var away_team = match.away_team;
+
+    var home_events = match.home_team_events;
+    var away_events = match.away_team_events;
+
+    $('#' + home_team.code + '-goals').text(home_team.goals);
+    $('#' + away_team.code + '-goals').text(away_team.goals);
+
+    $('#' + home_team.code + '-stats').text('');
+    $.each(home_events, function(key, value){
+        $('#' + home_team.code + '-stats').append(
+            '<p title="' + value.type_of_event + '" class="home-event home-' + value.type_of_event + '">' + value.time + '\' ' + value.player + '</p>');
+    });
+
+    $('#' + away_team.code + '-stats').text('');
+    $.each(away_events, function(key, value){
+        $('#' + away_team.code + '-stats').append(
+            '<p title="' + value.type_of_event + '" class="away-event away-' + value.type_of_event + '">' + value.time + '\' ' + value.player + '</p>');
+    });
+
+    if (match.status == 'in progress') {
+        setTimeout(function() { update_match(); }, 30000);
+        $('#match-status').text('En juego');
+    }else if (match.status == 'future') {
+        setTimeout(function() { update_match(); }, 30000);
+        $('#match-status').text('Por jugarse');
+    }else{
+        $('#match-status').text('Finalizado');
+    }
+}
+
+
+function update_match(){
+    $.get('http://worldcup.sfg.io/matches/today/', {}, process_data);
+}
+
+$(document).ready(function () {
+    update_match();
+});
+</script>
+{% endif %}
+{% endblock %}
+
+
+{% block content-title %}{% endblock %}
+
+{% block content %}
+
+    {% with home=match.home away=match.away %}
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    {% show_prediction_trends match %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    {{ match.when|date:"F j, H:i" }}<br/>
+                    <span id="match-status">
+                    {% if finished %}Finalizado{% else %}<img src="{% static 'images/timer.gif' %}">{% endif %}
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-xs-10">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h6 class="panel-title home-stats">
+                                    <strong>{{ home }}</strong>
+                                    {% if home.image %}
+                                    <img class="team-image-small home-image" src="{{ home.image.url }}" />
+                                    {% endif %}</h6>
+                                </div>
+                                <div class="panel-body" id="{{ home.code }}-stats">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-2 text-center">
+                            <span class="match-goals" id="{{ home.code }}-goals">
+                            {% if finished %}{{ match.home_goals }}{% else %}-{% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-xs-2 text-center">
+                            <span class="match-goals" id="{{ away.code }}-goals">
+                            {% if finished %}{{ match.away_goals }}{% else %}-{% endif %}
+                            </span>
+                        </div>
+                        <div class="col-xs-10">
+                            <div class="panel panel-info">
+                                <div class="panel-heading">
+                                    <h6 class="panel-title away-stats">
+                                    <strong>{{ away }}</strong>
+                                    {% if away.image %}
+                                    <img class="team-image-small away-image" src="{{ away.image.url }}" />
+                                    {% endif %}</h6>
+                                </div>
+                                <div class="panel-body away-stats" id="{{ away.code }}-stats">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endwith %}
+
+    {% if finished %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h6 class="panel-title">Aciertos exactos ({{ exacts.count }})</h6>
+                </div>
+                <div class="panel-body">
+                    <p>{% for p in exacts %}
+                        {% if p.user.avatar %}
+                            <img src="{{ p.user.avatar.url }}" class="team-image-xsmall" title="{{ p.user.username }}" />
+                        {% else %}
+                            <img src="{% static 'images/unknown.png' %}" class="team-image-xsmall" title="{{ p.user.username }}" />
+                        {% endif %}
+                    {% endfor %}</p>
+                    {% with winners_count=winners.count %}
+                    <p><small>Hubo {{ winners_count }} persona{{ winners_count|pluralize }} que sum{{ winners_count|pluralize:"ó,aron"}} 1 punto.</small></p>
+                    {% endwith %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+
+    <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = '{{ DISQUS_SHORTNAME }}';
+        var disqus_title = '{{ tournament.slug }}-{{ match.id }}-{{ match.home.code }}-{{ match.away.code }}';
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+
+
+{% endblock %}

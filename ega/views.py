@@ -17,6 +17,7 @@ from django.views.decorators.http import require_GET, require_http_methods
 
 from ega.constants import (
     DEFAULT_TOURNAMENT,
+    EXACTLY_MATCH_POINTS,
     INVITE_BODY,
     INVITE_LEAGUE,
     INVITE_SUBJECT,
@@ -28,7 +29,14 @@ from ega.forms import (
     LeagueForm,
     PredictionForm,
 )
-from ega.models import EgaUser, League, LeagueMember, Prediction, Tournament
+from ega.models import (
+    EgaUser,
+    League,
+    LeagueMember,
+    Match,
+    Prediction,
+    Tournament,
+)
 
 
 def get_absolute_url(url):
@@ -213,6 +221,28 @@ def next_matches(request, slug):
     return render(
         request, 'ega/next_matches.html',
         {'tournament': tournament, 'formset': formset})
+
+
+@login_required
+def match_details(request, slug, match_id):
+    """Return specified match stats."""
+    tournament = get_object_or_404(Tournament, slug=slug, published=True)
+    match = get_object_or_404(Match, id=match_id, tournament=tournament)
+
+    exacts = Prediction.objects.none()
+    winners = Prediction.objects.none()
+    finished = match.home_goals is not None and match.away_goals is not None
+    if finished:
+        winners = Prediction.objects.filter(
+            match=match, score__gt=0, score__lt=EXACTLY_MATCH_POINTS)
+        exacts = Prediction.objects.filter(
+            match=match, score__gte=EXACTLY_MATCH_POINTS
+        ).select_related('user')
+
+    return render(
+        request, 'ega/match_details.html',
+        {'tournament': tournament, 'match': match,
+         'finished': finished, 'exacts': exacts, 'winners': winners})
 
 
 @login_required
