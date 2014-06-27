@@ -246,7 +246,7 @@ def match_details(request, slug, match_id):
 
 
 @login_required
-def ranking(request, slug, league_slug=None):
+def ranking(request, slug, league_slug=None, playoffs=False):
     """Return ranking and stats for the specified tournament."""
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
     league = None
@@ -256,7 +256,8 @@ def ranking(request, slug, league_slug=None):
             League, tournament=tournament, slug=league_slug)
 
     user = request.user
-    scores = league.ranking() if league else tournament.ranking()
+    scores = (league.ranking(playoffs) if league
+              else tournament.ranking(playoffs))
     try:
         position = ([r['username'] for r in scores]).index(user.username)
         position += 1
@@ -272,12 +273,13 @@ def ranking(request, slug, league_slug=None):
     except EmptyPage:
         ranking = paginator.page(paginator.num_pages)
 
-    stats = user.stats(tournament)
+    stats = user.stats(tournament, playoffs)
 
     return render(
         request, 'ega/ranking.html',
         {'tournament': tournament, 'league': league,
-         'ranking': ranking, 'user_position': position, 'stats': stats})
+         'ranking': ranking, 'user_position': position, 'stats': stats,
+         'playoffs': playoffs})
 
 
 @login_required
