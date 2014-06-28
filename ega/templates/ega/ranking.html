@@ -12,6 +12,12 @@
 <a href="{% if league %}{% url 'ega-league-ranking-playoffs' tournament.slug league.slug %}{% else %}{% url 'ega-ranking-playoffs' tournament.slug %}{% endif %}">Fase Final</a> | Total{% endif %}</small></h2>
 
 <div class="row">
+    <div class="col-md-4 visible-xs">
+        {% include 'ega/_user_stats.html' %}
+    </div>
+</div>
+
+<div class="row">
     <div class="col-md-8">
         <ul class="nav nav-tabs">
         {% if playoffs %}

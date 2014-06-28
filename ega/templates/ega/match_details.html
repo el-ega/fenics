@@ -27,6 +27,7 @@ function process_data(data){
 
     $('#' + home_team.code + '-goals').text(home_team.goals);
     $('#' + away_team.code + '-goals').text(away_team.goals);
+    $('#' + away_team.code + '-goals-responsive').text(away_team.goals);
 
     $('#' + home_team.code + '-stats').text('');
     $.each(home_events, function(key, value){
@@ -131,7 +132,7 @@ $(document).ready(function () {
                             </div>
                         </div>
                         <div class="col-xs-2 text-center visible-xs">
-                            <span class="match-goals" id="{{ away.code }}-goals">
+                            <span class="match-goals" id="{{ away.code }}-goals-responsive">
                             {% if finished %}{{ match.away_goals }}{% else %}-{% endif %}
                             </span>
                         </div>
