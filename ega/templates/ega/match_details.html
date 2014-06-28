@@ -4,7 +4,7 @@
 
 
 {% block extra-head %}
-{% if not finished %}
+
 <script type="text/javascript">
 
 function process_data(data){
@@ -53,14 +53,19 @@ function process_data(data){
 
 
 function update_match(){
-    $.get('http://worldcup.sfg.io/matches/today/', {}, process_data);
+    {% if finished %}
+    var url = 'http://worldcup.sfg.io/matches/country?fifa_code={{ match.home.code }}';
+    {% else %}
+    var url = 'http://worldcup.sfg.io/matches/today/';
+    {% endif %}
+    $.get(url, {}, process_data);
 }
 
 $(document).ready(function () {
     update_match();
 });
 </script>
-{% endif %}
+
 {% endblock %}
 
 
@@ -76,11 +81,11 @@ $(document).ready(function () {
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12 text-center">
-                    {{ match.when|date:"F j, H:i" }}<br/>
-                    <span id="match-status">
+                <div class="col-md-12 text-center match-status">
+                    <span id="match-status" class="{% if finished %}label label-default{% endif %}">
                     {% if finished %}Finalizado{% else %}<img src="{% static 'images/timer.gif' %}">{% endif %}
                     </span>
+                    {{ match.when|date:"F j, H:i" }}
                 </div>
             </div>
             <div class="row">
@@ -108,7 +113,7 @@ $(document).ready(function () {
                 </div>
                 <div class="col-md-6">
                     <div class="row">
-                        <div class="col-xs-2 text-center">
+                        <div class="col-xs-2 text-center hidden-xs">
                             <span class="match-goals" id="{{ away.code }}-goals">
                             {% if finished %}{{ match.away_goals }}{% else %}-{% endif %}
                             </span>
@@ -125,6 +130,11 @@ $(document).ready(function () {
                                 <div class="panel-body away-stats" id="{{ away.code }}-stats">
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-xs-2 text-center visible-xs">
+                            <span class="match-goals" id="{{ away.code }}-goals">
+                            {% if finished %}{{ match.away_goals }}{% else %}-{% endif %}
+                            </span>
                         </div>
                     </div>
                 </div>
