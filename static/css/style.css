@@ -132,6 +132,14 @@ table.ranking {
     font-size: 50px;
 }
 
+.match-status {
+    margin-bottom: 10px;
+}
+
+#match-status {
+    margin-right: 10px;
+}
+
 p.home-event {
     padding-left: 20px;
     background: url('/static/images/whistle_icon.png') no-repeat;
@@ -145,6 +153,10 @@ p.away-event {
 
 p.home-substitution-in {
     background: url('/static/images/in_icon.png') no-repeat;
+}
+
+p.home-substitution-out {
+    background: url('/static/images/out_icon.png') no-repeat;
 }
 
 p.home-yellow-card {
@@ -161,6 +173,10 @@ p.home-goal, p.home-goal-penalty {
 
 p.away-substitution-in {
     background: url('/static/images/in_icon.png') no-repeat right;
+}
+
+p.away-substitution-out {
+    background: url('/static/images/out_icon.png') no-repeat right;
 }
 
 p.away-yellow-card {
