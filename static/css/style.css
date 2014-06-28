@@ -254,4 +254,9 @@ table.latest-results tbody td.result-td {
     .title {
         margin-top: 50px;
     }
+    p.away-substitution-in, p.away-substitution-out, p.away-yellow-card,
+    p.away-red-card, p.away-goal, p.away-goal-penalty {
+        background-position: left;
+        padding-left: 20px;
+    }
 }
