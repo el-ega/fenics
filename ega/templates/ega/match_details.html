@@ -82,9 +82,8 @@ $(document).ready(function () {
             </div>
             <div class="row">
                 <div class="col-md-12 text-center match-status">
-                    <span id="match-status" class="{% if finished %}label label-default{% endif %}">
-                    {% if finished %}Finalizado{% else %}<img src="{% static 'images/timer.gif' %}">{% endif %}
-                    </span>
+                    <span id="match-status" class="label label-default"></span>
+                    {% if not finished %}<span><img src="{% static 'images/timer.gif' %}"></span>{% endif %}
                     {{ match.when|date:"F j, H:i" }}
                 </div>
             </div>

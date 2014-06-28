@@ -34,7 +34,6 @@
                     {% if match.description %}{{ match.description }} | {% endif %}
                     {{ match.when|date:"M j, P" }}
                     {% if match.location %}| {{ match.location }}{% endif %}
-                    | <a href="{% url 'ega-match-details' tournament.slug match.id %}">Detalles</a>
                 </small>
             </div>
         </div>
