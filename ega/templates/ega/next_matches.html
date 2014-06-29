@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load ega_tags %}
 {% load humanize %}
+{% load staticfiles %}
 
 {% block content-title %}Próximos partidos{% endblock %}
 
@@ -40,7 +41,12 @@
                         {% show_prediction_trends match %}
                     </div>
                 </div>
-                <div class="row">
+                {% if form.instance.starred %}
+                <div class="text-center visible-xs" style="margin-top:-10px; margin-bottom:10px">
+                    <img src="{% static 'images/star-small.jpg' %}" />
+                </div>
+                {% endif %}
+                <div class="row {% if form.instance.starred %}starred{% endif %}">
                     <div class="col-md-4">
                         {% include "ega/_team_details.html" with condition="home" team=home stats=form.instance.home_team_stats %}
                     </div>
@@ -57,7 +63,8 @@
                 <div class="text-center hidden-xs match-metadata">
                     <small>
                     {% if match.description %}{{ match.description }} | {% endif %}
-                    {% if match.location %}{{ match.location }}{% endif %}</small>
+                    {% if match.location %}{{ match.location }}{% endif %}
+                    </small>
                 </div>
             </div>
             {% endwith %}

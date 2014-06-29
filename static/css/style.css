@@ -13,6 +13,18 @@ dt {
     margin-top: 10px;
 }
 
+.starred {
+    background: url('/static/images/star.jpg') no-repeat center;
+}
+
+.starred-row {
+    background: url('/static/images/star_alpha.png') no-repeat center center/45px 45px;
+}
+
+.starred-font {
+    color: #a17f1a;
+}
+
 .title {
     border-bottom: 1px solid #EEE;
     margin-bottom: 20px;
@@ -258,5 +270,8 @@ table.latest-results tbody td.result-td {
     p.away-red-card, p.away-goal, p.away-goal-penalty {
         background-position: left;
         padding-left: 20px;
+    }
+    .starred {
+        background: none;
     }
 }
