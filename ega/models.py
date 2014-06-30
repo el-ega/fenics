@@ -150,6 +150,7 @@ class Team(models.Model):
         tz_now = now()
         matches = Match.objects.filter(
             Q(away=self)|Q(home=self), when__lte=tz_now)
+        matches = matches.order_by('-when')
         return matches
 
 
@@ -165,6 +166,7 @@ class Match(models.Model):
     when = models.DateTimeField(null=True, blank=True)
     location = models.CharField(max_length=200, blank=True)
     referee = models.CharField(max_length=200, blank=True)
+    starred = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('when',)
@@ -344,6 +346,9 @@ def update_related_predictions(sender, instance, **kwargs):
 
     if home_goals is None or away_goals is None:
         return
+
+    # reset predictions
+    predictions.update(score=0)
 
     # update exact predictions
     predictions.filter(home_goals=home_goals, away_goals=away_goals).update(

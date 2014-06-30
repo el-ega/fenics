@@ -1,4 +1,5 @@
 {% for match in matches %}
+    <div class="{% if match.starred %}starred-row{% endif %}">
     {% with home=match.home away=match.away %}
         <div class="row text-center homepage-match-row">
             <div class="col-xs-2 col-xs-offset-1">
@@ -6,7 +7,7 @@
                 <img class="team-image-xsmall" src="{{ home.image.url }}" />
                 {% endif %}
             </div>
-            <div class="col-xs-2">
+            <div class="col-xs-2 {% if match.starred %}starred-font{% endif %}">
                 <strong>{% firstof home.code home.name %}</strong>
             </div>
             {% if match.user_prediction %}
@@ -19,7 +20,7 @@
             {% else %}
             <div class="col-xs-2"></div>
             {% endif %}
-            <div class="col-xs-2">
+            <div class="col-xs-2 {% if match.starred %}starred-font{% endif %}">
                 <strong>{% firstof away.code away.name %}</strong>
             </div>
             <div class="col-xs-2">
@@ -38,4 +39,5 @@
             </div>
         </div>
     {% endwith %}
+    </div>
 {% endfor %}

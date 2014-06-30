@@ -193,7 +193,8 @@ def next_matches(request, slug):
     matches = tournament.next_matches()
     for m in matches:
         # create prediction for user if missing
-        Prediction.objects.get_or_create(user=request.user, match=m)
+        Prediction.objects.get_or_create(
+            user=request.user, match=m, defaults={'starred': m.starred})
 
     PredictionFormSet = modelformset_factory(
         Prediction, form=PredictionForm, extra=0)

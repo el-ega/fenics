@@ -1,7 +1,8 @@
 {% for prediction in history %}
+    <div class="{% if prediction.starred %}starred-row{% endif %}">
     {% with match=prediction.match %}
     {% with home=match.home away=match.away %}
-        <div class="row text-center homepage-match-row">
+        <div class="row text-center homepage-match-row {% if prediction.starred %}starred-font{% endif %}">
             <div class="col-xs-2 col-xs-offset-1">
                 {% if home.image %}
                 <img class="team-image-xsmall" src="{{ home.image.url }}" />
@@ -41,4 +42,5 @@
         </div>
     {% endwith %}
     {% endwith %}
+    </div>
 {% endfor %}
