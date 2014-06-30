@@ -150,6 +150,7 @@ class Team(models.Model):
         tz_now = now()
         matches = Match.objects.filter(
             Q(away=self)|Q(home=self), when__lte=tz_now)
+        matches = matches.order_by('-when')
         return matches
 
 
