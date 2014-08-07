@@ -15,12 +15,14 @@ class Migration(SchemaMigration):
         db.delete_unique(u'ega_league', ['slug'])
 
         # Adding unique constraint on 'League', fields ['name', 'slug', 'tournament']
-        db.create_unique(u'ega_league', ['name', 'slug', 'tournament_id'])
+        db.create_unique(u'ega_league', ['slug', 'tournament_id'])
+        db.create_unique(u'ega_league', ['name', 'tournament_id'])
 
 
     def backwards(self, orm):
         # Removing unique constraint on 'League', fields ['name', 'slug', 'tournament']
-        db.delete_unique(u'ega_league', ['name', 'slug', 'tournament_id'])
+        db.delete_unique(u'ega_league', ['slug', 'tournament_id'])
+        db.delete_unique(u'ega_league', ['name', 'tournament_id'])
 
         # Adding unique constraint on 'League', fields ['slug']
         db.create_unique(u'ega_league', ['slug'])

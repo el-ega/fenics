@@ -296,7 +296,7 @@ class League(models.Model):
 
     class Meta:
         ordering = ['name']
-        unique_together = ('name', 'slug', 'tournament')
+        unique_together = (('name', 'tournament'), ('slug', 'tournament'))
 
     def __unicode__(self):
         return self.name
