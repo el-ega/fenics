@@ -7,9 +7,8 @@ EMAILS_PLACEHOLDER = 'Los emails de tus amigos, separados por coma'
 
 INVITE_BODY = """Hola!
 
-Estoy jugando en el Ega, donde pronosticamos torneos varios de fútbol.
-Estamos a full arrancando con el mundial Brasil 2014, estaría bueno si venís a
-participar conmigo.
+Estoy jugando en el Ega, pronosticando los resultados del
+Torneo de Transición 2014, estaría bueno si venís a participar conmigo.
 %(extra_text)s
 Podés unirte siguiendo el link: %(url)s
 
@@ -33,7 +32,7 @@ LEAGUE_JOIN_CHOICES = [
 
 # Game settings
 
-DEFAULT_TOURNAMENT = 'brasil-2014'
+DEFAULT_TOURNAMENT = 'torneo-transicion'
 
 NEXT_MATCHES_DAYS = 7
 HOURS_TO_DEADLINE = 0

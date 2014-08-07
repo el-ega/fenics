@@ -30,7 +30,7 @@ from ega.constants import (
     NEXT_MATCHES_DAYS,
     WINNER_MATCH_POINTS,
 )
-from ega.managers import PredictionManager
+from ega.managers import LeagueManager, PredictionManager
 
 
 ALNUM_CHARS = string.letters + string.digits
@@ -285,15 +285,18 @@ class TeamStats(models.Model):
 class League(models.Model):
     """Custom league metadata."""
 
-    name = models.CharField(max_length=200, unique=True)
-    slug = models.SlugField(max_length=200, unique=True)
+    name = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=200)
     tournament = models.ForeignKey(Tournament)
     created = models.DateTimeField(default=now)
     members = models.ManyToManyField(
         settings.AUTH_USER_MODEL, through='LeagueMember')
 
+    objects = LeagueManager()
+
     class Meta:
         ordering = ['name']
+        unique_together = ('name', 'slug', 'tournament')
 
     def __unicode__(self):
         return self.name

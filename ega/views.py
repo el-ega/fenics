@@ -98,7 +98,8 @@ def invite_friends(request, league_slug=None):
     kwargs = dict(key=request.user.invite_key)
     league = None
     if league_slug:
-        league = get_object_or_404(League, slug=league_slug)
+        league = get_object_or_404(
+            League, tournament__slug=DEFAULT_TOURNAMENT, slug=league_slug)
         if league.owner != request.user:
             raise Http404
         kwargs['league_slug'] = league.slug
@@ -139,7 +140,8 @@ def friend_join(request, key, league_slug=None):
     friend = get_object_or_404(EgaUser, invite_key=key)
 
     if league_slug:
-        league = get_object_or_404(League, slug=league_slug)
+        league = get_object_or_404(
+            League, tournament__slug=DEFAULT_TOURNAMENT, slug=league_slug)
         member, created = LeagueMember.objects.get_or_create(
             user=request.user, league=league)
         if created:
@@ -165,7 +167,7 @@ def leagues(request):
                 reverse('invite-league', kwargs=dict(league_slug=league.slug)))
     else:
         form = LeagueForm()
-    leagues = League.objects.filter(members=request.user)
+    leagues = League.objects.current().filter(members=request.user)
     return render(
         request, 'ega/leagues.html', dict(leagues=leagues, form=form))
 
