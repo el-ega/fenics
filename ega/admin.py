@@ -23,8 +23,11 @@ class LeagueAdmin(admin.ModelAdmin):
 
 
 class TeamAdmin(admin.ModelAdmin):
-
     prepopulated_fields = dict(slug=('name',))
+
+
+class MatchAdmin(admin.ModelAdmin):
+    list_filter = ('tournament', 'when')
 
 
 class TournamentAdmin(admin.ModelAdmin):
@@ -34,7 +37,7 @@ class TournamentAdmin(admin.ModelAdmin):
 
 admin.site.register(EgaUser)
 admin.site.register(League, LeagueAdmin)
-admin.site.register(Match)
+admin.site.register(Match, MatchAdmin)
 admin.site.register(Prediction)
 admin.site.register(Team, TeamAdmin)
 admin.site.register(TeamStats)

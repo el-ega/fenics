@@ -26,7 +26,6 @@ class Command(BaseCommand):
                                           day=entry.updated_parsed.tm_mday,
                                           hour=entry.updated_parsed.tm_hour,
                                           minute=entry.updated_parsed.tm_min)
-            news_date = news_date - datetime.timedelta(hours=3)
 
             if not News.objects.filter(title=entry['title'],
                                        published=news_date):
