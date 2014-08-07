@@ -122,7 +122,8 @@ class Tournament(models.Model):
         # HACK: filter playoff matches
         initial_match = 1 if not playoffs else INITIAL_PLAYOFF_ID
         SQL = ("SELECT pred.id, u.username as username, u.avatar as avatar, "
-               "SUM(score=1) AS x1, SUM(score=3) AS x3, SUM(score) AS total "
+               "SUM(score=1) AS x1, SUM(score=3) AS x3, "
+               "SUM(score=2) AS xx1, SUM(score=4) AS xx3, SUM(score) AS total "
                "FROM ega_prediction pred "
                "INNER JOIN ega_egauser u ON (pred.user_id=u.id) "
                "INNER JOIN ega_match m ON (pred.match_id=m.id) "

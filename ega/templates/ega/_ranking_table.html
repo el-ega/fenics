@@ -9,6 +9,7 @@
             {% if score_details %}
             <th class="text-right">x1</th>
             <th class="text-right">x3</th>
+            <th class="text-right"><img src="{% static 'images/star.jpg' %}" style="max-width:15px"></th>
             {% endif %}
             <th class="text-right score">Puntos</th>
         </tr>
@@ -25,8 +26,9 @@
             </td>
             <td>{{ row.username }}</td>
             {% if score_details %}
-            <td class="text-right">{{ row.x1 }}</td>
-            <td class="text-right">{{ row.x3 }}</td>
+            <td class="text-right">{{ row.x1|add:row.xx1 }}</td>
+            <td class="text-right">{{ row.x3|add:row.xx3 }}</td>
+            <td class="text-right">{% if row.xx1 or row.xx3 %}+{{ row.xx1|add:row.xx3 }}{% endif %}</td>
             {% endif %}
             <td class="text-right score"><strong>{{ row.total }}</strong></td>
         </tr>

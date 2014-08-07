@@ -158,7 +158,8 @@ $(document).ready(function () {
                         {% endif %}
                     {% endfor %}</p>
                     {% with winners_count=winners.count %}
-                    <p><small>Hubo {{ winners_count }} persona{{ winners_count|pluralize }} que sum{{ winners_count|pluralize:"ó,aron"}} 1 punto.</small></p>
+                    <p><small>Hubo {{ winners_count }} persona{{ winners_count|pluralize }}
+                    que sum{{ winners_count|pluralize:"ó,aron"}} {% if match.starred %}2 puntos (estrella){% else %}1 punto{% endif %}.</small></p>
                     {% endwith %}
                 </div>
             </div>
