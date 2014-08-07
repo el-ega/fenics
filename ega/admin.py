@@ -28,7 +28,7 @@ class TeamAdmin(admin.ModelAdmin):
 
 
 class TournamentAdmin(admin.ModelAdmin):
-
+    filter_horizontal = ('teams',)
     prepopulated_fields = dict(slug=('name',))
 
 
