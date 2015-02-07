@@ -32,7 +32,7 @@ LEAGUE_JOIN_CHOICES = [
 
 # Game settings
 
-DEFAULT_TOURNAMENT = 'torneo-transicion'
+DEFAULT_TOURNAMENT = 'torneo-de-los-30'
 
 NEXT_MATCHES_DAYS = 7
 HOURS_TO_DEADLINE = 0

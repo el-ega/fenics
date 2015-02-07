@@ -121,14 +121,18 @@ class Tournament(models.Model):
         """Users ranking in the tournament."""
         # HACK: filter playoff matches
         initial_match = 1 if not playoffs else INITIAL_PLAYOFF_ID
-        SQL = ("SELECT pred.id, u.username as username, u.avatar as avatar, "
-               "SUM(score=1) AS x1, SUM(score=3) AS x3, "
-               "SUM(score=2) AS xx1, SUM(score=4) AS xx3, SUM(score) AS total "
+        SQL = ("SELECT u.username as username, u.avatar as avatar, "
+               "r.x1 as x1, r.x3 as x3, r.xx1 as xx1, r.xx3 as xx3, r.total as total FROM ("
+               "SELECT pred.user_id, "
+               "SUM(case when score=1 then 1 else 0 end) AS x1, "
+               "SUM(case when score=3 then 3 else 0 end) AS x3, "
+               "SUM(case when score=2 then 2 else 0 end) AS xx1, "
+               "SUM(case when score=4 then 4 else 0 end) AS xx3, SUM(score) AS total "
                "FROM ega_prediction pred "
-               "INNER JOIN ega_egauser u ON (pred.user_id=u.id) "
                "INNER JOIN ega_match m ON (pred.match_id=m.id) "
                "WHERE m.tournament_id = %s AND m.id >= %s "
-               "GROUP BY pred.user_id ORDER BY total desc, x3 DESC")
+               "GROUP BY pred.user_id ORDER BY total desc, x3 DESC) r "
+               "INNER JOIN ega_egauser u ON (r.user_id=u.id) ")
 
         cursor = connection.cursor()
         cursor.execute(SQL, [self.id, initial_match])
@@ -150,7 +154,8 @@ class Team(models.Model):
         """Return team previously played matches."""
         tz_now = now()
         matches = Match.objects.filter(
-            Q(away=self)|Q(home=self), when__lte=tz_now)
+            Q(away=self)|Q(home=self), tournament=tournament,
+            when__lte=tz_now)
         matches = matches.order_by('-when')
         return matches
 

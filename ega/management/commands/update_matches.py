@@ -56,7 +56,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         matches = MatchData.all()
-        tournament = Tournament.objects.get(slug='torneo-transicion')
+        tournament = Tournament.objects.get(slug='torneo-de-los-30')
 
         for i, entry in enumerate(matches):
             when = entry.when
@@ -76,7 +76,7 @@ class Command(BaseCommand):
 
                 if when != match.when:
                     match.when = when
-                    match.description = 'Fecha %d' % (i / 10 + 1)
+                    match.description = 'Fecha %d' % (i / 15 + 1)
                     changed = True
 
                 if (match.home_goals is None or match.away_goals is None) and entry.is_finished:

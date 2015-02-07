@@ -54,8 +54,8 @@
                     {% endif %}
                     {% endcomment %}
                     <li><a href="{% url 'invite' %}">Invitá gente</a></li>
-                    <li><a href="{% url 'ega-next-matches' 'torneo-transicion' %}">Partidos</a></li>
-                    <li><a href="{% url 'ega-ranking' 'torneo-transicion' %}">Posiciones</a></li>
+                    <li><a href="{% url 'ega-next-matches' 'torneo-de-los-30' %}">Partidos</a></li>
+                    <li><a href="{% url 'ega-ranking' 'torneo-de-los-30' %}">Posiciones</a></li>
                     <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Ligas de amigos <b class="caret"></b></a>
                     <ul class="dropdown-menu">
@@ -81,7 +81,7 @@
                     </li>
                     {% else %}
                     <li><a href="{% url 'account_login' %}">{% trans "Sign In" %}</a></li>
-                    <li><a href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a></li>
+                    {# <li><a href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a></li> #}
                     {% endif %}
                     <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">el Ega <b class="caret"></b></a>

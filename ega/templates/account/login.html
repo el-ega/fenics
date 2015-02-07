@@ -42,11 +42,13 @@
 
 <div class="text-center">
 <p>Tu usuario de la edición del mundial Brasil 2014 todavía es válido.</p>
-<p>O podés <a href="{{ signup_url }}">registrarte</a> y luego iniciar sesión acá:</p>
+{# <p>O podés <a href="{{ signup_url }}">registrarte</a> y luego iniciar sesión acá:</p>#}
 
 {% else %}
+{% comment %}
 <p>{% blocktrans %}If you have not created an account yet, then please
 <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+{% endcomment %}
 {% endif %}
 
 <form method="POST" action="{% url 'account_login' %}" role="form">
