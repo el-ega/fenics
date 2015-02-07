@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'ega',
     'news',
     'allauth',
+    'honeypot',
     'south',
     'allauth.account',
     'allauth.socialaccount',
@@ -55,6 +56,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'honeypot.middleware.HoneypotResponseMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -150,6 +152,8 @@ EL_EGA_NO_REPLY = 'noreply@el-ega.com.ar'
 
 DISQUS_SHORTNAME = 'elega-staging'
 FENICS_FEED_URL = 'http://www.ole.com.ar/rss/futbol-primera/'
+
+HONEYPOT_FIELD_NAME = 'user-secret'
 
 try:
     from local_settings import *
