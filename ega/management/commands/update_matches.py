@@ -7,6 +7,7 @@ import demiurge
 from django.core.management.base import BaseCommand, CommandError
 from django.utils.timezone import get_default_timezone, make_aware
 
+from ega.constants import DEFAULT_TOURNAMENT
 from ega.models import Match, Team, Tournament
 
 
@@ -56,7 +57,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         matches = MatchData.all()
-        tournament = Tournament.objects.get(slug='torneo-de-los-30')
+        tournament = Tournament.objects.get(slug=DEFAULT_TOURNAMENT)
 
         for i, entry in enumerate(matches):
             when = entry.when
