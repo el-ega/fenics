@@ -4,7 +4,7 @@ from models import News
 
 
 class NewsAdmin(admin.ModelAdmin):
-    list_display = ('title', 'published')
-    search_fields = ('title',)
+    list_display = ('title', 'source', 'published')
+    search_fields = ('title', 'source')
 
 admin.site.register(News, NewsAdmin)

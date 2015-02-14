@@ -203,6 +203,11 @@ p.away-goal, p.away-goal-penalty {
     background: url('/static/images/ball_icon.png') no-repeat right;
 }
 
+.news-item {
+    margin-top: -10px;
+    margin-bottom: 25px;
+}
+
 table.latest-results {
     margin-bottom: 0px;
 }

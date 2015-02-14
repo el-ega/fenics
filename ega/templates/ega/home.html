@@ -15,8 +15,13 @@
             {% include 'ega/_user_stats.html' %}
 
             <div class="hidden-xs">
+                <h3 class="title">Blog <small>el Ega</small></h3>
+                {% latest_news source='ega' latest=1 %}
+            </div>
+
+            <div class="hidden-xs">
                 <h3 class="title">Noticias <small>Olé</small></h3>
-                {% latest_news latest=2 %}
+                {% latest_news source='ole' latest=2 %}
             </div>
         </div>
 

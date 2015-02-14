@@ -151,7 +151,10 @@ EL_EGA_ADMIN = 'admin@el-ega.com.ar'
 EL_EGA_NO_REPLY = 'noreply@el-ega.com.ar'
 
 DISQUS_SHORTNAME = 'elega-staging'
-FENICS_FEED_URL = 'http://www.ole.com.ar/rss/futbol-primera/'
+NEWS_FEEDS = (
+    ('ole', 'http://www.ole.com.ar/rss/futbol-primera/'),
+    ('ega', 'http://blog.el-ega.com.ar/rss'),
+)
 
 HONEYPOT_FIELD_NAME = 'user-secret'
 
