@@ -8,7 +8,7 @@ from django.core.validators import validate_email
 from django.forms.models import BaseModelFormSet
 from django.utils.timezone import now
 
-from ega.constants import EMAILS_PLACEHOLDER
+from ega.constants import DEFAULT_TOURNAMENT, EMAILS_PLACEHOLDER
 from ega.models import EgaUser, League, Prediction, Tournament
 
 
@@ -113,7 +113,7 @@ class LeagueForm(forms.ModelForm):
         label='Nombre',
     )
     tournament = forms.ModelChoiceField(
-        queryset=Tournament.objects.filter(published=True),
+        queryset=Tournament.objects.filter(slug=DEFAULT_TOURNAMENT),
         widget=forms.Select(attrs={'class': 'form-control'}),
         label='Torneo', empty_label=None,
     )

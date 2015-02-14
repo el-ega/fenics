@@ -131,8 +131,8 @@ class Tournament(models.Model):
                "FROM ega_prediction pred "
                "INNER JOIN ega_match m ON (pred.match_id=m.id) "
                "WHERE m.tournament_id = %s AND m.id >= %s "
-               "GROUP BY pred.user_id ORDER BY total desc, x3 DESC) r "
-               "INNER JOIN ega_egauser u ON (r.user_id=u.id) ")
+               "GROUP BY pred.user_id) r  "
+               "INNER JOIN ega_egauser u ON (r.user_id=u.id) ORDER BY total desc, x3 desc")
 
         cursor = connection.cursor()
         cursor.execute(SQL, [self.id, initial_match])

@@ -34,6 +34,3 @@ class Command(BaseCommand):
                                            summary=entry['summary'],
                                            link=entry['link'])
                 counter += 1
-
-        self.stdout.write('Successfully imported %d news\n' % counter)
-

@@ -21,7 +21,7 @@ class Command(BaseCommand):
         # matches in the last hour
         matches = Match.objects.filter(
             tournament__slug=DEFAULT_TOURNAMENT, when__isnull=False,
-            when__range=(now() - timedelta(hours=1), now()))
+            when__range=(now() - timedelta(minutes=30), now()))
 
         for m in matches:
             predictions = m.prediction_set.filter(
@@ -35,4 +35,4 @@ class Command(BaseCommand):
                     for p in predictions])
                 tweet = u"En juego: %s vs %s\n%s" % (
                     m.home.name, m.away.name, data)
-                status = api.PostUpdate(tweet)
+                api.PostUpdate(tweet)
