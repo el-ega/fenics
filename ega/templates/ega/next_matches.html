@@ -62,8 +62,8 @@
                 </div>
                 <div class="text-center hidden-xs match-metadata">
                     <small>
-                    {% if match.description %}{{ match.description }} | {% endif %}
-                    {% if match.location %}{{ match.location }}{% endif %}
+                    {% if match.description %}{{ match.description }}{% endif %}
+                    {% if match.location %}| {{ match.location }}{% endif %}
                     </small>
                 </div>
             </div>

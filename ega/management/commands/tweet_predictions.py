@@ -30,8 +30,8 @@ class Command(BaseCommand):
                 data = ', '.join([
                     "%s dice %s %d-%d %s" % (
                         settings.EGA_ADMINS[p.user.username],
-                        m.home.name, p.home_goals,
-                        p.away_goals, m.away.name)
+                        m.home.code, p.home_goals,
+                        p.away_goals, m.away.code)
                     for p in predictions])
                 tweet = u"En juego: %s vs %s\n%s" % (
                     m.home.name, m.away.name, data)

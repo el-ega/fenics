@@ -19,6 +19,7 @@ from django.utils.text import slugify
 from django.utils.timezone import now
 
 from ega.constants import (
+    DEFAULT_TOURNAMENT,
     EXACTLY_MATCH_POINTS,
     HOURS_TO_DEADLINE,
     INVITE_BODY,
@@ -125,9 +126,9 @@ class Tournament(models.Model):
                "r.x1 as x1, r.x3 as x3, r.xx1 as xx1, r.xx3 as xx3, r.total as total FROM ("
                "SELECT pred.user_id, "
                "SUM(case when score=1 then 1 else 0 end) AS x1, "
-               "SUM(case when score=3 then 3 else 0 end) AS x3, "
-               "SUM(case when score=2 then 2 else 0 end) AS xx1, "
-               "SUM(case when score=4 then 4 else 0 end) AS xx3, SUM(score) AS total "
+               "SUM(case when score=3 then 1 else 0 end) AS x3, "
+               "SUM(case when score=2 then 1 else 0 end) AS xx1, "
+               "SUM(case when score=4 then 1 else 0 end) AS xx3, SUM(score) AS total "
                "FROM ega_prediction pred "
                "INNER JOIN ega_match m ON (pred.match_id=m.id) "
                "WHERE m.tournament_id = %s AND m.id >= %s "
@@ -150,11 +151,12 @@ class Team(models.Model):
     def __unicode__(self):
         return self.name
 
-    def latest_matches(self, tournament=None):
+    def latest_matches(self, tournament=DEFAULT_TOURNAMENT):
         """Return team previously played matches."""
         tz_now = now()
         matches = Match.objects.filter(
-            Q(away=self)|Q(home=self), tournament=tournament,
+            Q(away=self)|Q(home=self),
+            tournament__slug=tournament,
             when__lte=tz_now)
         matches = matches.order_by('-when')
         return matches
