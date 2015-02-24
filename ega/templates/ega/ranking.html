@@ -16,6 +16,7 @@
 
 <h2>{{ tournament.name }}{% if fecha %} <small>Fecha {{ fecha }}</small>{% endif %}</h2>
 
+
 <div class="row">
     <div class="col-md-4 visible-xs">
         {% include 'ega/_user_stats.html' %}
@@ -24,6 +25,16 @@
 
 <div class="row">
     <div class="col-md-8">
+        <select name="fecha" class="pull-right">
+            <option value="{{ base_url }}">Total</option>
+            {% for f in choices %}
+                <option value="{{ base_url }}f/{{ f }}"
+                        {% ifequal fecha f %}selected="selected"{% endifequal %}>
+                    Fecha {{ f }}</option>
+            {% endfor %}
+        </select>
+        <div class="clearfix visible-xs"></div>
+
         <ul class="nav nav-tabs">
         <li class="{% if not league %}active{% endif %}">
             <a href="{% url 'ega-ranking' tournament.slug %}{% if fecha %}f/{{ fecha }}{% endif %}">
@@ -63,17 +74,6 @@
 
     <div class="col-md-4 hidden-xs">
         <div data-spy="affix" style="width: 300px">
-            <p><label>Posiciones por fecha</label>
-                <select name="fecha">
-                    <option value="{{ base_url }}">General</option>
-                    {% for f in choices %}
-                        <option value="{{ base_url }}f/{{ f }}"
-                                {% ifequal fecha f %}selected="selected"{% endifequal %}>
-                            Fecha {{ f }}</option>
-                    {% endfor %}
-                </select>
-            </p>
-
             {% include 'ega/_user_stats.html' %}
 
             {% comment %}
