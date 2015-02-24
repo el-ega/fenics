@@ -86,14 +86,15 @@ class EgaUser(AbstractUser):
         predictions = predictions.order_by('-match__when')
         return predictions
 
-    def stats(self, tournament, playoffs=False):
+    def stats(self, tournament, fecha=None):
         """User stats for given tournament."""
         stats = {}
-        initial_match = 1 if not playoffs else INITIAL_PLAYOFF_ID
         ranking = Prediction.objects.filter(
             match__tournament=tournament, user=self, score__gte=0,
-            home_goals__isnull=False, away_goals__isnull=False,
-            match__id__gte=initial_match)
+            home_goals__isnull=False, away_goals__isnull=False)
+        if fecha is not None:
+            label = "Fecha %s" % fecha
+            ranking = ranking.filter(match__description=label)
         stats['count'] = len(ranking)
         stats['score'] = sum(r.score for r in ranking)
         stats['winners'] = sum(1 for r in ranking if r.score > 0)
@@ -118,10 +119,15 @@ class Tournament(models.Model):
         until = tz_now + timedelta(days=days)
         return self.match_set.filter(when__range=(tz_now, until))
 
-    def ranking(self, playoffs=False):
+    def ranking(self, fecha=None):
         """Users ranking in the tournament."""
-        # HACK: filter playoff matches
-        initial_match = 1 if not playoffs else INITIAL_PLAYOFF_ID
+        params = [self.id]
+        where = "WHERE m.tournament_id = %s "
+        if fecha is not None:
+            label = "Fecha %s" % fecha
+            where += "AND m.description = %s "
+            params += [label]
+
         SQL = ("SELECT u.username as username, u.avatar as avatar, "
                "r.x1 as x1, r.x3 as x3, r.xx1 as xx1, r.xx3 as xx3, r.total as total FROM ("
                "SELECT pred.user_id, "
@@ -130,13 +136,12 @@ class Tournament(models.Model):
                "SUM(case when score=2 then 1 else 0 end) AS xx1, "
                "SUM(case when score=4 then 1 else 0 end) AS xx3, SUM(score) AS total "
                "FROM ega_prediction pred "
-               "INNER JOIN ega_match m ON (pred.match_id=m.id) "
-               "WHERE m.tournament_id = %s AND m.id >= %s "
+               "INNER JOIN ega_match m ON (pred.match_id=m.id) " + where +
                "GROUP BY pred.user_id) r  "
                "INNER JOIN ega_egauser u ON (r.user_id=u.id) ORDER BY total desc, x3 desc")
 
         cursor = connection.cursor()
-        cursor.execute(SQL, [self.id, initial_match])
+        cursor.execute(SQL, params)
         ranking = dictfetchall(cursor)
         return ranking
 
@@ -312,8 +317,8 @@ class League(models.Model):
     def owner(self):
         return LeagueMember.objects.get(league=self, is_owner=True).user
 
-    def ranking(self, playoffs=False):
-        ranking = self.tournament.ranking(playoffs)
+    def ranking(self, fecha=None):
+        ranking = self.tournament.ranking(fecha=fecha)
         users = self.members.values_list('username', flat=True)
         ranking = [r for r in ranking if r['username'] in users]
         return ranking

@@ -1,11 +1,20 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
+{% block extra-head %}
+<script>
+    $(document).ready(function () {
+        $('select[name=fecha]').change(
+            function (){ window.location = $(this).val(); });
+    });
+</script>
+{% endblock %}
+
 {% block content-title %}Posiciones{% endblock %}
 
 {% block content %}
 
-<h2>{{ tournament.name }}</h2>
+<h2>{{ tournament.name }}{% if fecha %} <small>Fecha {{ fecha }}</small>{% endif %}</h2>
 
 <div class="row">
     <div class="col-md-4 visible-xs">
@@ -17,11 +26,12 @@
     <div class="col-md-8">
         <ul class="nav nav-tabs">
         <li class="{% if not league %}active{% endif %}">
-            <a href="{% url 'ega-ranking' tournament.slug %}">General</a></li>
+            <a href="{% url 'ega-ranking' tournament.slug %}{% if fecha %}f/{{ fecha }}{% endif %}">
+                General</a></li>
         {% for l in request.user.league_set.all %}
             {% if l.tournament == tournament %}
             <li class="{% if league == l %}active{% endif %}">
-                <a href="{% url 'ega-league-ranking' tournament.slug l.slug %}">{{ l.name }}</a>
+                <a href="{% url 'ega-league-ranking' tournament.slug l.slug %}{% if fecha %}f/{{ fecha }}{% endif %}">{{ l.name }}</a>
             </li>
             {% endif %}
         {% endfor %}
@@ -53,6 +63,17 @@
 
     <div class="col-md-4 hidden-xs">
         <div data-spy="affix" style="width: 300px">
+            <p><label>Posiciones por fecha</label>
+                <select name="fecha">
+                    <option value="{{ base_url }}">General</option>
+                    {% for f in choices %}
+                        <option value="{{ base_url }}f/{{ f }}"
+                                {% ifequal fecha f %}selected="selected"{% endifequal %}>
+                            Fecha {{ f }}</option>
+                    {% endfor %}
+                </select>
+            </p>
+
             {% include 'ega/_user_stats.html' %}
 
             {% comment %}

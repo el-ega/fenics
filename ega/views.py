@@ -249,18 +249,20 @@ def match_details(request, slug, match_id):
 
 
 @login_required
-def ranking(request, slug, league_slug=None, playoffs=False):
+def ranking(request, slug, league_slug=None, fecha=None):
     """Return ranking and stats for the specified tournament."""
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
     league = None
 
+    base_url = reverse('ega-ranking', args=[slug])
     if league_slug is not None:
+        base_url = reverse('ega-league-ranking', args=[slug, league_slug])
         league = get_object_or_404(
             League, tournament=tournament, slug=league_slug)
 
     user = request.user
-    scores = (league.ranking(playoffs) if league
-              else tournament.ranking(playoffs))
+    scores = (league.ranking(fecha=fecha)
+              if league else tournament.ranking(fecha=fecha))
     try:
         position = ([r['username'] for r in scores]).index(user.username)
         position += 1
@@ -276,13 +278,16 @@ def ranking(request, slug, league_slug=None, playoffs=False):
     except EmptyPage:
         ranking = paginator.page(paginator.num_pages)
 
-    stats = user.stats(tournament, playoffs)
+    stats = user.stats(tournament, fecha=fecha)
+    available_fechas = 1 + tournament.match_set.filter(
+        home_goals__isnull=False, away_goals__isnull=False).count() / 15
+    choices = map(str, range(1, available_fechas))
 
     return render(
         request, 'ega/ranking.html',
         {'tournament': tournament, 'league': league,
-         'ranking': ranking, 'user_position': position, 'stats': stats,
-         'playoffs': playoffs})
+         'base_url': base_url, 'fecha': fecha, 'choices': choices,
+         'ranking': ranking, 'user_position': position, 'stats': stats})
 
 
 @login_required
