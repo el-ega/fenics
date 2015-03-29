@@ -59,6 +59,7 @@ def home(request):
                                        away_goals__isnull=False )
     pending = matches.count() - played.count()
 
+    current_round = tournament.current_round()
     matches = matches[:3]
     for m in matches:
         try:
@@ -72,6 +73,7 @@ def home(request):
 
     return render(request, 'ega/home.html',
                   {'tournament': tournament, 'top_ranking': top_ranking,
+                   'current_round': current_round,
                    'pending': pending, 'matches': matches,
                    'history': history, 'stats': stats})
 

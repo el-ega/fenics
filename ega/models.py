@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 import random
+import re
 import string
 
 from datetime import datetime, timedelta
@@ -112,6 +113,18 @@ class Tournament(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def current_round(self):
+        current = None
+        try:
+            last_played = self.match_set.filter(
+                home_goals__isnull=False,
+                away_goals__isnull=False).latest('when')
+            numbers = re.findall('\d+', last_played.description)
+            current = numbers[0] if numbers else None
+        except Match.DoesNotExist:
+            pass
+        return current
 
     def next_matches(self, days=NEXT_MATCHES_DAYS):
         """Return matches in the next days."""

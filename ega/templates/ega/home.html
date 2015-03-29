@@ -21,7 +21,7 @@
 
             <div class="hidden-xs">
                 <h3 class="title">Noticias <small><a href="http://ole.com.ar">Olé</a></small></h3>
-                {% latest_news source='ole' latest=2 %}
+                {% latest_news source='ole' latest=1 %}
             </div>
         </div>
 
@@ -49,29 +49,11 @@
                     Posiciones
                 </h3>
                 {% include 'ega/_ranking_table.html' with ranking=top_ranking delta=1 %}
-                <p class="title-action"><strong><a href="{% url 'ega-ranking' tournament.slug %}">ver tabla completa</a></strong></p>
+                <p class="title-action"><strong><a href="{% url 'ega-ranking' tournament.slug %}">ver tabla completa</a> |
+                <a href="{% url 'ega-ranking' tournament.slug current_round %}">ver fecha {{ current_round }}</a></strong></p>
             {% endif %}
         </div>
 
-    </div>
-
-    <hr/>
-    <div class="row">
-        <div class="col-md-12">
-            <div id="disqus_thread"></div>
-            <script type="text/javascript">
-                var disqus_shortname = '{{ DISQUS_SHORTNAME }}';
-                var disqus_title = '{{ tournament.slug }}';
-                var disqus_url = 'http://el-ega.com.ar';
-
-                /* * * DON'T EDIT BELOW THIS LINE * * */
-                (function() {
-                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-                })();
-            </script>
-        </div>
     </div>
 
 {% endblock %}

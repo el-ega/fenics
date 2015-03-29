@@ -258,6 +258,15 @@ table.latest-results tbody td.result-td {
     height: 80px;
 }
 
+.footer-links {
+    margin-top: 55px;
+    background-color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1em;
+}
+
+.footer-links a {
+    color: green;
+}
 
 /* Responsive customizations */
 
