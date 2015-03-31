@@ -76,8 +76,10 @@ class Command(BaseCommand):
                     self.stdout.write(u'Match created: %s\n' % unicode(match))
 
                 if when != match.when:
+                    round = (i / 15 + 1)
                     match.when = when
-                    match.description = 'Fecha %d' % (i / 15 + 1)
+                    match.description = 'Fecha %d' % round
+                    match.round = str(round)
                     changed = True
 
                 if (match.home_goals is None or match.away_goals is None) and entry.is_finished:

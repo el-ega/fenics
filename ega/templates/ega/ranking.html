@@ -4,7 +4,7 @@
 {% block extra-head %}
 <script>
     $(document).ready(function () {
-        $('select[name=fecha]').change(
+        $('select[name=round]').change(
             function (){ window.location = $(this).val(); });
     });
 </script>
@@ -14,7 +14,7 @@
 
 {% block content %}
 
-<h2>{{ tournament.name }}{% if fecha %} <small>Fecha {{ fecha }}</small>{% endif %}</h2>
+<h2>{{ tournament.name }}{% if round %} <small>Fecha {{ round }}</small>{% endif %}</h2>
 
 
 <div class="row">
@@ -25,11 +25,11 @@
 
 <div class="row">
     <div class="col-md-8">
-        <select name="fecha" class="pull-right">
+        <select name="round" class="pull-right">
             <option value="{{ base_url }}">Total</option>
             {% for f in choices %}
                 <option value="{{ base_url }}f/{{ f }}"
-                        {% ifequal fecha f %}selected="selected"{% endifequal %}>
+                        {% ifequal round f %}selected="selected"{% endifequal %}>
                     Fecha {{ f }}</option>
             {% endfor %}
         </select>
@@ -37,12 +37,12 @@
 
         <ul class="nav nav-tabs">
         <li class="{% if not league %}active{% endif %}">
-            <a href="{% url 'ega-ranking' tournament.slug %}{% if fecha %}f/{{ fecha }}{% endif %}">
+            <a href="{% url 'ega-ranking' tournament.slug %}{% if round %}f/{{ round }}{% endif %}">
                 General</a></li>
         {% for l in request.user.league_set.all %}
             {% if l.tournament == tournament %}
             <li class="{% if league == l %}active{% endif %}">
-                <a href="{% url 'ega-league-ranking' tournament.slug l.slug %}{% if fecha %}f/{{ fecha }}{% endif %}">{{ l.name }}</a>
+                <a href="{% url 'ega-league-ranking' tournament.slug l.slug %}{% if round %}f/{{ round }}{% endif %}">{{ l.name }}</a>
             </li>
             {% endif %}
         {% endfor %}

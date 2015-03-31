@@ -36,7 +36,6 @@ from ega.managers import LeagueManager, PredictionManager
 
 
 ALNUM_CHARS = string.letters + string.digits
-INITIAL_PLAYOFF_ID = 49  # HACK: match id for playoffs
 
 
 def rand_str(length=8):
@@ -87,15 +86,15 @@ class EgaUser(AbstractUser):
         predictions = predictions.order_by('-match__when')
         return predictions
 
-    def stats(self, tournament, fecha=None):
+    def stats(self, tournament, round=None):
         """User stats for given tournament."""
         stats = {}
         ranking = Prediction.objects.filter(
             match__tournament=tournament, user=self, score__gte=0,
             home_goals__isnull=False, away_goals__isnull=False)
-        if fecha is not None:
-            label = "Fecha %s" % fecha
-            ranking = ranking.filter(match__description=label)
+        if round is not None:
+            ranking = ranking.filter(match__round=round)
+
         stats['count'] = len(ranking)
         stats['score'] = sum(r.score for r in ranking)
         stats['winners'] = sum(1 for r in ranking if r.score > 0)
@@ -120,8 +119,7 @@ class Tournament(models.Model):
             last_played = self.match_set.filter(
                 home_goals__isnull=False,
                 away_goals__isnull=False).latest('when')
-            numbers = re.findall('\d+', last_played.description)
-            current = numbers[0] if numbers else None
+            current = last_played.round
         except Match.DoesNotExist:
             pass
         return current
@@ -132,14 +130,13 @@ class Tournament(models.Model):
         until = tz_now + timedelta(days=days)
         return self.match_set.filter(when__range=(tz_now, until))
 
-    def ranking(self, fecha=None):
+    def ranking(self, round=None):
         """Users ranking in the tournament."""
         params = [self.id]
         where = "WHERE m.tournament_id = %s "
-        if fecha is not None:
-            label = "Fecha %s" % fecha
-            where += "AND m.description = %s "
-            params += [label]
+        if round is not None:
+            where += "AND m.round = %s "
+            params += [round]
 
         SQL = ("SELECT u.username as username, u.avatar as avatar, "
                "r.x1 as x1, r.x3 as x3, r.xx1 as xx1, r.xx3 as xx3, r.total as total FROM ("
@@ -188,6 +185,7 @@ class Match(models.Model):
     away_goals = models.IntegerField(null=True, blank=True)
 
     tournament = models.ForeignKey('Tournament')
+    round = models.CharField(max_length=128, blank=True)
     description = models.CharField(max_length=128, blank=True)
     when = models.DateTimeField(null=True, blank=True)
     location = models.CharField(max_length=200, blank=True)
@@ -330,8 +328,8 @@ class League(models.Model):
     def owner(self):
         return LeagueMember.objects.get(league=self, is_owner=True).user
 
-    def ranking(self, fecha=None):
-        ranking = self.tournament.ranking(fecha=fecha)
+    def ranking(self, round=None):
+        ranking = self.tournament.ranking(round=round)
         users = self.members.values_list('username', flat=True)
         ranking = [r for r in ranking if r['username'] in users]
         return ranking
