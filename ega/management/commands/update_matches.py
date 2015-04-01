@@ -41,6 +41,10 @@ class MatchData(demiurge.Item):
         return self.status.lower() == 'finalizado'
 
     @property
+    def is_suspended(self):
+        return self.status.lower() == 'suspendido'
+
+    @property
     def when(self):
         if self._time.startswith('-'):
             match_time = "00:00"
@@ -75,7 +79,11 @@ class Command(BaseCommand):
                 if created:
                     self.stdout.write(u'Match created: %s\n' % unicode(match))
 
-                if when != match.when:
+                if not match.suspended and entry.is_suspended:
+                    match.suspended = True
+                    changed = True
+
+                if when != match.when and not match.suspended:
                     round = (i / 15 + 1)
                     match.when = when
                     match.description = 'Fecha %d' % round

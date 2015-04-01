@@ -191,6 +191,7 @@ class Match(models.Model):
     location = models.CharField(max_length=200, blank=True)
     referee = models.CharField(max_length=200, blank=True)
     starred = models.BooleanField(default=False)
+    suspended = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('when',)
