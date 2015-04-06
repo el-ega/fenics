@@ -372,7 +372,10 @@ def update_related_predictions(sender, instance, **kwargs):
     away_goals = instance.away_goals
     predictions = instance.prediction_set
 
+
     if home_goals is None or away_goals is None:
+        # update starred field for predictions (only while not played)
+        predictions.update(starred=instance.starred)
         return
 
     # reset predictions
