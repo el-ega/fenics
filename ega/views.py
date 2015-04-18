@@ -100,7 +100,7 @@ def invite_friends(request, league_slug=None):
         if league.owner != request.user:
             raise Http404
         kwargs['league_slug'] = league.slug
-    invite_url = request.get_absolute_uri(reverse('join', kwargs=kwargs))
+    invite_url = request.build_absolute_uri(reverse('join', kwargs=kwargs))
 
     if request.method == 'POST':
         form = InviteFriendsForm(request.POST)
