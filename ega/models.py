@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
-
 import random
 import re
 import string
@@ -35,7 +33,7 @@ from ega.constants import (
 from ega.managers import LeagueManager, PredictionManager
 
 
-ALNUM_CHARS = string.letters + string.digits
+ALNUM_CHARS = string.ascii_letters + string.digits
 
 
 def rand_str(length=8):
