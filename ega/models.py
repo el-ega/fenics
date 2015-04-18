@@ -57,7 +57,8 @@ class EgaUser(AbstractUser):
         upload_to='avatars', null=True, blank=True,
         help_text='Se recomienda subir una imagen de (al menos) 100x100')
     invite_key = models.CharField(
-        max_length=20, default=partial(rand_str, 20), unique=True)
+        max_length=20, unique=True)
+    # , default=partial(rand_str, 20)
 
     def invite_friends(self, emails, subject=None, body=None):
         if subject is None:
