@@ -38,7 +38,7 @@ from ega.managers import LeagueManager, PredictionManager
 ALNUM_CHARS = string.letters + string.digits
 
 
-def rand_str(length=8):
+def rand_str(length=20):
     return ''.join(random.choice(ALNUM_CHARS) for x in xrange(length))
 
 
@@ -57,7 +57,7 @@ class EgaUser(AbstractUser):
         upload_to='avatars', null=True, blank=True,
         help_text='Se recomienda subir una imagen de (al menos) 100x100')
     invite_key = models.CharField(
-        max_length=20, default=partial(rand_str, 20), unique=True)
+        max_length=20, unique=True, default=rand_str)
 
     def invite_friends(self, emails, subject=None, body=None):
         if subject is None:

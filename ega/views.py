@@ -6,7 +6,6 @@ from allauth.account.models import EmailAddress
 from django.contrib import auth, messages
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.decorators import login_required
-from django.contrib.sites.models import Site
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.forms.models import modelformset_factory
@@ -37,10 +36,6 @@ from ega.models import (
     Prediction,
     Tournament,
 )
-
-
-def get_absolute_url(url):
-    return Site.objects.get_current().domain + url
 
 
 def logout(request):
@@ -105,7 +100,7 @@ def invite_friends(request, league_slug=None):
         if league.owner != request.user:
             raise Http404
         kwargs['league_slug'] = league.slug
-    invite_url = get_absolute_url(reverse('join', kwargs=kwargs))
+    invite_url = request.build_absolute_uri(reverse('join', kwargs=kwargs))
 
     if request.method == 'POST':
         form = InviteFriendsForm(request.POST)
