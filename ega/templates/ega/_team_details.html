@@ -19,8 +19,8 @@
             {% for m in team.latest_matches|slice:':3' %}
             <tr class="text-center">
                 <td class="team-td">{{ m.home.name }}</td>
-                <td class="result-td"><strong>{{ m.home_goals }}</strong></td>
-                <td class="result-td"><strong>{{ m.away_goals }}</strong></td>
+                <td class="result-td"><strong>{{ m.home_goals|default_if_none:'-' }}</strong></td>
+                <td class="result-td"><strong>{{ m.away_goals|default_if_none:'-' }}</strong></td>
                 <td class="team-td">{{ m.away.name }}</td>
             </tr>
             {% endfor %}
