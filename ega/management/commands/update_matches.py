@@ -4,7 +4,7 @@ from datetime import datetime
 
 import demiurge
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.utils.timezone import get_default_timezone, make_aware
 
 from ega.constants import DEFAULT_TOURNAMENT
@@ -90,7 +90,8 @@ class Command(BaseCommand):
                     match.round = str(round)
                     changed = True
 
-                if (match.home_goals is None or match.away_goals is None) and entry.is_finished:
+                if ((match.home_goals is None or match.away_goals is None) and
+                        entry.is_finished):
                     changed = True
                     match.home_goals = entry.home_goals
                     match.away_goals = entry.away_goals

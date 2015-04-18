@@ -18,8 +18,8 @@ urlpatterns = patterns(
         'ranking', name='ega-ranking'),
     url(r'^ranking/(?P<slug>[\w-]+)/(?P<league_slug>[\w-]+)/$', 'ranking',
         name='ega-league-ranking'),
-    url(r'^ranking/(?P<slug>[\w-]+)/(?P<league_slug>[\w-]+)/f/(?P<round>[\w]+)/$',
-        'ranking', name='ega-league-ranking'),
+    url(r'^ranking/(?P<slug>[\w-]+)/(?P<league_slug>[\w-]+)/f/'
+        r'(?P<round>[\w]+)/$', 'ranking', name='ega-league-ranking'),
     url(r'^history/(?P<slug>[\w-]+)/$', 'history', name='ega-history'),
 
     url(r'^league/$', 'leagues', name='leagues'),

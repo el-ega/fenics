@@ -7,6 +7,7 @@ from ega.constants import INVITE_SUBJECT, INVITE_BODY
 
 ADMINS = ['natalia@gmail.com', 'matias@gmail.com']
 
+
 class EgaUserTestCase(TestCase):
 
     def setUp(self):
