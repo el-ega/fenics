@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 import django.contrib.auth.models
+import ega.models
 import django.utils.timezone
 from django.conf import settings
 import django.core.validators
@@ -30,7 +31,7 @@ class Migration(migrations.Migration):
                 ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
                 ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
                 ('avatar', models.ImageField(help_text='Se recomienda subir una imagen de (al menos) 100x100', null=True, upload_to='avatars', blank=True)),
-                ('invite_key', models.CharField(unique=True, max_length=20)),
+                ('invite_key', models.CharField(default=ega.models.rand_str, unique=True, max_length=20)),
                 ('groups', models.ManyToManyField(related_query_name='user', related_name='user_set', to='auth.Group', blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', verbose_name='groups')),
                 ('user_permissions', models.ManyToManyField(related_query_name='user', related_name='user_set', to='auth.Permission', blank=True, help_text='Specific permissions for this user.', verbose_name='user permissions')),
             ],

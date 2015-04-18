@@ -3,6 +3,6 @@ Pillow==2.8.1
 demiurge==0.2
 django-allauth==0.19.1
 django-honeypot==0.4.0
-feedparser==5.2.0
+feedparser==5.2.0.post1
 psycopg2==2.6
 python-twitter==2.2
