@@ -144,6 +144,6 @@ NEWS_FEEDS = (
 HONEYPOT_FIELD_NAME = 'user-secret'
 
 try:
-    from local_settings import *
+    from .local_settings import *
 except ImportError:
     pass
