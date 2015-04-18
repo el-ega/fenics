@@ -38,7 +38,7 @@ from ega.managers import LeagueManager, PredictionManager
 ALNUM_CHARS = string.letters + string.digits
 
 
-def rand_str(length=18):
+def rand_str(length=20):
     return ''.join(random.choice(ALNUM_CHARS) for x in xrange(length))
 
 
