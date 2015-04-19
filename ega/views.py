@@ -43,6 +43,7 @@ def logout(request):
     messages.success(request, 'Cerraste sesión exitosamente!')
     return HttpResponseRedirect(reverse('home'))
 
+
 @login_required
 def home(request):
     tournament = get_object_or_404(
@@ -308,6 +309,7 @@ def history(request, slug):
     return render(
         request, 'ega/history.html',
         {'tournament': tournament, 'predictions': predictions, 'stats': stats})
+
 
 @login_required
 def verify_email(request, email):

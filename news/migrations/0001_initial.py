@@ -25,5 +25,6 @@ class Migration(migrations.Migration):
                 'verbose_name': 'News',
                 'verbose_name_plural': 'News',
             },
+            bases=(models.Model,),
         ),
     ]
