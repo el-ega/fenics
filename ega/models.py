@@ -59,6 +59,11 @@ class EgaUser(AbstractUser):
     invite_key = models.CharField(
         max_length=20, unique=True, default=rand_str)
 
+    def save(self, **kwargs):
+        if not self.last_login:
+            self.last_login = now()
+        super(EgaUser, self).save(**kwargs)
+
     def invite_friends(self, emails, subject=None, body=None):
         if subject is None:
             subject = INVITE_SUBJECT

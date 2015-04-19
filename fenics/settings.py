@@ -143,6 +143,11 @@ NEWS_FEEDS = (
 
 HONEYPOT_FIELD_NAME = 'user-secret'
 
+MIGRATION_MODULES = {
+    'socialaccount': 'other_migrations.socialaccount',
+    'account': 'other_migrations.account',
+}
+
 try:
     from local_settings import *
 except ImportError:
