@@ -119,7 +119,7 @@ class Tournament(models.Model):
     teams = models.ManyToManyField('Team')
     published = models.BooleanField(default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def current_round(self):
@@ -161,7 +161,7 @@ class Team(models.Model):
     slug = models.SlugField(max_length=200, unique=True)
     image = models.ImageField(upload_to='teams', null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def latest_matches(self, tournament=DEFAULT_TOURNAMENT):
@@ -194,7 +194,7 @@ class Match(models.Model):
     class Meta:
         ordering = ('when',)
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s: %s vs %s" % (
             self.tournament, self.home.name, self.away.name)
 
@@ -231,7 +231,7 @@ class Prediction(models.Model):
         ordering = ('match__when',)
         unique_together = ('user', 'match')
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s: %s" % (self.user, self.match)
 
     @property
@@ -273,7 +273,7 @@ class TeamStats(models.Model):
     class Meta:
         ordering = ('-points',)
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s - %s" % (self.team, self.tournament)
 
     def sync(self):
@@ -320,7 +320,7 @@ class League(models.Model):
         ordering = ['name']
         unique_together = (('name', 'tournament'), ('slug', 'tournament'))
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     @property
@@ -359,7 +359,7 @@ class LeagueMember(models.Model):
     class Meta:
         unique_together = ('user', 'league')
 
-    def __unicode__(self):
+    def __str__(self):
         return unicode(self.user)
 
 
