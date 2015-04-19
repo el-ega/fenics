@@ -14,11 +14,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='socialaccount',
             name='provider',
-            field=models.CharField(max_length=30, verbose_name='provider', choices=[(b'twitter', b'Twitter'), (b'google', b'Google'), (b'facebook', b'Facebook')]),
+            field=models.CharField(max_length=30, verbose_name='provider', choices=[('twitter', 'Twitter'), ('google', 'Google'), ('facebook', 'Facebook')]),
         ),
         migrations.AlterField(
             model_name='socialapp',
             name='provider',
-            field=models.CharField(max_length=30, verbose_name='provider', choices=[(b'twitter', b'Twitter'), (b'google', b'Google'), (b'facebook', b'Facebook')]),
+            field=models.CharField(max_length=30, verbose_name='provider', choices=[('twitter', 'Twitter'), ('google', 'Google'), ('facebook', 'Facebook')]),
         ),
     ]
