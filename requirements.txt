@@ -1,4 +1,4 @@
-Django==1.8
+Django<1.8
 Pillow==2.8.1
 demiurge==0.2
 django-allauth==0.19.1
