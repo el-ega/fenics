@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django.conf import settings
 from django.core import mail
 from django.test import TestCase
@@ -6,6 +8,7 @@ from ega.models import EgaUser
 from ega.constants import INVITE_SUBJECT, INVITE_BODY
 
 ADMINS = ['natalia@gmail.com', 'matias@gmail.com']
+
 
 class EgaUserTestCase(TestCase):
 
