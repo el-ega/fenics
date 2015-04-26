@@ -13,6 +13,7 @@ from django.views.decorators.http import require_GET, require_http_methods
 from ega.constants import (
     DEFAULT_TOURNAMENT,
     EXACTLY_MATCH_POINTS,
+    HISTORY_MATCHES_PER_PAGE,
     INVITE_BODY,
     INVITE_LEAGUE,
     INVITE_SUBJECT,
@@ -289,7 +290,7 @@ def history(request, slug):
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
 
     user_history = request.user.history(tournament)
-    paginator = Paginator(user_history, RANKING_TEAMS_PER_PAGE)
+    paginator = Paginator(user_history, HISTORY_MATCHES_PER_PAGE)
 
     page = request.GET.get('page')
     try:
