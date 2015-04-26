@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
-
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
-from django.forms.models import BaseModelFormSet
-from django.utils.timezone import now
 
 from ega.constants import DEFAULT_TOURNAMENT, EMAILS_PLACEHOLDER
 from ega.models import EgaUser, League, Prediction, Tournament
@@ -17,10 +13,10 @@ class PredictionForm(forms.ModelForm):
 
     home_goals = forms.ChoiceField(
         choices=GOAL_CHOICES, required=False,
-        widget=forms.Select(attrs={'class':'form-control input-lg'}))
+        widget=forms.Select(attrs={'class': 'form-control input-lg'}))
     away_goals = forms.ChoiceField(
         choices=GOAL_CHOICES, required=False,
-        widget=forms.Select(attrs={'class':'form-control input-lg'}))
+        widget=forms.Select(attrs={'class': 'form-control input-lg'}))
 
     def __init__(self, *args, **kwargs):
         super(PredictionForm, self).__init__(*args, **kwargs)

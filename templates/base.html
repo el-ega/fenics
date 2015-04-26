@@ -56,6 +56,7 @@
                     <li><a href="{% url 'invite' %}">Invitá gente</a></li>
                     <li><a href="{% url 'ega-next-matches' 'torneo-de-los-30' %}">Partidos</a></li>
                     <li><a href="{% url 'ega-ranking' 'torneo-de-los-30' %}">Posiciones</a></li>
+                    <li><a href="{% url 'ega-tournament-stats' 'torneo-de-los-30' %}">{% trans "Estadísticas" %}</a></li>
                     <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Ligas de amigos <b class="caret"></b></a>
                     <ul class="dropdown-menu">
@@ -82,6 +83,7 @@
                     {% else %}
                     <li><a href="{% url 'account_login' %}">{% trans "Sign In" %}</a></li>
                     <li><a href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a></li>
+                    <li><a href="{% url 'ega-tournament-stats' 'torneo-de-los-30' %}">{% trans "Estadísticas" %}</a></li>
                     {% endif %}
                 </ul>
             </div><!-- /.navbar-collapse -->
@@ -123,6 +125,18 @@
             {% endblock %}
         </footer>
 
+        {% block analytics %}
+        <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-99589-1', 'auto');
+        ga('send', 'pageview');
+
+        </script>
+        {% endblock %}
     </body>
 
 </html>

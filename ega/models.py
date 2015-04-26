@@ -1,19 +1,15 @@
 # -*- coding: utf-8 -*-
-
-from __future__ import unicode_literals
-
+import collections
 import random
-import re
 import string
 
-from datetime import datetime, timedelta
-from functools import partial
+from datetime import timedelta
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.mail.message import EmailMessage
 from django.db import IntegrityError, connection, models
-from django.db.models import Count, F, Q, Sum
+from django.db.models import F, Q, Sum
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
@@ -25,21 +21,34 @@ from ega.constants import (
     HOURS_TO_DEADLINE,
     INVITE_BODY,
     INVITE_SUBJECT,
-    LEAGUE_JOIN_CHOICES,
     MATCH_WON_POINTS,
     MATCH_TIE_POINTS,
     MATCH_LOST_POINTS,
     NEXT_MATCHES_DAYS,
     WINNER_MATCH_POINTS,
 )
-from ega.managers import LeagueManager, PredictionManager
+from ega.managers import LeagueManager, PredictionManager, TeamStatsManager
 
 
-ALNUM_CHARS = string.letters + string.digits
+ALNUM_CHARS = string.ascii_letters + string.digits
+RANKING_SQL = """
+SELECT u.username as username, u.avatar as avatar,
+       r.x1 as x1, r.x3 as x3, r.xx1 as xx1, r.xx3 as xx3, r.total as total
+FROM (SELECT
+    pred.user_id,
+    SUM(case when score=1 then 1 else 0 end) AS x1,
+    SUM(case when score=3 then 1 else 0 end) AS x3,
+    SUM(case when score=2 then 1 else 0 end) AS xx1,
+    SUM(case when score=4 then 1 else 0 end) AS xx3, SUM(score) AS total
+    FROM ega_prediction pred
+    INNER JOIN ega_match m ON (pred.match_id=m.id) {where}
+    GROUP BY pred.user_id
+) r INNER JOIN ega_egauser u ON (r.user_id=u.id) ORDER BY total DESC, x3 DESC
+"""
 
 
-def rand_str(length=8):
-    return ''.join(random.choice(ALNUM_CHARS) for x in xrange(length))
+def rand_str(length=20):
+    return ''.join(random.choice(ALNUM_CHARS) for x in range(length))
 
 
 def dictfetchall(cursor):
@@ -57,7 +66,7 @@ class EgaUser(AbstractUser):
         upload_to='avatars', null=True, blank=True,
         help_text='Se recomienda subir una imagen de (al menos) 100x100')
     invite_key = models.CharField(
-        max_length=20, default=partial(rand_str, 20), unique=True)
+        max_length=20, unique=True, default=rand_str)
 
     def invite_friends(self, emails, subject=None, body=None):
         if subject is None:
@@ -110,7 +119,7 @@ class Tournament(models.Model):
     teams = models.ManyToManyField('Team')
     published = models.BooleanField(default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def current_round(self):
@@ -138,22 +147,35 @@ class Tournament(models.Model):
             where += "AND m.round = %s "
             params += [round]
 
-        SQL = ("SELECT u.username as username, u.avatar as avatar, "
-               "r.x1 as x1, r.x3 as x3, r.xx1 as xx1, r.xx3 as xx3, r.total as total FROM ("
-               "SELECT pred.user_id, "
-               "SUM(case when score=1 then 1 else 0 end) AS x1, "
-               "SUM(case when score=3 then 1 else 0 end) AS x3, "
-               "SUM(case when score=2 then 1 else 0 end) AS xx1, "
-               "SUM(case when score=4 then 1 else 0 end) AS xx3, SUM(score) AS total "
-               "FROM ega_prediction pred "
-               "INNER JOIN ega_match m ON (pred.match_id=m.id) " + where +
-               "GROUP BY pred.user_id) r  "
-               "INNER JOIN ega_egauser u ON (r.user_id=u.id) ORDER BY total desc, x3 desc")
-
+        sql = RANKING_SQL.format(where=where)
         cursor = connection.cursor()
-        cursor.execute(SQL, params)
+        cursor.execute(sql, params)
         ranking = dictfetchall(cursor)
         return ranking
+
+    def team_ranking(self):
+        """Return tournament teams ranking."""
+        ranking = self.teamstats_set.all().annotate(
+            played=F('won')+F('tie')+F('lost'),
+            dg=F('gf')-F('gc')).order_by('-points', '-dg', '-gf')
+        return ranking
+
+    def most_common_results(self, n):
+        """Return the most common results."""
+        results = self.match_set.filter(
+            home_goals__isnull=False, away_goals__isnull=False)
+        results = results.values_list('home_goals', 'away_goals')
+        counter = collections.Counter(results)
+        return counter.most_common(n)
+
+    def most_common_predictions(self, n):
+        """Return the most common predictions."""
+        predictions = Prediction.objects.filter(match__tournament=self)
+        predictions = predictions.filter(match__home_goals__isnull=False,
+                                         match__away_goals__isnull=False)
+        predictions = predictions.values_list('home_goals', 'away_goals')
+        counter = collections.Counter(predictions)
+        return counter.most_common(n)
 
 
 class Team(models.Model):
@@ -163,14 +185,14 @@ class Team(models.Model):
     slug = models.SlugField(max_length=200, unique=True)
     image = models.ImageField(upload_to='teams', null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def latest_matches(self, tournament=DEFAULT_TOURNAMENT):
         """Return team previously played matches."""
         tz_now = now()
         matches = Match.objects.filter(
-            Q(away=self)|Q(home=self),
+            Q(away=self) | Q(home=self),
             tournament__slug=tournament,
             when__lte=tz_now)
         matches = matches.order_by('-when')
@@ -196,7 +218,7 @@ class Match(models.Model):
     class Meta:
         ordering = ('when',)
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s: %s vs %s" % (
             self.tournament, self.home.name, self.away.name)
 
@@ -233,7 +255,7 @@ class Prediction(models.Model):
         ordering = ('match__when',)
         unique_together = ('user', 'match')
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s: %s" % (self.user, self.match)
 
     @property
@@ -270,12 +292,17 @@ class TeamStats(models.Model):
     tie = models.PositiveIntegerField(default=0)
     lost = models.PositiveIntegerField(default=0)
 
+    gf = models.PositiveIntegerField(default=0)
+    gc = models.PositiveIntegerField(default=0)
+
     points = models.PositiveIntegerField(default=0)
+
+    objects = TeamStatsManager()
 
     class Meta:
         ordering = ('-points',)
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s - %s" % (self.team, self.tournament)
 
     def sync(self):
@@ -296,6 +323,14 @@ class TeamStats(models.Model):
         self.lost = (
             home.filter(home_goals__lt=F('away_goals')).count() +
             away.filter(away_goals__lt=F('home_goals')).count())
+
+        # goals stats
+        home_goals = home.aggregate(home_gf=Sum('home_goals'),
+                                    home_gc=Sum('away_goals'))
+        away_goals = away.aggregate(away_gf=Sum('away_goals'),
+                                    away_gc=Sum('home_goals'))
+        self.gf = home_goals['home_gf'] + away_goals['away_gf']
+        self.gc = home_goals['home_gc'] + away_goals['away_gc']
 
         self.points = self._points()
         self.save()
@@ -322,7 +357,7 @@ class League(models.Model):
         ordering = ['name']
         unique_together = (('name', 'tournament'), ('slug', 'tournament'))
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     @property
@@ -361,7 +396,7 @@ class LeagueMember(models.Model):
     class Meta:
         unique_together = ('user', 'league')
 
-    def __unicode__(self):
+    def __str__(self):
         return unicode(self.user)
 
 
@@ -371,7 +406,6 @@ def update_related_predictions(sender, instance, **kwargs):
     home_goals = instance.home_goals
     away_goals = instance.away_goals
     predictions = instance.prediction_set
-
 
     if home_goals is None or away_goals is None:
         # update starred field for predictions (only while not played)

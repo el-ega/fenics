@@ -1,23 +1,19 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
-
 from allauth.account.models import EmailAddress
 from django.contrib import auth, messages
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.decorators import login_required
-from django.contrib.sites.models import Site
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.urlresolvers import reverse
 from django.forms.models import modelformset_factory
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
-from django.template.response import TemplateResponse
 from django.views.decorators.http import require_GET, require_http_methods
 
 from ega.constants import (
     DEFAULT_TOURNAMENT,
     EXACTLY_MATCH_POINTS,
+    HISTORY_MATCHES_PER_PAGE,
     INVITE_BODY,
     INVITE_LEAGUE,
     INVITE_SUBJECT,
@@ -39,14 +35,11 @@ from ega.models import (
 )
 
 
-def get_absolute_url(url):
-    return Site.objects.get_current().domain + url
-
-
 def logout(request):
     auth.logout(request)
     messages.success(request, 'Cerraste sesión exitosamente!')
     return HttpResponseRedirect(reverse('home'))
+
 
 @login_required
 def home(request):
@@ -56,7 +49,7 @@ def home(request):
     matches = tournament.next_matches()
     played = Prediction.objects.filter(user=request.user, match__in=matches,
                                        home_goals__isnull=False,
-                                       away_goals__isnull=False )
+                                       away_goals__isnull=False)
     pending = matches.count() - played.count()
 
     current_round = tournament.current_round()
@@ -105,7 +98,7 @@ def invite_friends(request, league_slug=None):
         if league.owner != request.user:
             raise Http404
         kwargs['league_slug'] = league.slug
-    invite_url = get_absolute_url(reverse('join', kwargs=kwargs))
+    invite_url = request.build_absolute_uri(reverse('join', kwargs=kwargs))
 
     if request.method == 'POST':
         form = InviteFriendsForm(request.POST)
@@ -139,7 +132,7 @@ def invite_friends(request, league_slug=None):
 @require_GET
 @login_required
 def friend_join(request, key, league_slug=None):
-    friend = get_object_or_404(EgaUser, invite_key=key)
+    get_object_or_404(EgaUser, invite_key=key)
 
     if league_slug:
         league = get_object_or_404(
@@ -204,7 +197,6 @@ def next_matches(request, slug):
         Prediction, form=PredictionForm, extra=0)
     predictions = Prediction.objects.filter(
         user=request.user, match__in=matches)
-
 
     if request.method == 'POST':
         formset = PredictionFormSet(request.POST)
@@ -298,7 +290,7 @@ def history(request, slug):
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
 
     user_history = request.user.history(tournament)
-    paginator = Paginator(user_history, RANKING_TEAMS_PER_PAGE)
+    paginator = Paginator(user_history, HISTORY_MATCHES_PER_PAGE)
 
     page = request.GET.get('page')
     try:
@@ -313,6 +305,26 @@ def history(request, slug):
     return render(
         request, 'ega/history.html',
         {'tournament': tournament, 'predictions': predictions, 'stats': stats})
+
+
+def tournament_stats(request, slug):
+    """Return stats for the specified tournament."""
+    tournament = get_object_or_404(Tournament, slug=slug, published=True)
+
+    results = tournament.most_common_results(5)
+    predictions = tournament.most_common_predictions(5)
+    ranking = tournament.team_ranking()
+
+    no_wins = [r.team for r in ranking if r.won == 0]
+    no_ties = [r.team for r in ranking if r.tie == 0]
+    no_loses = [r.team for r in ranking if r.lost == 0]
+
+    return render(
+        request, 'ega/tournament_stats.html',
+        {'tournament': tournament,
+         'ranking': ranking, 'results': results, 'predictions': predictions,
+         'no_wins': no_wins, 'no_ties': no_ties, 'no_loses': no_loses})
+
 
 @login_required
 def verify_email(request, email):

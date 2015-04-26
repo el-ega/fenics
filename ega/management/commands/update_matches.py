@@ -4,7 +4,7 @@ from datetime import datetime
 
 import demiurge
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.utils.timezone import get_default_timezone, make_aware
 
 from ega.constants import DEFAULT_TOURNAMENT
@@ -33,7 +33,7 @@ class MatchData(demiurge.Item):
         base_url = ('http://mundod.lavoz.com.ar/sites/default/files'
                     '/Datafactory/html/v1/primeraa/fixture.html')
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s vs. %s" % (self.home, self.away)
 
     @property
@@ -77,20 +77,21 @@ class Command(BaseCommand):
                     tournament=tournament, home=home_team, away=away_team)
 
                 if created:
-                    self.stdout.write(u'Match created: %s\n' % unicode(match))
+                    self.stdout.write(u'Match created: %s\n' % str(match))
 
                 if not match.suspended and entry.is_suspended:
                     match.suspended = True
                     changed = True
 
                 if when != match.when and not match.suspended:
-                    round = (i / 15 + 1)
+                    round = (i // 15 + 1)
                     match.when = when
                     match.description = 'Fecha %d' % round
                     match.round = str(round)
                     changed = True
 
-                if (match.home_goals is None or match.away_goals is None) and entry.is_finished:
+                if ((match.home_goals is None or match.away_goals is None) and
+                        entry.is_finished):
                     changed = True
                     match.home_goals = entry.home_goals
                     match.away_goals = entry.away_goals

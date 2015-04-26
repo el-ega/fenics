@@ -9,17 +9,19 @@ urlpatterns = patterns(
     url(r'^profile/verify/(?P<email>.+)/$', 'verify_email',
         name='verify-email'),
 
+    url(r'^stats/(?P<slug>[\w-]+)/$', 'tournament_stats',
+        name='ega-tournament-stats'),
     url(r'^matches/(?P<slug>[\w-]+)/$', 'next_matches',
         name='ega-next-matches'),
     url(r'^matches/(?P<slug>[\w-]+)/(?P<match_id>\d+)/$', 'match_details',
         name='ega-match-details'),
     url(r'^ranking/(?P<slug>[\w-]+)/$', 'ranking', name='ega-ranking'),
-    url(r'^ranking/(?P<slug>[\w-]+)/f/(?P<round>[\w+])/$',
+    url(r'^ranking/(?P<slug>[\w-]+)/f/(?P<round>[\w]+)/$',
         'ranking', name='ega-ranking'),
     url(r'^ranking/(?P<slug>[\w-]+)/(?P<league_slug>[\w-]+)/$', 'ranking',
         name='ega-league-ranking'),
-    url(r'^ranking/(?P<slug>[\w-]+)/(?P<league_slug>[\w-]+)/f/(?P<round>[\w+])/$',
-        'ranking', name='ega-league-ranking'),
+    url(r'^ranking/(?P<slug>[\w-]+)/(?P<league_slug>[\w-]+)/f/'
+        r'(?P<round>[\w]+)/$', 'ranking', name='ega-league-ranking'),
     url(r'^history/(?P<slug>[\w-]+)/$', 'history', name='ega-history'),
 
     url(r'^league/$', 'leagues', name='leagues'),

@@ -2,20 +2,20 @@
 
 from datetime import timedelta
 
-import twitter
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.utils.timezone import now
+from TwitterAPI import TwitterAPI
 
 from ega.constants import DEFAULT_TOURNAMENT
-from ega.models import Match, Prediction
+from ega.models import Match
 
 
 class Command(BaseCommand):
     help = 'Tweet admin predictions'
 
     def handle(self, *args, **options):
-        api = twitter.Api(**settings.TWITTER_CREDENTIALS)
+        api = TwitterAPI(**settings.TWITTER_CREDENTIALS)
         users = settings.EGA_ADMINS.keys()
 
         # matches in the last hour
@@ -35,4 +35,4 @@ class Command(BaseCommand):
                     for p in predictions])
                 tweet = u"En juego: %s vs %s\n%s" % (
                     m.home.name, m.away.name, data)
-                api.PostUpdate(tweet)
+                api.request('statuses/update', {'status': tweet})

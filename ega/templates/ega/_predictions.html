@@ -10,7 +10,9 @@
             </div>
             <div class="col-xs-2">
                 <strong>
-                {% if use_code %}{% firstof home.code home.name %}{% else %}{{ home }}{% endif %}
+                <span class="hidden-xs">
+                    {% if use_code %}{% firstof home.code home.name %}{% else %}{{ home }}{% endif %}</span>
+                <span class="visible-xs">{% firstof home.code home.name %}</span>
                 </strong>
             </div>
             <div class="col-xs-1">
@@ -21,7 +23,9 @@
             </div>
             <div class="col-xs-2">
                 <strong>
-                {% if use_code %}{% firstof away.code away.name %}{% else %}{{ away }}{% endif %}
+                <span class="hidden-xs">
+                    {% if use_code %}{% firstof away.code away.name %}{% else %}{{ away }}{% endif %}</span>
+                <span class="visible-xs">{% firstof away.code away.name %}</span>
                 </strong>
             </div>
             <div class="col-xs-2">

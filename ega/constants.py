@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
-
-
 EMAILS_PLACEHOLDER = 'Los emails de tus amigos, separados por coma'
 
 INVITE_BODY = """Hola!
@@ -45,4 +42,5 @@ MATCH_WON_POINTS = 3
 MATCH_TIE_POINTS = 1
 MATCH_LOST_POINTS = 0
 
+HISTORY_MATCHES_PER_PAGE = 15
 RANKING_TEAMS_PER_PAGE = 10
