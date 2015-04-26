@@ -21,3 +21,11 @@ class LeagueManager(models.Manager):
     def current(self):
         qs = self.get_queryset().filter(tournament__slug=DEFAULT_TOURNAMENT)
         return qs
+
+
+class TeamStatsManager(models.Manager):
+    """TeamStat manager."""
+
+    def get_queryset(self):
+        return super(
+            TeamStatsManager, self).get_queryset().select_related('team')

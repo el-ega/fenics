@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import collections
 import random
 import string
 
@@ -9,7 +9,7 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.mail.message import EmailMessage
 from django.db import IntegrityError, connection, models
-from django.db.models import F, Q
+from django.db.models import F, Q, Sum
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
@@ -27,7 +27,7 @@ from ega.constants import (
     NEXT_MATCHES_DAYS,
     WINNER_MATCH_POINTS,
 )
-from ega.managers import LeagueManager, PredictionManager
+from ega.managers import LeagueManager, PredictionManager, TeamStatsManager
 
 
 ALNUM_CHARS = string.ascii_letters + string.digits
@@ -153,6 +153,29 @@ class Tournament(models.Model):
         ranking = dictfetchall(cursor)
         return ranking
 
+    def team_ranking(self):
+        """Return tournament teams ranking."""
+        ranking = self.teamstats_set.all().annotate(
+            dg=F('gf')-F('gc')).order_by('-points', '-dg', '-gf')
+        return ranking
+
+    def most_common_results(self, n):
+        """Return the most common results."""
+        results = self.match_set.filter(
+            home_goals__isnull=False, away_goals__isnull=False)
+        results = results.values_list('home_goals', 'away_goals')
+        counter = collections.Counter(results)
+        return counter.most_common(n)
+
+    def most_common_predictions(self, n):
+        """Return the most common predictions."""
+        predictions = Prediction.objects.filter(match__tournament=self)
+        predictions = predictions.filter(match__home_goals__isnull=False,
+                                         match__away_goals__isnull=False)
+        predictions = predictions.values_list('home_goals', 'away_goals')
+        counter = collections.Counter(predictions)
+        return counter.most_common(n)
+
 
 class Team(models.Model):
     """Team metadata."""
@@ -268,7 +291,12 @@ class TeamStats(models.Model):
     tie = models.PositiveIntegerField(default=0)
     lost = models.PositiveIntegerField(default=0)
 
+    gf = models.PositiveIntegerField(default=0)
+    gc = models.PositiveIntegerField(default=0)
+
     points = models.PositiveIntegerField(default=0)
+
+    objects = TeamStatsManager()
 
     class Meta:
         ordering = ('-points',)
@@ -294,6 +322,14 @@ class TeamStats(models.Model):
         self.lost = (
             home.filter(home_goals__lt=F('away_goals')).count() +
             away.filter(away_goals__lt=F('home_goals')).count())
+
+        # goals stats
+        home_goals = home.aggregate(home_gf=Sum('home_goals'),
+                                    home_gc=Sum('away_goals'))
+        away_goals = away.aggregate(away_gf=Sum('away_goals'),
+                                    away_gc=Sum('home_goals'))
+        self.gf = home_goals['home_gf'] + away_goals['away_gf']
+        self.gc = home_goals['home_gc'] + away_goals['away_gc']
 
         self.points = self._points()
         self.save()

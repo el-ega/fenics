@@ -307,6 +307,20 @@ def history(request, slug):
         {'tournament': tournament, 'predictions': predictions, 'stats': stats})
 
 
+def tournament_stats(request, slug):
+    """Return stats for the specified tournament."""
+    tournament = get_object_or_404(Tournament, slug=slug, published=True)
+
+    results = tournament.most_common_results(5)
+    predictions = tournament.most_common_predictions(5)
+    ranking = tournament.team_ranking()
+
+    return render(
+        request, 'ega/tournament_stats.html',
+        {'tournament': tournament,
+         'ranking': ranking, 'results': results, 'predictions': predictions})
+
+
 @login_required
 def verify_email(request, email):
     email_address = get_object_or_404(
