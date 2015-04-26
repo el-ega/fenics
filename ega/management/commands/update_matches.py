@@ -33,7 +33,7 @@ class MatchData(demiurge.Item):
         base_url = ('http://mundod.lavoz.com.ar/sites/default/files'
                     '/Datafactory/html/v1/primeraa/fixture.html')
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s vs. %s" % (self.home, self.away)
 
     @property
@@ -77,14 +77,14 @@ class Command(BaseCommand):
                     tournament=tournament, home=home_team, away=away_team)
 
                 if created:
-                    self.stdout.write(u'Match created: %s\n' % unicode(match))
+                    self.stdout.write(u'Match created: %s\n' % str(match))
 
                 if not match.suspended and entry.is_suspended:
                     match.suspended = True
                     changed = True
 
                 if when != match.when and not match.suspended:
-                    round = (i / 15 + 1)
+                    round = (i // 15 + 1)
                     match.when = when
                     match.description = 'Fecha %d' % round
                     match.round = str(round)

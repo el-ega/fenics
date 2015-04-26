@@ -5,4 +5,4 @@ django-allauth==0.19.1
 django-honeypot==0.4.0
 feedparser==5.2.0.post1
 psycopg2==2.6
-python-twitter==2.2
+TwitterAPI==2.3.3
