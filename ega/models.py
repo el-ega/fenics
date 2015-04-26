@@ -156,6 +156,7 @@ class Tournament(models.Model):
     def team_ranking(self):
         """Return tournament teams ranking."""
         ranking = self.teamstats_set.all().annotate(
+            played=F('won')+F('tie')+F('lost'),
             dg=F('gf')-F('gc')).order_by('-points', '-dg', '-gf')
         return ranking
 

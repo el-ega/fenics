@@ -24,13 +24,13 @@
                     <th>#</th>
                     <th></th>
                     <th></th>
-                    <th class="text-right">J</th>
-                    <th class="text-right">G</th>
-                    <th class="text-right">E</th>
-                    <th class="text-right">P</th>
-                    <th class="text-right">GF</th>
-                    <th class="text-right">GC</th>
-                    <th class="text-right">DG</th>
+                    <th class="text-right hidden-xs">J</th>
+                    <th class="text-right hidden-xs">G</th>
+                    <th class="text-right hidden-xs">E</th>
+                    <th class="text-right hidden-xs">P</th>
+                    <th class="text-right hidden-xs">GF</th>
+                    <th class="text-right hidden-xs">GC</th>
+                    <th class="text-right hidden-xs">DG</th>
                     <th class="text-right score">Puntos</th>
                 </tr>
             </thead>
@@ -39,17 +39,18 @@
                 <tr>
                     <td>{{ forloop.counter }}</td>
                     <td>{% if row.team.image %}
-                        <img class="avatar" src="{{ MEDIA_URL }}{{ row.team.image }}" />
+                        <img class="team-image-xsmall" src="{{ MEDIA_URL }}{{ row.team.image }}" />
                         {% endif %}
                     </td>
                     <td>{{ row.team }}</td>
-                    <td class="text-right">{{ row.won|add:row.tie|add:row.lost }}</td>
-                    <td class="text-right">{{ row.won }}</td>
-                    <td class="text-right">{{ row.tie }}</td>
-                    <td class="text-right">{{ row.lost }}</td>
-                    <td class="text-right">{{ row.gf }}</td>
-                    <td class="text-right">{{ row.gc }}</td>
-                    <td class="text-right">{% if row.dg >= 0 %}+{% endif %}{{ row.dg }}</td>
+                    <td class="text-right hidden-xs">{{ row.played }}</td>
+                    <td class="text-right hidden-xs">{{ row.won }}</td>
+                    <td class="text-right hidden-xs">{{ row.tie }}</td>
+                    <td class="text-right hidden-xs">{{ row.lost }}</td>
+                    <td class="text-right hidden-xs">{{ row.gf }}</td>
+                    <td class="text-right hidden-xs">{{ row.gc }}</td>
+                    <td class="text-right hidden-xs">
+                        {% if row.dg >= 0 %}+{% endif %}{{ row.dg }}</td>
                     <td class="text-right score"><strong>{{ row.points }}</strong></td>
                 </tr>
             {% endfor %}
