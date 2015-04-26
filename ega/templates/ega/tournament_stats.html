@@ -61,25 +61,48 @@
     <div class="col-md-4">
         <h4 class="title">Top 5 - Más repetidos</h4>
         <div class="row">
-        <div class="col-xs-6">
-            <div class="text-center">
-                <p><strong>Resultados</strong></p>
-                {% for result, occurrences in results %}
-                    <strong>{{ result.0 }} - {{ result.1 }}</strong>
-                    ({{ occurrences }})<br/>
-                {% endfor %}
+            <div class="col-xs-6">
+                <div class="text-center">
+                    <p><strong>Resultados</strong></p>
+                    {% for result, occurrences in results %}
+                        <strong>{{ result.0 }} - {{ result.1 }}</strong>
+                        ({{ occurrences }})<br/>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="text-center">
+                    <p><strong>Pronósticos</strong></p>
+                    {% for result, occurrences in predictions %}
+                        <strong>{{ result.0 }} - {{ result.1 }}</strong>
+                        ({{ occurrences }})<br/>
+                    {% endfor %}
+                </div>
             </div>
         </div>
-        <div class="col-xs-6">
-            <div class="text-center">
-                <p><strong>Pronósticos</strong></p>
-                {% for result, occurrences in predictions %}
-                    <strong>{{ result.0 }} - {{ result.1 }}</strong>
-                    ({{ occurrences }})<br/>
-                {% endfor %}
-            </div>
+
+        <div>
+        <h4 class="title"></h4>
+        <div>
+            <dl>
+                {% if no_loses %}
+                <dt>No perdi{{ no_loses|pluralize:'ó,eron' }} todavía</dt>
+                <dd>{{ no_loses|join:', '}}</dd>
+                {% else %}
+                <dt>No quedan invictos en el torneo</dt><dd></dd>
+                {% endif %}
+                {% if no_ties %}
+                <dt>No empat{{ no_ties|pluralize:'ó,aron' }} todavía</dt>
+                <dd>{{ no_ties|join:', '}}</dd>
+                {% endif %}
+                {% if no_wins %}
+                <dt>No gan{{ no_wins|pluralize:'ó,aron' }} todavía</dt>
+                <dd>{{ no_wins|join:', '}}</dd>
+                {% endif %}
+            </dl>
         </div>
         </div>
+
     </div>
 </div>
 {% endblock %}

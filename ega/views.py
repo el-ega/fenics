@@ -315,10 +315,15 @@ def tournament_stats(request, slug):
     predictions = tournament.most_common_predictions(5)
     ranking = tournament.team_ranking()
 
+    no_wins = [r.team for r in ranking if r.won == 0]
+    no_ties = [r.team for r in ranking if r.tie == 0]
+    no_loses = [r.team for r in ranking if r.lost == 0]
+
     return render(
         request, 'ega/tournament_stats.html',
         {'tournament': tournament,
-         'ranking': ranking, 'results': results, 'predictions': predictions})
+         'ranking': ranking, 'results': results, 'predictions': predictions,
+         'no_wins': no_wins, 'no_ties': no_ties, 'no_loses': no_loses})
 
 
 @login_required
