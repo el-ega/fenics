@@ -322,7 +322,7 @@ def tournament_stats(request, slug):
     return render(
         request, 'ega/tournament_stats.html',
         {'tournament': tournament,
-         'ranking': ranking, 'results': results, 'predictions': predictions,
+         'ranking': ranking, 'top_5': zip(results, predictions),
          'no_wins': no_wins, 'no_ties': no_ties, 'no_loses': no_loses})
 
 
