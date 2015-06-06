@@ -42,9 +42,19 @@ def logout(request):
 
 
 @login_required
+def switch_tournament(request, slug):
+    """Update tournament in session and redirect back."""
+    redirect_to = request.GET.get('next', reverse('home'))
+    request.session['tournament'] = slug
+    return HttpResponseRedirect(redirect_to)
+
+
+@login_required
 def home(request):
-    tournament = get_object_or_404(
-        Tournament, slug=DEFAULT_TOURNAMENT, published=True)
+    t_slug = request.session.get('tournament', DEFAULT_TOURNAMENT)
+    request.session['tournament'] = t_slug
+
+    tournament = get_object_or_404(Tournament, slug=t_slug, published=True)
 
     matches = tournament.next_matches()
     played = Prediction.objects.filter(user=request.user, match__in=matches,
