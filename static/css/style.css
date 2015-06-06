@@ -268,6 +268,17 @@ table.latest-results tbody td.result-td {
     color: green;
 }
 
+
+.navbar-lower {
+    background-color: white;
+    top: 40px;
+    z-index: 500;
+    height: 40px;
+    min-height: 40px;
+    border: none;
+    margin-bottom: 0px;
+}
+
 /* Responsive customizations */
 
 @media (max-width: 768px) {

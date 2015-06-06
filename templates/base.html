@@ -48,15 +48,23 @@
                 <ul class="nav navbar-nav navbar-right">
                     {% if user.is_authenticated %}
                     {% comment %}
-                    {% if pending %}
-                    <li><a href="{% url 'ega-next-matches' tournament.slug %}#pending-match">
-                        Partidos <span class="badge">{{ pending }}</span></a></li>
+                    {% if available_tournaments|length > 1 %}
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><strong>{{ current_tournament.name }}</strong> <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            {% for slug, tournament in available_tournaments.items %}
+                                {% if tournament != current_tournament %}
+                                    <li><a href="{% url 'ega-switch-tournament' tournament.slug %}">{{ tournament.name }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </li>
                     {% endif %}
                     {% endcomment %}
                     <li><a href="{% url 'invite' %}">Invitá gente</a></li>
-                    <li><a href="{% url 'ega-next-matches' 'torneo-de-los-30' %}">Partidos</a></li>
-                    <li><a href="{% url 'ega-ranking' 'torneo-de-los-30' %}">Posiciones</a></li>
-                    <li><a href="{% url 'ega-tournament-stats' 'torneo-de-los-30' %}">{% trans "Estadísticas" %}</a></li>
+                    <li><a href="{% url 'ega-next-matches' current_tournament.slug %}">Partidos</a></li>
+                    <li><a href="{% url 'ega-ranking' current_tournament.slug %}">Posiciones</a></li>
+                    <li><a href="{% url 'ega-tournament-stats' current_tournament.slug %}">{% trans "Estadísticas" %}</a></li>
                     <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Ligas de amigos <b class="caret"></b></a>
                     <ul class="dropdown-menu">
@@ -83,12 +91,26 @@
                     {% else %}
                     <li><a href="{% url 'account_login' %}">{% trans "Sign In" %}</a></li>
                     <li><a href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a></li>
-                    <li><a href="{% url 'ega-tournament-stats' 'torneo-de-los-30' %}">{% trans "Estadísticas" %}</a></li>
+                    <li><a href="{% url 'ega-tournament-stats' current_tournament.slug %}">{% trans "Estadísticas" %}</a></li>
                     {% endif %}
                 </ul>
             </div><!-- /.navbar-collapse -->
         </div>
         </nav>
+
+        {% if user.is_authenticated %}
+        <nav class="navbar navbar-lower navbar-fixed-top" role="navigation">
+        <div class="container">
+            <p class="navbar-text navbar-right text-right">Cambiar a
+            {% for s, t in available_tournaments.items %}
+            {% if t != current_tournament %}
+            <a href="{% url 'ega-switch-tournament' t.slug %}" class="navbar-link">{{ t.name }}</a>
+            {% endif %}
+            {% endfor %}
+            </p>
+        </div>
+        </nav>
+        {% endif %}
 
         <div class="container">
             <h1 class="text-muted">
