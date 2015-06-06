@@ -24,6 +24,9 @@ class Command(BaseCommand):
                     hour=entry.updated_parsed.tm_hour,
                     minute=entry.updated_parsed.tm_min)
 
+                if len(entry['link']) > 200:
+                    continue
+
                 if not News.objects.filter(title=entry['title'],
                                            source=source,
                                            published=news_date):

@@ -46,6 +46,9 @@ class MatchData(demiurge.Item):
 
     @property
     def when(self):
+        if self._time is None:
+            return None
+
         if self._time.startswith('-'):
             match_time = "00:00"
         else:
@@ -65,7 +68,7 @@ class Command(BaseCommand):
 
         for i, entry in enumerate(matches):
             when = entry.when
-            if when.hour != 0:
+            if when is not None and when.hour != 0:
                 changed = False
                 home = TEAM_MAPPING.get(entry.home, entry.home)
                 away = TEAM_MAPPING.get(entry.away, entry.away)
