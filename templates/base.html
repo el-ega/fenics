@@ -98,7 +98,7 @@
         </div>
         </nav>
 
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated and available_tournaments|length > 1 %}
         <nav class="navbar navbar-lower navbar-fixed-top" role="navigation">
         <div class="container">
             <p class="navbar-text navbar-right text-right">Cambiar a
