@@ -329,8 +329,12 @@ class TeamStats(models.Model):
                                     home_gc=Sum('away_goals'))
         away_goals = away.aggregate(away_gf=Sum('away_goals'),
                                     away_gc=Sum('home_goals'))
-        self.gf = home_goals['home_gf'] + away_goals['away_gf']
-        self.gc = home_goals['home_gc'] + away_goals['away_gc']
+        self.gf = 0
+        self.gc = 0
+        if home_goals['home_gf'] and away_goals['away_gf']:
+            self.gf = home_goals['home_gf'] + away_goals['away_gf']
+        if home_goals['home_gc'] and away_goals['away_gc']:
+            self.gc = home_goals['home_gc'] + away_goals['away_gc']
 
         self.points = self._points()
         self.save()
