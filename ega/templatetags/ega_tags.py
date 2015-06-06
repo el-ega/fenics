@@ -21,3 +21,8 @@ def show_prediction_trends(match):
 
     return {'home_team': match.home, 'away_team': match.away,
             'count': total, 'values': values}
+
+
+@register.assignment_tag
+def get_friends_leagues(user, slug):
+    return user.league_set.filter(tournament__slug=slug)

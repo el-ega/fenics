@@ -1,6 +1,6 @@
 {% load staticfiles %}
 {% load i18n %}
-
+{% load ega_tags %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -68,14 +68,13 @@
                     <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Ligas de amigos <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        {% with leagues=request.user.league_set.current.all %}
-                            {% for league in leagues %}
-                                <li><a href="{% url 'league-home' league.tournament.slug league.slug %}">{{ league.name }}</a></li>
-                            {% endfor %}
-                            {% if leagues %}
-                                <li class="divider"></li>
-                            {% endif %}
-                        {% endwith %}
+                        {% get_friends_leagues user current_tournament.slug as leagues %}
+                        {% for league in leagues %}
+                            <li><a href="{% url 'league-home' league.tournament.slug league.slug %}">{{ league.name }}</a></li>
+                        {% endfor %}
+                        {% if leagues %}
+                            <li class="divider"></li>
+                        {% endif %}
                         <li><a href="{% url 'leagues' %}">Administrar ligas</a></li>
                         <li><a href="{% url 'leagues' %}#new-league">Crear nueva liga</a></li>
                     </ul>
@@ -101,13 +100,13 @@
         {% if user.is_authenticated and available_tournaments|length > 1 %}
         <nav class="navbar navbar-lower navbar-fixed-top" role="navigation">
         <div class="container">
-            <p class="navbar-text navbar-right text-right">Cambiar a
+            <p class="navbar-text navbar-right text-right"><small>Cambiar a
             {% for s, t in available_tournaments.items %}
             {% if t != current_tournament %}
             <a href="{% url 'ega-switch-tournament' t.slug %}" class="navbar-link">{{ t.name }}</a>
             {% endif %}
             {% endfor %}
-            </p>
+            </small></p>
         </div>
         </nav>
         {% endif %}
