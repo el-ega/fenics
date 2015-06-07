@@ -171,9 +171,11 @@ def leagues(request):
     tournament = get_tournament(request)
 
     if request.method == 'POST':
-        form = LeagueForm(request.POST, initial=dict(tournament=tournament))
+        form = LeagueForm(request.POST)
         if form.is_valid():
-            league = form.save()
+            league = form.save(commit=False)
+            league.tournament = tournament
+            league.save()
             LeagueMember.objects.create(
                 user=request.user, league=league, is_owner=True)
             return HttpResponseRedirect(
@@ -182,10 +184,10 @@ def leagues(request):
     else:
         form = LeagueForm(initial=dict(tournament=tournament))
 
-    leagues = League.objects.filter(
+    user_leagues = League.objects.filter(
         tournament=tournament, members=request.user)
     return render(
-        request, 'ega/leagues.html', dict(leagues=leagues, form=form))
+        request, 'ega/leagues.html', dict(leagues=user_leagues, form=form))
 
 
 @require_GET
@@ -293,12 +295,12 @@ def ranking(request, league_slug=None, round=None):
     round_choices = tournament.match_set.filter(
         home_goals__isnull=False, away_goals__isnull=False).values_list(
         'round', flat=True).order_by('round').distinct()
-    leagues = League.objects.filter(
+    user_leagues = League.objects.filter(
         tournament=tournament, members=request.user)
 
     return render(
         request, 'ega/ranking.html',
-        {'league': league, 'leagues': leagues,
+        {'league': league, 'leagues': user_leagues,
          'base_url': base_url, 'round': round, 'choices': round_choices,
          'ranking': ranking, 'user_position': position, 'stats': stats})
 
