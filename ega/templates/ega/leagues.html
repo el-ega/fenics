@@ -9,7 +9,7 @@
 {% for l in leagues %}
 <div class="panel panel-default">
     <div class="panel-heading">
-      <h3 class="panel-title">{{ l }} - {{ l.tournament }}
+      <h3 class="panel-title">{{ l }}
         {% if l.owner == request.user %}
         <a class="pull-right" href="{% url 'invite-league' l.slug %}">Invitá más amigos</a>
         {% endif %}
