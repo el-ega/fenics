@@ -35,9 +35,10 @@ from ega.models import (
 )
 
 
-def get_tournament(request, published=True):
+def get_tournament(request):
     slug = request.session.setdefault('tournament', DEFAULT_TOURNAMENT)
-    return get_object_or_404(Tournament, slug=slug, published=published)
+    return get_object_or_404(
+        Tournament, slug=slug, published=True, finished=False)
 
 
 def logout(request):
