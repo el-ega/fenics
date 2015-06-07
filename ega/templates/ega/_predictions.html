@@ -40,7 +40,7 @@
                 <small>
                 Pronóstico: {{ prediction.home_goals }} - {{ prediction.away_goals }}
                 {% if prediction.score >= 0 %}({{ prediction.score }} punto{{ prediction.score|pluralize }}){% endif %}
-                | <a href="{% url 'ega-match-details' tournament.slug match.id %}">Detalles</a></small>
+                | <a href="{% url 'ega-match-details' match.id %}">Detalles</a></small>
                 {% endif %}
             </div>
         </div>

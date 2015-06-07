@@ -16,7 +16,6 @@ from django.utils.text import slugify
 from django.utils.timezone import now
 
 from ega.constants import (
-    DEFAULT_TOURNAMENT,
     EXACTLY_MATCH_POINTS,
     HOURS_TO_DEADLINE,
     INVITE_BODY,
@@ -189,12 +188,12 @@ class Team(models.Model):
     def __str__(self):
         return self.name
 
-    def latest_matches(self, tournament=DEFAULT_TOURNAMENT):
+    def latest_matches(self, tournament):
         """Return team previously played matches."""
         tz_now = now()
         matches = Match.objects.filter(
             Q(away=self) | Q(home=self),
-            tournament__slug=tournament,
+            tournament=tournament,
             when__lte=tz_now)
         matches = matches.order_by('-when')
         return matches

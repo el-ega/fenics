@@ -1,3 +1,4 @@
+{% load ega_tags %}
 <div class="panel panel-info">
     <div class="panel-heading">
         <h6 class="panel-title {{ condition }}-stats">
@@ -11,12 +12,13 @@
         {{ stats.won }} ganado{{ stats.won|pluralize }},
         {{ stats.tie }} empatado{{ stats.tie|pluralize }},
         {{ stats.lost }} perdido{{ stats.lost|pluralize }}</small></p>
-        {% if team.latest_matches %}
+        {% get_latest_matches team current_tournament as latest_matches %}
+        {% if latest_matches %}
         <small>
         <table class="table table-condensed latest-results">
             <thead><th colspan="4">Últimos resultados</th></thead>
             <tbody>
-            {% for m in team.latest_matches|slice:':3' %}
+            {% for m in latest_matches|slice:':3' %}
             <tr class="text-center">
                 <td class="team-td">{{ m.home.name }}</td>
                 <td class="result-td"><strong>{{ m.home_goals|default_if_none:'-' }}</strong></td>
