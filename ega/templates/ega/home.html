@@ -5,6 +5,7 @@
 {% block content-title %}{% endblock %}
 
 {% block content %}
+    <h3><strong>{{ current_tournament.name }}</strong></h3>
     {% if pending > 0 %}
     <div class="alert alert-info">
         Tenés <a class="alert-link" href="{% url 'ega-next-matches' tournament.slug %}#pending-match">{{ pending }} partido{{ pending|pluralize }}</a> pendiente{{ pending|pluralize }} para pronosticar.
@@ -12,9 +13,6 @@
     {% endif %}
     <div class="row">
         <div class="col-md-4">
-            <h3 class="title">
-                {{ current_tournament.name }}
-            </h3>
 
             {% include 'ega/_user_stats.html' %}
 
