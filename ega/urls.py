@@ -31,8 +31,8 @@ urlpatterns = patterns(
         name='league-home'),
 
     url(r'^invite/$', 'invite_friends', name='invite'),
-    url(r'^invite/(?P<league_slug>[\w-]+)/$',
-        'invite_friends', name='invite-league'),
+    url(r'^invite/(?P<league_slug>[\w-]+)/$', 'invite_friends',
+        name='invite-league'),
     url(r'^join/(?P<slug>[\w-]+)/(?P<key>\w+)/$', 'friend_join', name='join'),
     url(r'^join/(?P<slug>[\w-]+)/(?P<key>\w+)/(?P<league_slug>[\w-]+)/$',
         'friend_join', name='join'),

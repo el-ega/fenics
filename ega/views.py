@@ -177,8 +177,8 @@ def leagues(request):
             return HttpResponseRedirect(
                 reverse('invite-league', kwargs=dict(league_slug=league.slug)))
     else:
-        form = LeagueForm(
-            initial=dict(tournament=Tournament.objects.get(slug=tournament_slug)))
+        current = Tournament.objects.get(slug=tournament_slug)
+        form = LeagueForm(initial=dict(tournament=current))
 
     leagues = League.objects.filter(
         tournament__slug=tournament_slug, members=request.user)
