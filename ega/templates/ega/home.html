@@ -51,14 +51,9 @@
                     Posiciones
                 </h3>
                 {% include 'ega/_ranking_table.html' with ranking=top_ranking delta=1 %}
-<<<<<<< HEAD
-                <p class="title-action"><strong><a href="{% url 'ega-ranking' %}">ver tabla completa</a> |
-                <a href="{% url 'ega-ranking' current_round %}">ver fecha {{ current_round }}</a></strong></p>
-=======
-                <p class="title-action"><strong><a href="{% url 'ega-ranking' tournament.slug %}">ver tabla completa</a>
+                <p class="title-action"><strong><a href="{% url 'ega-ranking' %}">ver tabla completa</a>
                 {% if current_round %}|
-                <a href="{% url 'ega-ranking' tournament.slug current_round %}">ver fecha {{ current_round }}</a></strong>{% endif %}</p>
->>>>>>> 3375491be7c6494913b93d112588be38611f056f
+                <a href="{% url 'ega-ranking' current_round %}">ver fecha {{ current_round }}</a></strong>{% endif %}</p>
             {% endif %}
         </div>
 
