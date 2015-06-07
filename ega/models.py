@@ -98,8 +98,7 @@ class EgaUser(AbstractUser):
         """User stats for given tournament."""
         stats = {}
         ranking = Prediction.objects.filter(
-            match__tournament=tournament,
-            user=self, score__gte=0,
+            match__tournament=tournament, user=self, score__gte=0,
             home_goals__isnull=False, away_goals__isnull=False)
         if round is not None:
             ranking = ranking.filter(match__round=round)
