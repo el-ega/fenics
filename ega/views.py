@@ -182,7 +182,7 @@ def leagues(request):
                 reverse('ega-invite-league',
                         kwargs=dict(league_slug=league.slug)))
     else:
-        form = LeagueForm(initial=dict(tournament=tournament))
+        form = LeagueForm()
 
     user_leagues = League.objects.filter(
         tournament=tournament, members=request.user)
