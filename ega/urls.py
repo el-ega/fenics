@@ -27,14 +27,14 @@ urlpatterns = patterns(
     url(r'^history/(?P<slug>[\w-]+)/$', 'history', name='ega-history'),
 
     url(r'^league/$', 'leagues', name='leagues'),
-    url(r'^league/(?P<slug>[\w-]+)/(?P<league_slug>[\w-]+)/$', 'league_home',
+    url(r'^league/(?P<league_slug>[\w-]+)/$', 'league_home',
         name='league-home'),
 
     url(r'^invite/$', 'invite_friends', name='invite'),
     url(r'^invite/(?P<league_slug>[\w-]+)/$', 'invite_friends',
         name='invite-league'),
-    url(r'^join/(?P<key>\w+)/$', 'friend_join', name='join'),
-    url(r'^join/(?P<key>\w+)/(?P<league_slug>[\w-]+)/$', 'friend_join',
-        name='join'),
+    url(r'^join/(?P<slug>[\w-]+)/(?P<key>\w+)/$', 'friend_join', name='join'),
+    url(r'^join/(?P<slug>[\w-]+)/(?P<key>\w+)/(?P<league_slug>[\w-]+)/$',
+        'friend_join', name='join'),
 
 )

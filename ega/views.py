@@ -100,11 +100,13 @@ def profile(request):
 @require_http_methods(('GET', 'POST'))
 @login_required
 def invite_friends(request, league_slug=None):
-    kwargs = dict(key=request.user.invite_key)
+    tournament_slug = request.session.get('tournament', DEFAULT_TOURNAMENT)
+    kwargs = dict(key=request.user.invite_key, slug=tournament_slug)
+
     league = None
     if league_slug:
         league = get_object_or_404(
-            League, tournament__slug=DEFAULT_TOURNAMENT, slug=league_slug)
+            League, tournament__slug=tournament_slug, slug=league_slug)
         if league.owner != request.user:
             raise Http404
         kwargs['league_slug'] = league.slug
@@ -141,12 +143,12 @@ def invite_friends(request, league_slug=None):
 
 @require_GET
 @login_required
-def friend_join(request, key, league_slug=None):
+def friend_join(request, key, slug, league_slug=None):
     get_object_or_404(EgaUser, invite_key=key)
 
     if league_slug:
         league = get_object_or_404(
-            League, tournament__slug=DEFAULT_TOURNAMENT, slug=league_slug)
+            League, tournament__slug=slug, slug=league_slug)
         member, created = LeagueMember.objects.get_or_create(
             user=request.user, league=league)
         if created:
@@ -156,12 +158,16 @@ def friend_join(request, key, league_slug=None):
             messages.warning(request, 'Ya sos miembro de la liga %s.' % league)
     else:
         messages.success(request, 'Te uniste a el Ega!')
-    return HttpResponseRedirect(reverse('home'))
+    # switch to the tournament this user was invited to
+    return HttpResponseRedirect(
+        reverse('ega-switch-tournament', kwargs=dict(slug=slug)))
 
 
 @require_http_methods(('GET', 'POST'))
 @login_required
 def leagues(request):
+    tournament_slug = request.session.get('tournament', DEFAULT_TOURNAMENT)
+
     if request.method == 'POST':
         form = LeagueForm(request.POST)
         if form.is_valid():
@@ -171,8 +177,11 @@ def leagues(request):
             return HttpResponseRedirect(
                 reverse('invite-league', kwargs=dict(league_slug=league.slug)))
     else:
-        form = LeagueForm()
-    leagues = League.objects.current().filter(members=request.user)
+        current = Tournament.objects.get(slug=tournament_slug)
+        form = LeagueForm(initial=dict(tournament=current))
+
+    leagues = League.objects.filter(
+        tournament__slug=tournament_slug, members=request.user)
     return render(
         request, 'ega/leagues.html', dict(leagues=leagues, form=form))
 
