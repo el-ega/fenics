@@ -30,3 +30,4 @@ pip-log.txt
 .mr.developer.cfg
 
 fenics/local_settings.py
+env/

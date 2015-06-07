@@ -70,7 +70,7 @@
                     <ul class="dropdown-menu">
                         {% with leagues=request.user.league_set.current.all %}
                             {% for league in leagues %}
-                                <li><a href="{% url 'league-home' league.tournament.slug league.slug %}">{{ league.name }}</a></li>
+                                <li><a href="{% url 'league-home' league.slug %}">{{ league.name }}</a></li>
                             {% endfor %}
                             {% if leagues %}
                                 <li class="divider"></li>

@@ -109,7 +109,7 @@ class LeagueForm(forms.ModelForm):
         label='Nombre',
     )
     tournament = forms.ModelChoiceField(
-        queryset=Tournament.objects.filter(slug=DEFAULT_TOURNAMENT),
+        queryset=Tournament.objects.filter(published=True),
         widget=forms.Select(attrs={'class': 'form-control'}),
         label='Torneo', empty_label=None,
     )
