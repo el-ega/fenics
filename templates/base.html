@@ -100,21 +100,22 @@
         {% if user.is_authenticated and available_tournaments|length > 1 %}
         <nav class="navbar navbar-lower navbar-fixed-top" role="navigation">
         <div class="container">
-            <p class="navbar-text navbar-right text-right"><small>Cambiar a
+            <div class="text-right"><small>Cambiar a
             {% for s, t in available_tournaments.items %}
             {% if t != current_tournament %}
-            <a href="{% url 'ega-switch-tournament' t.slug %}" class="navbar-link">{{ t.name }}</a>
+            <a href="{% url 'ega-switch-tournament' t.slug %}?next={{ request.path }}" class="navbar-link">{{ t.name }}</a>
             {% endif %}
             {% endfor %}
-            </small></p>
+            </small></div>
+            <h3 style="margin:0"><strong>{{ current_tournament.name }}</strong></h3>
         </div>
         </nav>
         {% endif %}
 
         <div class="container">
-            <h1 class="text-muted">
+            <h2 class="text-muted">
                 {% block content-title %}el Ega{% endblock %}
-            </h1>
+            </h2>
 
             <div>
                 {% for message in messages %}

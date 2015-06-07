@@ -2,10 +2,32 @@
 {% load i18n %}
 {% load humanize %}
 
-{% block content-title %}Tus ligas de amigos{% endblock %}
+{% block content-title %}Ligas de amigos{% endblock %}
 
 {% block content %}
 
+<div class="section">
+<h4 class="title">Nueva liga</h4>
+<form method="POST" action="{% url 'ega-leagues' %}" class="form-inline" role="form" id="new-league">
+    {% csrf_token %}
+
+    {% for field in form %}
+    <div class="form-group {% if field.errors %}has-error{% endif %}">
+        <label class="control-label" for="{{ field.id }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+        <span class="control-label">
+        {% for error in field.errors %}{{ error }}{% endfor %}
+        </span>
+        {% endif %}
+    </div>
+    {% endfor %}
+    <button name="create" type="submit" class="btn btn-primary">Crear liga</button>
+</form>
+</div>
+
+<div class="section">
+<h4 class="title">Tus ligas</h4>
 {% for l in leagues %}
 <div class="panel panel-default">
     <div class="panel-heading">
@@ -33,24 +55,6 @@
     <p>No tenés ligas de amigos... create una ahora!</p>
 {% endfor %}
 </ul>
-
-<h2 class="text-muted">Nueva liga</h2>
-
-<form method="POST" action="{% url 'ega-leagues' %}" class="form-inline" role="form" id="new-league">
-    {% csrf_token %}
-
-    {% for field in form %}
-    <div class="form-group {% if field.errors %}has-error{% endif %}">
-        <label class="control-label" for="{{ field.id }}">{{ field.label }}</label>
-        {{ field }}
-        {% if field.errors %}
-        <span class="control-label">
-        {% for error in field.errors %}{{ error }}{% endfor %}
-        </span>
-        {% endif %}
-    </div>
-    {% endfor %}
-    <button name="create" type="submit" class="btn btn-primary">Crear liga</button>
-</form>
+</div>
 
 {% endblock %}
