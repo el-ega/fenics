@@ -11,7 +11,7 @@
     <div class="panel-heading">
       <h3 class="panel-title">{{ l }}
         {% if l.owner == request.user %}
-        <a class="pull-right" href="{% url 'invite-league' l.slug %}">Invitá más amigos</a>
+        <a class="pull-right" href="{% url 'ega-invite-league' l.slug %}">Invitá más amigos</a>
         {% endif %}
       </h3>
     </div>
@@ -36,7 +36,7 @@
 
 <h2 class="text-muted">Nueva liga</h2>
 
-<form method="POST" action="{% url 'leagues' %}" class="form-inline" role="form" id="new-league">
+<form method="POST" action="{% url 'ega-leagues' %}" class="form-inline" role="form" id="new-league">
     {% csrf_token %}
 
     {% for field in form %}

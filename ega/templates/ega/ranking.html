@@ -14,7 +14,7 @@
 
 {% block content %}
 
-<h2>{{ tournament.name }}{% if round %} <small>Fecha {{ round }}</small>{% endif %}</h2>
+<h2>{{ current_tournament.name }}{% if round %} <small>Fecha {{ round }}</small>{% endif %}</h2>
 
 
 <div class="row">
@@ -37,14 +37,12 @@
 
         <ul class="nav nav-tabs">
         <li class="{% if not league %}active{% endif %}">
-            <a href="{% url 'ega-ranking' tournament.slug %}{% if round %}f/{{ round }}{% endif %}">
+            <a href="{% url 'ega-ranking' %}{% if round %}f/{{ round }}{% endif %}">
                 General</a></li>
-        {% for l in request.user.league_set.all %}
-            {% if l.tournament == tournament %}
+        {% for l in leagues %}
             <li class="{% if league == l %}active{% endif %}">
-                <a href="{% url 'ega-league-ranking' tournament.slug l.slug %}{% if round %}f/{{ round }}{% endif %}">{{ l.name }}</a>
+                <a href="{% url 'ega-league-ranking' l.slug %}{% if round %}f/{{ round }}{% endif %}">{{ l.name }}</a>
             </li>
-            {% endif %}
         {% endfor %}
         </ul>
     </div>

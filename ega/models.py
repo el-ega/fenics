@@ -16,7 +16,6 @@ from django.utils.text import slugify
 from django.utils.timezone import now
 
 from ega.constants import (
-    DEFAULT_TOURNAMENT,
     EXACTLY_MATCH_POINTS,
     HOURS_TO_DEADLINE,
     INVITE_BODY,
@@ -91,7 +90,8 @@ class EgaUser(AbstractUser):
         """Return matches predictions for given tournament."""
         tz_now = now() + timedelta(hours=HOURS_TO_DEADLINE)
         predictions = Prediction.objects.filter(
-            match__tournament=tournament, user=self, match__when__lte=tz_now)
+            match__tournament=tournament,
+            user=self, match__when__lte=tz_now)
         predictions = predictions.order_by('-match__when')
         return predictions
 
@@ -99,7 +99,8 @@ class EgaUser(AbstractUser):
         """User stats for given tournament."""
         stats = {}
         ranking = Prediction.objects.filter(
-            match__tournament=tournament, user=self, score__gte=0,
+            match__tournament=tournament,
+            user=self, score__gte=0,
             home_goals__isnull=False, away_goals__isnull=False)
         if round is not None:
             ranking = ranking.filter(match__round=round)
@@ -188,12 +189,12 @@ class Team(models.Model):
     def __str__(self):
         return self.name
 
-    def latest_matches(self, tournament=DEFAULT_TOURNAMENT):
+    def latest_matches(self, tournament):
         """Return team previously played matches."""
         tz_now = now()
         matches = Match.objects.filter(
             Q(away=self) | Q(home=self),
-            tournament__slug=tournament,
+            tournament=tournament,
             when__lte=tz_now)
         matches = matches.order_by('-when')
         return matches
