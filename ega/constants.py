@@ -29,7 +29,7 @@ LEAGUE_JOIN_CHOICES = [
 
 # Game settings
 
-DEFAULT_TOURNAMENT = 'torneo-de-los-30'
+DEFAULT_TOURNAMENT = 'copa-america-2015'
 
 NEXT_MATCHES_DAYS = 7
 HOURS_TO_DEADLINE = 0
