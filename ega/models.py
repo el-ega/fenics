@@ -401,7 +401,7 @@ class LeagueMember(models.Model):
         unique_together = ('user', 'league')
 
     def __str__(self):
-        return unicode(self.user)
+        return str(self.user)
 
 
 @receiver(post_save, sender=Match, dispatch_uid="update-scores")
