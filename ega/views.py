@@ -41,6 +41,21 @@ def get_tournament(request):
         Tournament, slug=slug, published=True, finished=False)
 
 
+def check_in_tournament(request, current_tournament, obj):
+    """Check given object exists in current_tournament.
+
+    Return None if obj belongs to current_tournament,
+    else return a redirect to tournament's home.
+    """
+    response = None
+    if obj.tournament_id != current_tournament.id:
+        msg = '%s (%s) no disponible en %s.' % (obj, obj.tournament,
+                                                current_tournament)
+        messages.info(request, msg)
+        response = HttpResponseRedirect(reverse('home'))
+    return response
+
+
 def logout(request):
     auth.logout(request)
     messages.success(request, 'Cerraste sesión exitosamente!')
@@ -195,7 +210,12 @@ def leagues(request):
 def league_home(request, league_slug):
     tournament = get_tournament(request)
     league = get_object_or_404(
-        League, tournament=tournament, slug=league_slug, members=request.user)
+        League, slug=league_slug, members=request.user,
+        tournament__published=True)
+
+    response = check_in_tournament(request, tournament, league)
+    if response is not None:
+        return response
 
     top_ranking = league.ranking()[:5]
     stats = request.user.stats(tournament)
@@ -243,7 +263,11 @@ def next_matches(request):
 def match_details(request, match_id):
     """Return specified match stats."""
     tournament = get_tournament(request)
-    match = get_object_or_404(Match, id=match_id, tournament=tournament)
+    match = get_object_or_404(Match, id=match_id, tournament__published=True)
+
+    response = check_in_tournament(request, tournament, match)
+    if response is not None:
+        return response
 
     exacts = Prediction.objects.none()
     winners = Prediction.objects.none()
@@ -271,7 +295,11 @@ def ranking(request, league_slug=None, round=None):
     if league_slug is not None:
         base_url = reverse('ega-league-ranking', args=[league_slug])
         league = get_object_or_404(
-            League, tournament=tournament, slug=league_slug)
+            League, tournament__published=True, slug=league_slug)
+
+        response = check_in_tournament(request, tournament, league)
+        if response is not None:
+            return response
 
     user = request.user
     scores = (league.ranking(round=round)

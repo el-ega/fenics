@@ -219,8 +219,7 @@ class Match(models.Model):
         ordering = ('when',)
 
     def __str__(self):
-        return u"%s: %s vs %s" % (
-            self.tournament, self.home.name, self.away.name)
+        return "%s vs %s" % (self.home.name, self.away.name)
 
     @property
     def deadline(self):
@@ -256,7 +255,7 @@ class Prediction(models.Model):
         unique_together = ('user', 'match')
 
     def __str__(self):
-        return u"%s: %s" % (self.user, self.match)
+        return "%s: %s" % (self.user, self.match)
 
     @property
     def home_team_stats(self):
@@ -303,7 +302,7 @@ class TeamStats(models.Model):
         ordering = ('-points',)
 
     def __str__(self):
-        return u"%s - %s" % (self.team, self.tournament)
+        return "%s - %s" % (self.team, self.tournament)
 
     def sync(self):
         """Update team stats for tournament."""
