@@ -12,6 +12,15 @@ from ega.models import (
 )
 
 
+class EgaUserAdmin(admin.ModelAdmin):
+    list_display = ('username', 'email', 'invite_key', 'date_joined')
+    search_fields = ('username', 'email', 'invite_key')
+    readonly_fields = ('list_referrals',)
+
+    def list_referrals(self, obj):
+        return ', '.join(u.username for u in obj.referrals.all())
+
+
 class LeagueMemberInline(admin.TabularInline):
     model = LeagueMember
     extra = 0
@@ -43,7 +52,7 @@ class TournamentAdmin(admin.ModelAdmin):
     prepopulated_fields = dict(slug=('name',))
 
 
-admin.site.register(EgaUser)
+admin.site.register(EgaUser, EgaUserAdmin)
 admin.site.register(League, LeagueAdmin)
 admin.site.register(Match, MatchAdmin)
 admin.site.register(Prediction, PredictionAdmin)

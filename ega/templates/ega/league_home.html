@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
-{% block content-title %}{{ league.name }}{% endblock %}
+{% block content-title %}Liga {{ league.name }}{% endblock %}
 
 {% block content %}
 
@@ -21,6 +21,7 @@
         <hr class="visible-xs" />
 
         <div class="col-md-8">
+            {% include  'ega/_league_detail.html' %}
             <div id="disqus_thread"></div>
             <script type="text/javascript">
                 var disqus_shortname = '{{ DISQUS_SHORTNAME }}';
