@@ -16,7 +16,9 @@
                     {% endif %}
                     {% if predictions.paginator.num_pages > 1 %}
                     {% for p in predictions.paginator.page_range %}
-                        <li><a href="?page={{ p }}">{{ p }}</a></li>
+                        <li {% if predictions.number == p %}class="active"{% endif %}>
+                            <a href="?page={{ p }}">{{ p }}</a>
+                        </li>
                     {% endfor %}
                     {% endif %}
                     {% if predictions.has_next %}

@@ -14,16 +14,16 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='socialaccount',
             name='provider',
-            field=models.CharField(choices=[('google', 'Google'), ('facebook', 'Facebook'), ('twitter', 'Twitter')], verbose_name='provider', max_length=30),
+            field=models.CharField(max_length=30, choices=[('facebook', 'Facebook'), ('twitter', 'Twitter'), ('google', 'Google')], verbose_name='provider'),
         ),
         migrations.AlterField(
             model_name='socialapp',
             name='provider',
-            field=models.CharField(choices=[('google', 'Google'), ('facebook', 'Facebook'), ('twitter', 'Twitter')], verbose_name='provider', max_length=30),
+            field=models.CharField(max_length=30, choices=[('facebook', 'Facebook'), ('twitter', 'Twitter'), ('google', 'Google')], verbose_name='provider'),
         ),
         migrations.AlterField(
             model_name='socialtoken',
             name='token',
-            field=models.TextField(verbose_name='token', help_text='"oauth_token" (OAuth1) or access token (OAuth2)'),
+            field=models.TextField(help_text='"oauth_token" (OAuth1) or access token (OAuth2)', verbose_name='token'),
         ),
     ]

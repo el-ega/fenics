@@ -35,6 +35,17 @@ from ega.models import (
 )
 
 
+def build_invite_url(request, slug, key=None, league_slug=None):
+    if key is None:
+        key = request.user.invite_key
+
+    kwargs = dict(key=key, slug=slug)
+    if league_slug is not None:
+        kwargs['league_slug'] = league_slug
+
+    return request.build_absolute_uri(reverse('ega-join', kwargs=kwargs))
+
+
 def get_tournament(request):
     slug = request.session.setdefault('tournament', DEFAULT_TOURNAMENT)
     return get_object_or_404(
@@ -118,7 +129,6 @@ def profile(request):
 @login_required
 def invite_friends(request, league_slug=None):
     tournament = get_tournament(request)
-    kwargs = dict(key=request.user.invite_key, slug=tournament.slug)
 
     league = None
     if league_slug:
@@ -126,8 +136,8 @@ def invite_friends(request, league_slug=None):
             League, tournament=tournament, slug=league_slug)
         if league.owner != request.user:
             raise Http404
-        kwargs['league_slug'] = league.slug
-    invite_url = request.build_absolute_uri(reverse('ega-join', kwargs=kwargs))
+    invite_url = build_invite_url(
+        request, slug=tournament.slug, league_slug=league_slug)
 
     if request.method == 'POST':
         form = InviteFriendsForm(request.POST)
@@ -161,7 +171,21 @@ def invite_friends(request, league_slug=None):
 @require_GET
 @login_required
 def friend_join(request, key, slug, league_slug=None):
-    get_object_or_404(EgaUser, invite_key=key)
+    inviting_user = get_object_or_404(EgaUser, invite_key=key)
+    if inviting_user == request.user:
+        invite_url = build_invite_url(
+            request, slug=slug, league_slug=league_slug)
+        msg1 = 'Vos sos el dueño del link %s!' % invite_url
+        msg2 = 'No podés unirte con un link de referencia propio.'
+        messages.info(request, msg1)
+        messages.warning(request, msg2)
+        return HttpResponseRedirect(reverse('home'))
+
+    created = inviting_user.record_referral(request.user)
+    if created:
+        msg = 'Te uniste a el Ega! '
+    else:
+        msg = 'Hola de nuevo! '
 
     if league_slug:
         league = get_object_or_404(
@@ -169,12 +193,11 @@ def friend_join(request, key, slug, league_slug=None):
         member, created = LeagueMember.objects.get_or_create(
             user=request.user, league=league)
         if created:
-            messages.success(
-                request, 'Te uniste a el Ega, en la liga %s!' % league)
+            msg += 'Bienvenido a la liga %s.' % league
         else:
-            messages.warning(request, 'Ya sos miembro de la liga %s.' % league)
-    else:
-        messages.success(request, 'Te uniste a el Ega!')
+            msg += 'Ya sos miembro de la liga %s.' % league
+
+    messages.success(request, msg)
     # switch to the tournament this user was invited to
     return HttpResponseRedirect(
         reverse('ega-switch-tournament', kwargs=dict(slug=slug)))

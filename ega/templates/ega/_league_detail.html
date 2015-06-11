@@ -1,0 +1,26 @@
+{% load humanize %}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title"><strong>{{ league.name }}</strong>
+        {% if league.owner == request.user %}
+        <div  class="pull-right">
+        <a href="{% url 'ega-invite-league' league.slug %}">Invitá más amigos a esta liga</a>
+        </div>
+        {% endif %}
+      </h3>
+    </div>
+    <!--div class="panel-body">
+    Creada {{ league.created|naturalday }} para el torneo {{ league.tournament }}, con
+    los siguientes participantes:
+    </div-->
+    <ul class="list-group">
+        {% for m in league.leaguemember_set.all %}
+        <li class="list-group-item">
+            {{ m.user.visible_name }}
+            {% ifequal m.user user %}<span class="badge">vos</span>{% endifequal %}
+            {% if m.is_owner %}<span class="badge">creador</span>{% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</div>

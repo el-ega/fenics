@@ -66,6 +66,18 @@ class EgaUser(AbstractUser):
         help_text='Se recomienda subir una imagen de (al menos) 100x100')
     invite_key = models.CharField(
         max_length=20, unique=True, default=rand_str)
+    referred_by = models.ForeignKey(
+        'self', null=True, related_name='referrals')
+    referred_on = models.DateTimeField(null=True)
+
+    def record_referral(self, other):
+        created = False
+        if other.referred_by is None:
+            other.referred_by = self
+            other.referred_on = now()
+            other.save(update_fields=('referred_by', 'referred_on'))
+            created = True
+        return created
 
     def invite_friends(self, emails, subject=None, body=None):
         if subject is None:
