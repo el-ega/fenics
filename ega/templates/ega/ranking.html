@@ -56,7 +56,9 @@
                 {% endif %}
                 {% if ranking.paginator.num_pages > 1 %}
                 {% for p in ranking.paginator.page_range %}
-                    <li><a href="?page={{ p }}">{{ p }}</a></li>
+                    <li {% if ranking.number == p %}class="active"{% endif %}>
+                        <a href="?page={{ p }}">{{ p }}</a>
+                    </li>
                 {% endfor %}
                 {% endif %}
                 {% if ranking.has_next %}
