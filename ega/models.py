@@ -184,7 +184,9 @@ class Tournament(models.Model):
         """Return the most common predictions."""
         predictions = Prediction.objects.filter(match__tournament=self)
         predictions = predictions.filter(match__home_goals__isnull=False,
-                                         match__away_goals__isnull=False)
+                                         match__away_goals__isnull=False,
+                                         home_goals__isnull=False,
+                                         away_goals__isnull=False)
         predictions = predictions.values_list('home_goals', 'away_goals')
         counter = collections.Counter(predictions)
         return counter.most_common(n)
@@ -341,11 +343,16 @@ class TeamStats(models.Model):
         away_goals = away.aggregate(away_gf=Sum('away_goals'),
                                     away_gc=Sum('home_goals'))
         self.gf = 0
+        if home_goals['home_gf'] is not None:
+            self.gf += home_goals['home_gf']
+        if away_goals['away_gf'] is not None:
+            self.gf += away_goals['away_gf']
+
         self.gc = 0
-        if home_goals['home_gf'] and away_goals['away_gf']:
-            self.gf = home_goals['home_gf'] + away_goals['away_gf']
-        if home_goals['home_gc'] and away_goals['away_gc']:
-            self.gc = home_goals['home_gc'] + away_goals['away_gc']
+        if home_goals['home_gc']:
+            self.gc += home_goals['home_gc']
+        if away_goals['away_gc']:
+            self.gc += away_goals['away_gc']
 
         self.points = self._points()
         self.save()
