@@ -114,6 +114,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     # allauth specific context processors
     'allauth.account.context_processors.account',
     'allauth.socialaccount.context_processors.socialaccount',
+    'fenics.context_processors.available_tournaments',
     'fenics.context_processors.disqus_shortname',
 )
 

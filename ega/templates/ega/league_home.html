@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
-{% block content-title %}{{ league.name }}{% endblock %}
+{% block content-title %}Liga {{ league.name }}{% endblock %}
 
 {% block content %}
 
@@ -14,13 +14,14 @@
                     Posiciones
                 </h3>
                 {% include 'ega/_ranking_table.html' with ranking=top_ranking delta=1 %}
-                <p class="title-action"><strong><a href="{% url 'ega-league-ranking' tournament.slug league.slug %}">ver tabla completa</a></strong></p>
+                <p class="title-action"><strong><a href="{% url 'ega-league-ranking' league.slug %}">ver tabla completa</a></strong></p>
             {% endif %}
         </div>
 
         <hr class="visible-xs" />
 
         <div class="col-md-8">
+            {% include  'ega/_league_detail.html' %}
             <div id="disqus_thread"></div>
             <script type="text/javascript">
                 var disqus_shortname = '{{ DISQUS_SHORTNAME }}';

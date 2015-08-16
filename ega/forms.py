@@ -4,8 +4,8 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 
-from ega.constants import DEFAULT_TOURNAMENT, EMAILS_PLACEHOLDER
-from ega.models import EgaUser, League, Prediction, Tournament
+from ega.constants import EMAILS_PLACEHOLDER
+from ega.models import EgaUser, League, Prediction
 
 
 class PredictionForm(forms.ModelForm):
@@ -108,15 +108,10 @@ class LeagueForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         label='Nombre',
     )
-    tournament = forms.ModelChoiceField(
-        queryset=Tournament.objects.filter(slug=DEFAULT_TOURNAMENT),
-        widget=forms.Select(attrs={'class': 'form-control'}),
-        label='Torneo', empty_label=None,
-    )
 
     class Meta:
         model = League
-        fields = ('name', 'tournament')
+        fields = ('name',)
 
 
 class EgaUserForm(forms.ModelForm):

@@ -16,7 +16,6 @@ from django.utils.text import slugify
 from django.utils.timezone import now
 
 from ega.constants import (
-    DEFAULT_TOURNAMENT,
     EXACTLY_MATCH_POINTS,
     HOURS_TO_DEADLINE,
     INVITE_BODY,
@@ -67,6 +66,18 @@ class EgaUser(AbstractUser):
         help_text='Se recomienda subir una imagen de (al menos) 100x100')
     invite_key = models.CharField(
         max_length=20, unique=True, default=rand_str)
+    referred_by = models.ForeignKey(
+        'self', null=True, related_name='referrals')
+    referred_on = models.DateTimeField(null=True)
+
+    def record_referral(self, other):
+        created = False
+        if other.referred_by is None:
+            other.referred_by = self
+            other.referred_on = now()
+            other.save(update_fields=('referred_by', 'referred_on'))
+            created = True
+        return created
 
     def invite_friends(self, emails, subject=None, body=None):
         if subject is None:
@@ -118,6 +129,7 @@ class Tournament(models.Model):
     slug = models.SlugField(max_length=200, unique=True)
     teams = models.ManyToManyField('Team')
     published = models.BooleanField(default=False)
+    finished = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -172,7 +184,9 @@ class Tournament(models.Model):
         """Return the most common predictions."""
         predictions = Prediction.objects.filter(match__tournament=self)
         predictions = predictions.filter(match__home_goals__isnull=False,
-                                         match__away_goals__isnull=False)
+                                         match__away_goals__isnull=False,
+                                         home_goals__isnull=False,
+                                         away_goals__isnull=False)
         predictions = predictions.values_list('home_goals', 'away_goals')
         counter = collections.Counter(predictions)
         return counter.most_common(n)
@@ -197,12 +211,12 @@ class Team(models.Model):
     def __str__(self):
         return self.name
 
-    def latest_matches(self, tournament=DEFAULT_TOURNAMENT):
+    def latest_matches(self, tournament):
         """Return team previously played matches."""
         tz_now = now()
         matches = Match.objects.filter(
             Q(away=self) | Q(home=self),
-            tournament__slug=tournament,
+            tournament=tournament,
             when__lte=tz_now)
         matches = matches.order_by('-when')
         return matches
@@ -228,8 +242,7 @@ class Match(models.Model):
         ordering = ('when',)
 
     def __str__(self):
-        return u"%s: %s vs %s" % (
-            self.tournament, self.home.name, self.away.name)
+        return "%s vs %s" % (self.home.name, self.away.name)
 
     @property
     def deadline(self):
@@ -304,7 +317,7 @@ class Prediction(models.Model):
         unique_together = ('user', 'match')
 
     def __str__(self):
-        return u"%s: %s" % (self.user, self.match)
+        return "%s: %s" % (self.user, self.match)
 
     @property
     def home_team_stats(self):
@@ -351,7 +364,7 @@ class TeamStats(models.Model):
         ordering = ('-points',)
 
     def __str__(self):
-        return u"%s - %s" % (self.team, self.tournament)
+        return "%s - %s" % (self.team, self.tournament)
 
     def sync(self):
         """Update team stats for tournament."""
@@ -377,8 +390,17 @@ class TeamStats(models.Model):
                                     home_gc=Sum('away_goals'))
         away_goals = away.aggregate(away_gf=Sum('away_goals'),
                                     away_gc=Sum('home_goals'))
-        self.gf = home_goals['home_gf'] + away_goals['away_gf']
-        self.gc = home_goals['home_gc'] + away_goals['away_gc']
+        self.gf = 0
+        if home_goals['home_gf'] is not None:
+            self.gf += home_goals['home_gf']
+        if away_goals['away_gf'] is not None:
+            self.gf += away_goals['away_gf']
+
+        self.gc = 0
+        if home_goals['home_gc']:
+            self.gc += home_goals['home_gc']
+        if away_goals['away_gc']:
+            self.gc += away_goals['away_gc']
 
         self.points = self._points()
         self.save()
@@ -445,7 +467,7 @@ class LeagueMember(models.Model):
         unique_together = ('user', 'league')
 
     def __str__(self):
-        return unicode(self.user)
+        return str(self.user)
 
 
 @receiver(post_save, sender=Match, dispatch_uid="update-scores")

@@ -20,7 +20,7 @@ class Command(BaseCommand):
 
         # matches in the last hour
         matches = Match.objects.filter(
-            tournament__slug=DEFAULT_TOURNAMENT, when__isnull=False,
+            when__isnull=False,
             when__range=(now() - timedelta(minutes=30), now()))
 
         for m in matches:

@@ -4,13 +4,26 @@ html {
 }
 
 body {
-    padding-top: 70px;
+    padding-top: 90px;
     /* Margin bottom by footer height */
     margin-bottom: 90px;
 }
 
 dt {
     margin-top: 10px;
+}
+
+.section {
+    margin-top: 25px;
+}
+
+.navbar-lower {
+    background-color: white;
+    top: 50px;
+    z-index: 500;
+    border: none;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
 .starred {
@@ -275,6 +288,7 @@ table.latest-results tbody td.result-td {
 .footer-links a {
     color: green;
 }
+
 
 /* Responsive customizations */
 

@@ -10,12 +10,9 @@
 </script>
 {% endblock %}
 
-{% block content-title %}Posiciones{% endblock %}
+{% block content-title %}Posiciones{% if round %}<small> | Fecha {{ round }}</small>{% endif %}{% endblock %}
 
 {% block content %}
-
-<h2>{{ tournament.name }}{% if round %} <small>Fecha {{ round }}</small>{% endif %}</h2>
-
 
 <div class="row">
     <div class="col-md-4 visible-xs">
@@ -37,14 +34,12 @@
 
         <ul class="nav nav-tabs">
         <li class="{% if not league %}active{% endif %}">
-            <a href="{% url 'ega-ranking' tournament.slug %}{% if round %}f/{{ round }}{% endif %}">
+            <a href="{% url 'ega-ranking' %}{% if round %}f/{{ round }}{% endif %}">
                 General</a></li>
-        {% for l in request.user.league_set.all %}
-            {% if l.tournament == tournament %}
+        {% for l in leagues %}
             <li class="{% if league == l %}active{% endif %}">
-                <a href="{% url 'ega-league-ranking' tournament.slug l.slug %}{% if round %}f/{{ round }}{% endif %}">{{ l.name }}</a>
+                <a href="{% url 'ega-league-ranking' l.slug %}{% if round %}f/{{ round }}{% endif %}">{{ l.name }}</a>
             </li>
-            {% endif %}
         {% endfor %}
         </ul>
     </div>
@@ -61,7 +56,9 @@
                 {% endif %}
                 {% if ranking.paginator.num_pages > 1 %}
                 {% for p in ranking.paginator.page_range %}
-                    <li><a href="?page={{ p }}">{{ p }}</a></li>
+                    <li {% if ranking.number == p %}class="active"{% endif %}>
+                        <a href="?page={{ p }}">{{ p }}</a>
+                    </li>
                 {% endfor %}
                 {% endif %}
                 {% if ranking.has_next %}
