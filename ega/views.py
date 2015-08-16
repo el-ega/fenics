@@ -227,6 +227,7 @@ def match_details(request, slug, match_id):
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
     match = get_object_or_404(Match, id=match_id, tournament=tournament)
     events = match.matchevents_set.exclude(kind=MatchEvents.UNKNOWN)
+    clips = events.exclude(video_id='')
 
     exacts = Prediction.objects.none()
     winners = Prediction.objects.none()
@@ -241,7 +242,8 @@ def match_details(request, slug, match_id):
     return render(
         request, 'ega/match_details.html',
         {'tournament': tournament, 'match': match, 'events': events,
-         'finished': finished, 'exacts': exacts, 'winners': winners})
+         'clips': clips, 'finished': finished, 'exacts': exacts,
+         'winners': winners})
 
 
 @login_required

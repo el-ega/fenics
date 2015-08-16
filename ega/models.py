@@ -268,8 +268,8 @@ class MatchEvents(models.Model):
     )
 
     match = models.ForeignKey(Match)
-    # TODO: youtube video id?
     team = models.ForeignKey(Team)
+    video_id = models.CharField(max_length=255, blank=True)
     player = models.CharField(max_length=255)
     minute = models.PositiveIntegerField()
     kind = models.CharField(max_length=64, choices=EVENT_TYPE_CHOICES)
