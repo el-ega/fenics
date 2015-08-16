@@ -196,7 +196,7 @@ $(document).ready(function () {
 
         <ol class="carousel-indicators">
             {% for video in clips %}
-                <li data-target="#goals-slide" data-slide-to="{{ forloop.counter0}}" {% if forloop.first %}class="active"{% endif %}></li>
+                <li data-target="#goals-slide" data-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></li>
             {% endfor %}
         </ol>
 
