@@ -5,6 +5,7 @@ from ega.models import (
     League,
     LeagueMember,
     Match,
+    MatchEvents,
     Prediction,
     Team,
     TeamStats,
@@ -38,6 +39,7 @@ class TournamentAdmin(admin.ModelAdmin):
 admin.site.register(EgaUser)
 admin.site.register(League, LeagueAdmin)
 admin.site.register(Match, MatchAdmin)
+admin.site.register(MatchEvents)
 admin.site.register(Prediction)
 admin.site.register(Team, TeamAdmin)
 admin.site.register(TeamStats)

@@ -30,6 +30,7 @@ from ega.models import (
     League,
     LeagueMember,
     Match,
+    MatchEvents,
     Prediction,
     Tournament,
 )
@@ -225,6 +226,7 @@ def match_details(request, slug, match_id):
     """Return specified match stats."""
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
     match = get_object_or_404(Match, id=match_id, tournament=tournament)
+    events = match.matchevents_set.exclude(kind=MatchEvents.UNKNOWN)
 
     exacts = Prediction.objects.none()
     winners = Prediction.objects.none()
@@ -238,7 +240,7 @@ def match_details(request, slug, match_id):
 
     return render(
         request, 'ega/match_details.html',
-        {'tournament': tournament, 'match': match,
+        {'tournament': tournament, 'match': match, 'events': events,
          'finished': finished, 'exacts': exacts, 'winners': winners})
 
 
@@ -318,11 +320,13 @@ def tournament_stats(request, slug):
     no_wins = [r.team for r in ranking if r.won == 0]
     no_ties = [r.team for r in ranking if r.tie == 0]
     no_loses = [r.team for r in ranking if r.lost == 0]
+    top_scorers = tournament.top_scorers(5)
 
     return render(
         request, 'ega/tournament_stats.html',
         {'tournament': tournament,
-         'ranking': ranking, 'results': results, 'predictions': predictions,
+         'ranking': ranking, 'top_scorers': top_scorers,
+         'top_5': zip(results, predictions),
          'no_wins': no_wins, 'no_ties': no_ties, 'no_loses': no_loses})
 
 

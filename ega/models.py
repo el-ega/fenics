@@ -177,6 +177,15 @@ class Tournament(models.Model):
         counter = collections.Counter(predictions)
         return counter.most_common(n)
 
+    def top_scorers(self, n):
+        """Return the n top scorers."""
+        goals = MatchEvents.objects.filter(
+            match__tournament=self,
+            kind__in=[MatchEvents.GOAL, MatchEvents.PENALTY_GOAL])
+        players = goals.values_list('player', 'team__code')
+        counter = collections.Counter(players)
+        return counter.most_common(n)
+
 
 class Team(models.Model):
     """Team metadata."""
@@ -233,6 +242,45 @@ class Match(models.Model):
     @property
     def is_expired(self):
         return self.deadline < now()
+
+
+class MatchEvents(models.Model):
+    """Event tracking for a match."""
+
+    GOAL = 'goal'
+    PENALTY_GOAL = 'goal-penalty'
+    YELLOW_CARD = 'yellow-card'
+    SECOND_YELLOW_CARD = 'second-yellow-card'
+    RED_CARD = 'red-card'
+    SUBSTITUTION_IN = 'substitution-in'
+    SUBSTITUTION_OUT = 'substitution-out'
+    UNKNOWN = 'unknown'
+
+    EVENT_TYPE_CHOICES = (
+        (GOAL, 'Gol'),
+        (PENALTY_GOAL, 'Gol (penal)'),
+        (YELLOW_CARD, 'Tarjeta amarilla'),
+        (SECOND_YELLOW_CARD, 'Doble amarilla'),
+        (RED_CARD, 'Tarjeta roja'),
+        (SUBSTITUTION_IN, 'Cambio - entra'),
+        (SUBSTITUTION_OUT, 'Cambio - sale'),
+        (UNKNOWN, '-'),
+    )
+
+    match = models.ForeignKey(Match)
+    # TODO: youtube video id?
+    team = models.ForeignKey(Team)
+    player = models.CharField(max_length=255)
+    minute = models.PositiveIntegerField()
+    kind = models.CharField(max_length=64, choices=EVENT_TYPE_CHOICES)
+    description = models.TextField(blank=True)
+    raw_data = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ['minute', 'kind']
+
+    def __str__(self):
+        return '%s - %s' % (str(self.match), self.get_kind_display())
 
 
 class Prediction(models.Model):

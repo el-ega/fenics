@@ -85,7 +85,12 @@ $(document).ready(function () {
                 <div class="col-md-12 text-center match-status">
                     <span id="match-status" class="label label-default"></span>
                     {% if not finished %}<span><img src="{% static 'images/timer.gif' %}"></span>{% endif %}
-                    {{ match.when|date:"F j, H:i" }}
+                    {{ match.description }} | {{ match.when|date:"F j, H:i" }}
+                    {% if match.referee %}
+                        <br/><img src="{% static 'images/whistle_icon.png' %}" />
+                        {{ match.referee }}
+                    {% endif %}
+                    {% if match.location %}<br/>Estadio: {{ match.location }}{% endif %}
                 </div>
             </div>
             <div class="row">
@@ -101,6 +106,11 @@ $(document).ready(function () {
                                     {% endif %}</h6>
                                 </div>
                                 <div class="panel-body" id="{{ home.code }}-stats">
+                                    {% for event in events %}
+                                        {% if event.team == home %}
+                                            <p title="{{ event.description }}" class="home-event home-{{ event.kind }}">{{ event.minute }}' {{ event.player }}</p>
+                                        {% endif %}
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
@@ -128,6 +138,11 @@ $(document).ready(function () {
                                     {% endif %}</h6>
                                 </div>
                                 <div class="panel-body away-stats" id="{{ away.code }}-stats">
+                                    {% for event in events %}
+                                        {% if event.team == away %}
+                                            <p title="{{ event.description }}" class="away-event away-{{ event.kind }}">{{ event.minute }}' {{ event.player }}</p>
+                                        {% endif %}
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
@@ -142,7 +157,8 @@ $(document).ready(function () {
             <div class="row">
                 <div class="col-md-12 text-center">
                     <small>datos provistos por</small>
-                    <a target="_blank" href="http://resultados-futbol.com/"><img src="{% static 'images/rf-logo.png' %}" /></a>
+                    <a target="_blank" href="http://resultados-futbol.com/">
+                        <img src="{% static 'images/rf-logo.png' %}" /></a>
                 </div>
             </div>
         </div>

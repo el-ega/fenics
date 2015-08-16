@@ -175,6 +175,10 @@ p.home-yellow-card {
     background: url('/static/images/yellow_card_icon.gif') no-repeat;
 }
 
+p.home-second-yellow-card {
+    background: url('/static/images/yellow_card_icon.gif') no-repeat;
+}
+
 p.home-red-card {
     background: url('/static/images/red_card_icon.gif') no-repeat;
 }
@@ -259,7 +263,7 @@ table.latest-results tbody td.result-td {
 }
 
 .footer-links {
-    margin-top: 35px;
+    margin-top: 55px;
     background-color: rgba(255, 255, 255, 0.7);
     font-size: 1.1em;
 }
