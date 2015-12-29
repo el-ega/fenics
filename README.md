@@ -14,6 +14,7 @@ Cómo levantar un entorno de desarrollo
     $ source env/bin/activate
     (env) $ pip install -r requirements.txt
     (env) $ python manage.py migrate
+    (env) $ python manage.py loaddata fixtures/sample_data.json
     (env) $ python manage.py runserver
 
 
