@@ -188,6 +188,10 @@ p.home-yellow-card {
     background: url('/static/images/yellow_card_icon.gif') no-repeat;
 }
 
+p.home-second-yellow-card {
+    background: url('/static/images/red_card_icon.gif') no-repeat;
+}
+
 p.home-red-card {
     background: url('/static/images/red_card_icon.gif') no-repeat;
 }
@@ -206,6 +210,10 @@ p.away-substitution-out {
 
 p.away-yellow-card {
     background: url('/static/images/yellow_card_icon.gif') no-repeat right;
+}
+
+p.away-second-yellow-card {
+    background: url('/static/images/red_card_icon.gif') no-repeat right;
 }
 
 p.away-red-card {
@@ -301,5 +309,10 @@ table.latest-results tbody td.result-td {
     }
     .starred {
         background: none;
+    }
+    p.home-yellow-card, p.away-yellow-card,
+    p.home-substitution-in, p.home-substitution-out,
+    p.away-substitution-in, p.away-substitution-out{
+        display: none;
     }
 }

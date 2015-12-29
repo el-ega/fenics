@@ -47,7 +47,8 @@ def build_invite_url(request, slug, key=None, league_slug=None):
 
 
 def get_tournament(request):
-    slug = request.session.setdefault('tournament', DEFAULT_TOURNAMENT)
+    #slug = request.session.setdefault('tournament', DEFAULT_TOURNAMENT)
+    slug = DEFAULT_TOURNAMENT
     return get_object_or_404(
         Tournament, slug=slug, published=True, finished=False)
 
@@ -234,11 +235,7 @@ def league_home(request, league_slug):
     tournament = get_tournament(request)
     league = get_object_or_404(
         League, slug=league_slug, members=request.user,
-        tournament__published=True)
-
-    response = check_in_tournament(request, tournament, league)
-    if response is not None:
-        return response
+        tournament=tournament, tournament__published=True)
 
     top_ranking = league.ranking()[:5]
     stats = request.user.stats(tournament)
@@ -286,11 +283,8 @@ def next_matches(request):
 def match_details(request, match_id):
     """Return specified match stats."""
     tournament = get_tournament(request)
-    match = get_object_or_404(Match, id=match_id, tournament__published=True)
-
-    response = check_in_tournament(request, tournament, match)
-    if response is not None:
-        return response
+    match = get_object_or_404(
+        Match, id=match_id, tournament=tournament, tournament__published=True)
 
     exacts = Prediction.objects.none()
     winners = Prediction.objects.none()
@@ -318,11 +312,8 @@ def ranking(request, league_slug=None, round=None):
     if league_slug is not None:
         base_url = reverse('ega-league-ranking', args=[league_slug])
         league = get_object_or_404(
-            League, tournament__published=True, slug=league_slug)
-
-        response = check_in_tournament(request, tournament, league)
-        if response is not None:
-            return response
+            League, tournament=tournament, tournament__published=True,
+            slug=league_slug)
 
     user = request.user
     scores = (league.ranking(round=round)
