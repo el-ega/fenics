@@ -28,7 +28,7 @@ class MatchData(demiurge.Item):
     _time = demiurge.TextField(selector='td.hora')
 
     class Meta:
-        selector = 'tr.partido'
+        selector = '#fase_n1 tr.partido'
         base_url = ('http://mundod.lavoz.com.ar/sites/default/files'
                     '/Datafactory/html/v1/primeraa/fixture.html')
 

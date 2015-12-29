@@ -1,0 +1,341 @@
+[
+{
+    "model": "flatpages.flatpage",
+    "fields": {
+        "sites": [
+            1
+        ],
+        "template_name": "",
+        "url": "/faq/",
+        "registration_required": false,
+        "title": "Preguntas frecuentes",
+        "content": "<dl>\r\n\r\n<dt>\u00bfQu\u00e9 es el-ega?</dt>\r\n<dd>Un juego simple de pron\u00f3sticos deportivos: intent\u00e1 acertar los resultados de los partidos y gan\u00e1 puntos de acuerdo a la precisi\u00f3n de tus pron\u00f3sticos.</dd>\r\n\r\n<dt>\u00bfQu\u00e9 hace falta para participar?</dt>\r\n<dd>Tener una cuenta de correo electr\u00f3nico y aceptar las reglas de juego.</dd>\r\n\r\n<dt>\u00bfC\u00f3mo sumo puntos?</dt>\r\n<dd>Sum\u00e1s puntos por acertar el resultado de un partido, ya sea de manera exacta o aproximada (es decir, si acert\u00e1s qui\u00e9n gan\u00f3, o si empataron, aunque no con el resultado correcto).</dd>\r\n\r\n<dt>\u00bfQu\u00e9 es un \"partido estrella\"?</dt>\r\n<dd>Partidos que entregan m\u00e1s puntos que los tradicionales (1 punto m\u00e1s si acert\u00e1s de manera exacta o aproximada)</dd>\r\n\r\n<dt>\u00bfD\u00f3nde puedo obtener m\u00e1s informaci\u00f3n?</dt>\r\n<dd>En la secci\u00f3n de las reglas de juego y a trav\u00e9s del foro de la p\u00e1gina, en nuestro formulario de contacto o en la direcci\u00f3n de mail [info (arroba) el-ega (punto) com (punto) ar].\r\nEn estos \u00faltimos se aceptan (y son bienvenidos) comentarios, ideas y sugerencias.</dd>\r\n\r\n</dl>",
+        "enable_comments": false
+    }
+},
+{
+    "model": "flatpages.flatpage",
+    "fields": {
+        "sites": [
+            1
+        ],
+        "template_name": "",
+        "url": "/rules/",
+        "registration_required": false,
+        "title": "Reglas del juego",
+        "content": "<h3>Participantes</h3>\r\n<p>Podr\u00e1s participar si est\u00e1s previamente registrado. Para ello, complet\u00e1 el formulario de inscripci\u00f3n, o conectate a trav\u00e9s de tu cuenta de Facebook, Twitter o Google.</p>\r\n<p>Utilizaremos tu direcci\u00f3n de correo electr\u00f3nico para las comunicaciones de actualizaciones, novedades, informes, cambios de reglamento, etc.</p>\r\n\r\n<h3>Modalidad de juego</h3>\r\n<p>Cada usuario tiene una fecha l\u00ed\u00admite por partido para completar los resultados, de cuyo marcador real saldr\u00e1 la puntuaci\u00f3n que logre. Una vez vencida la fecha l\u00ed\u00admite de un partido, este no estar\u00e1 disponible para el juego. Hasta entonces, cualquier resultado puede ser modificado arbitrariamente.\r\nSi no complet\u00e1s el resultado para uno o ambos equipos, se considerar\u00e1 como \"no completado\" y no sumar\u00e1s puntos para ese partido.</p>\r\n\r\n<h3>Puntuaci\u00f3n</h3>\r\n<p>Los resultados reales de los partidos determinan la cantidad de puntos que se pueden obtener. En caso de alargue se lo considerar\u00e1 como parte del partido; es decir, en estos casos, el partido se considera terminado cuando finalice el alargue, en caso de existir. Las definiciones por penales no ser\u00e1n consideradas como parte del partido, el cual ser\u00e1 considerado empatado.</p>\r\n<p>La puntuaci\u00f3n se determina de la siguiente manera:\r\n<ul>\r\n<li>3 puntos por acertar el resultado exacto del partido (4 en caso de partido \"estrella\")</li>\r\n<li>1 punto por acertar el resultado del partido, pero no de manera exacta (2 en caso de partido \"estrella\")</li>\r\n<li>0 punto si no se cumple ninguna de las condiciones anteriores<l/i>\r\n</ul>\r\n</p>\r\n\r\n<h3>Posiciones</h3>\r\n<p>Los usuarios ser\u00e1n ordenados en la tabla de posiciones de acuerdo a la cantidad de puntos que hayan obtenido en el total de partidos disputados. En caso de igualdad, se tomar\u00e1n los siguientes criterios para determinar el desempate (en orden decreciente de prioridad):</p>\r\n<p>\r\n<ul>\r\n<li>Mayor cantidad de resultados exactos acertados</li>\r\n<li>Mayor cantidad de resultados \"no exactos\" acertados</li>\r\n<li>Menor cantidad de beneficios recibidos por partidos \"estrella\"</li>\r\n<li>Sorteo</li>\r\n</ul>\r\n</p>\r\n\r\n<h3>Partidos suspendidos o cancelados</h3>\r\n<p>Si alg\u00fan partido resultara suspendido o postergado, podr\u00e1 ser cancelado tambi\u00e9n del juego, si lo creemos conveniente.\r\nUn partido tambi\u00e9n puede resultar cancelado si:\r\n<ul>\r\n<li>La fecha de cierre fue modificada sin tener los usuarios un tiempo razonable para jugar</li>\r\n<li>Se pude completar el resultado de un partido cuando \u00e9ste ya est\u00e1 en juego</li>\r\n</ul>\r\n</p>",
+        "enable_comments": false
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/Arsenal.gif",
+        "slug": "arsenal",
+        "name": "Arsenal",
+        "code": "ARS"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/Banfield.gif",
+        "slug": "banfield",
+        "name": "Banfield",
+        "code": "BAN"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/BocaJuniors.gif",
+        "slug": "boca-juniors",
+        "name": "Boca Juniors",
+        "code": "BOC"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/Estudiantes.gif",
+        "slug": "estudiantes",
+        "name": "Estudiantes",
+        "code": "EST"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/GimnasiaLP.gif",
+        "slug": "gimnasia",
+        "name": "Gimnasia",
+        "code": "GLP"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/Lanus.gif",
+        "slug": "lanus",
+        "name": "Lan\u00fas",
+        "code": "LAN"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/Newells.gif",
+        "slug": "newells-old-boys",
+        "name": "Newell's Old Boys",
+        "code": "NOB"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/Olimpo.gif",
+        "slug": "olimpo",
+        "name": "Olimpo",
+        "code": "OLI"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/Quilmes.gif",
+        "slug": "quilmes",
+        "name": "Quilmes",
+        "code": "QUI"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/Racing.gif",
+        "slug": "racing",
+        "name": "Racing",
+        "code": "RAC"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/RiverPlate.gif",
+        "slug": "river-plate",
+        "name": "River Plate",
+        "code": "RIV"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/RosarioCentral.gif",
+        "slug": "rosario-central",
+        "name": "Rosario Central",
+        "code": "CEN"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/SanLorenzo.gif",
+        "slug": "san-lorenzo",
+        "name": "San Lorenzo",
+        "code": "SLO"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/Velez.gif",
+        "slug": "velez",
+        "name": "V\u00e9lez",
+        "code": "VEL"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/AtleticoRafaela.gif",
+        "slug": "atletico-rafaela",
+        "name": "Atl\u00e9tico Rafaela",
+        "code": "RAF"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/Belgrano.gif",
+        "slug": "belgrano",
+        "name": "Belgrano",
+        "code": "BEL"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/DefensaYJusticia.gif",
+        "slug": "defensa-y-justicia",
+        "name": "Defensa y Justicia",
+        "code": "DYJ"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/GodoyCruz.gif",
+        "slug": "godoy-cruz",
+        "name": "Godoy Cruz",
+        "code": "GOD"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/Tigre.gif",
+        "slug": "tigre",
+        "name": "Tigre",
+        "code": "TIG"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/Independiente.gif",
+        "slug": "independiente",
+        "name": "Independiente",
+        "code": "IND"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/Aldosivi.png",
+        "slug": "aldosivi",
+        "name": "Aldosivi",
+        "code": "ALD"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/Colon.png",
+        "slug": "colon",
+        "name": "Col\u00f3n",
+        "code": "COL"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/Crucero.png",
+        "slug": "crucero-del-norte",
+        "name": "Crucero del Norte",
+        "code": "CDN"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/SanMartin.png",
+        "slug": "san-martin-sj",
+        "name": "San Mart\u00edn (SJ)",
+        "code": "SMA"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/Temperley.png",
+        "slug": "temperley",
+        "name": "Temperley",
+        "code": "TEM"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/Union.png",
+        "slug": "union",
+        "name": "Uni\u00f3n",
+        "code": "UNI"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/Huracan.png",
+        "slug": "huracan",
+        "name": "Hurac\u00e1n",
+        "code": "HUR"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/Argentinos.png",
+        "slug": "argentinos-juniors",
+        "name": "Argentinos Juniors",
+        "code": "ARG"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/Sarmiento.png",
+        "slug": "sarmiento",
+        "name": "Sarmiento",
+        "code": "SAR"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/Chicago.png",
+        "slug": "nueva-chicago",
+        "name": "Nueva Chicago",
+        "code": "CHI"
+    }
+},
+{
+    "model": "ega.tournament",
+    "fields": {
+        "finished": false,
+        "teams": [
+            33,
+            34,
+            35,
+            36,
+            38,
+            40,
+            41,
+            42,
+            43,
+            45,
+            46,
+            47,
+            48,
+            49,
+            51,
+            52,
+            54,
+            57,
+            58,
+            59,
+            61,
+            55,
+            62,
+            44,
+            60,
+            37,
+            50,
+            56,
+            53,
+            39
+        ],
+        "slug": "torneo-de-los-30",
+        "name": "Torneo de los 30",
+        "published": true
+    }
+}
+]
