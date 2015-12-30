@@ -7,7 +7,6 @@ from django.core.management.base import BaseCommand
 from django.utils.timezone import now
 from TwitterAPI import TwitterAPI
 
-from ega.constants import DEFAULT_TOURNAMENT
 from ega.models import Match
 
 
