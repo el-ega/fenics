@@ -62,7 +62,7 @@ class SignUpTestCase(BaseTestCase):
     bad_username = (
         'Este usuario ya está en uso. Por favor elija otro.')
     bad_email = (
-        'Un usuario ya fue registrado con esta dirrección de correo '
+        'Un usuario ya fue registrado con esta dirección de correo '
         'electrónico.')
 
     def setUp(self):
