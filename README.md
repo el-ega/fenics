@@ -10,7 +10,7 @@ Cómo levantar un entorno de desarrollo
 
     $ git clone git@github.com:el-ega/fenics
     $ cd fenics
-    $ virtualenv env
+    $ virtualenv -p python3 env
     $ source env/bin/activate
     (env) $ pip install -r requirements.txt
     (env) $ python manage.py migrate
