@@ -1,8 +1,8 @@
-Django==1.8.2
-Pillow==2.8.1
+Django==1.9
+Pillow==3.0.0
 demiurge==0.2
-django-allauth==0.20.0
-django-honeypot==0.4.0
-feedparser==5.2.0.post1
-psycopg2==2.6
-TwitterAPI==2.3.3
+django-allauth==0.24.1
+django-honeypot==0.5.0
+feedparser==5.2.1
+psycopg2==2.6.1
+TwitterAPI==2.3.6
