@@ -19,11 +19,12 @@
 
 </div>
 
-{% if socialaccount.providers  %}
+{% get_providers as socialaccount_providers %}
+{% if socialaccount_providers  %}
 <div class="text-center providers-login">
     <p><label>Logueate con</label></p>
     <div>
-    {% for provider in socialaccount.providers %}
+    {% for provider in socialaccount_providers %}
         {% if provider.id == 'twitter' %}
         <a title="Twitter" href="{% provider_login_url 'twitter' process='login' %}">
             <img src="{% static 'images/twitter.png' %}" /></a>
