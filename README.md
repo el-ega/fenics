@@ -1,8 +1,12 @@
+[![Stories in Ready](https://badge.waffle.io/el-ega/fenics.svg?label=ready&title=ToDo)](http://waffle.io/el-ega/fenics) 
+
 fenics
 ======
 
 fenics es el proyecto detrás de https://el-ega.com.ar,
 el sitio de pronósticos deportivos.
+
+Seguí el desarrollo en https://waffle.io/el-ega/fenics.
 
 Cómo levantar un entorno de desarrollo
 --------------------------------------
