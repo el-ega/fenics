@@ -63,42 +63,42 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         matches = MatchData.all()
-        tournament = Tournament.objects.get(slug='torneo-de-los-30')
+        tournament = Tournament.objects.get(slug='torneo-transicion-2016')
 
         for i, entry in enumerate(matches):
             when = entry.when
-            if when is not None and when.hour != 0:
-                changed = False
-                home = TEAM_MAPPING.get(entry.home, entry.home)
-                away = TEAM_MAPPING.get(entry.away, entry.away)
+            changed = False
 
-                home_team = Team.objects.get(name=home)
-                away_team = Team.objects.get(name=away)
+            home = TEAM_MAPPING.get(entry.home, entry.home)
+            away = TEAM_MAPPING.get(entry.away, entry.away)
 
-                match, created = Match.objects.get_or_create(
-                    tournament=tournament, home=home_team, away=away_team)
+            home_team = Team.objects.get(name=home)
+            away_team = Team.objects.get(name=away)
 
-                if created:
-                    self.stdout.write(u'Match created: %s\n' % str(match))
+            match, created = Match.objects.get_or_create(
+                tournament=tournament, home=home_team, away=away_team)
 
-                if not match.suspended and entry.is_suspended:
-                    match.suspended = True
-                    changed = True
+            if created:
+                self.stdout.write(u'Match created: %s\n' % str(match))
 
-                if when != match.when and not match.suspended:
-                    round = (i // 15 + 1)
-                    match.when = when
-                    match.description = 'Fecha %d' % round
-                    match.round = str(round)
-                    changed = True
+            if not match.suspended and entry.is_suspended:
+                match.suspended = True
+                changed = True
 
-                if ((match.home_goals is None or match.away_goals is None) and
-                        entry.is_finished):
-                    changed = True
-                    match.home_goals = entry.home_goals
-                    match.away_goals = entry.away_goals
-                    self.stdout.write(u'Updated result: %s: %s - %s\n' % (
-                        match, entry.home_goals, entry.away_goals))
+            if when != match.when and not match.suspended and when.hour != 0:
+                round = (i // 15 + 1)
+                match.when = when
+                match.description = 'Fecha %d' % round
+                match.round = str(round)
+                changed = True
 
-                if changed:
-                    match.save()
+            if ((match.home_goals is None or match.away_goals is None) and
+                    entry.is_finished):
+                changed = True
+                match.home_goals = entry.home_goals
+                match.away_goals = entry.away_goals
+                self.stdout.write(u'Updated result: %s: %s - %s\n' % (
+                    match, entry.home_goals, entry.away_goals))
+
+            if changed:
+                match.save()

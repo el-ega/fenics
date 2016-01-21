@@ -30,7 +30,7 @@
 {
     "model": "ega.team",
     "fields": {
-        "image": "teams/Arsenal.gif",
+        "image": "teams/Arsenal.png",
         "slug": "arsenal",
         "name": "Arsenal",
         "code": "ARS"
@@ -39,7 +39,7 @@
 {
     "model": "ega.team",
     "fields": {
-        "image": "teams/Banfield.gif",
+        "image": "teams/Banfield.png",
         "slug": "banfield",
         "name": "Banfield",
         "code": "BAN"
@@ -48,7 +48,7 @@
 {
     "model": "ega.team",
     "fields": {
-        "image": "teams/BocaJuniors.gif",
+        "image": "teams/Boca.png",
         "slug": "boca-juniors",
         "name": "Boca Juniors",
         "code": "BOC"
@@ -57,7 +57,7 @@
 {
     "model": "ega.team",
     "fields": {
-        "image": "teams/Estudiantes.gif",
+        "image": "teams/Estudiantes.png",
         "slug": "estudiantes",
         "name": "Estudiantes",
         "code": "EST"
@@ -66,7 +66,7 @@
 {
     "model": "ega.team",
     "fields": {
-        "image": "teams/GimnasiaLP.gif",
+        "image": "teams/Gimnasia.png",
         "slug": "gimnasia",
         "name": "Gimnasia",
         "code": "GLP"
@@ -75,7 +75,7 @@
 {
     "model": "ega.team",
     "fields": {
-        "image": "teams/Lanus.gif",
+        "image": "teams/Lanus.png",
         "slug": "lanus",
         "name": "Lan\u00fas",
         "code": "LAN"
@@ -84,7 +84,7 @@
 {
     "model": "ega.team",
     "fields": {
-        "image": "teams/Newells.gif",
+        "image": "teams/Newells.png",
         "slug": "newells-old-boys",
         "name": "Newell's Old Boys",
         "code": "NOB"
@@ -93,7 +93,7 @@
 {
     "model": "ega.team",
     "fields": {
-        "image": "teams/Olimpo.gif",
+        "image": "teams/Olimpo.png",
         "slug": "olimpo",
         "name": "Olimpo",
         "code": "OLI"
@@ -102,7 +102,7 @@
 {
     "model": "ega.team",
     "fields": {
-        "image": "teams/Quilmes.gif",
+        "image": "teams/Quilmes.png",
         "slug": "quilmes",
         "name": "Quilmes",
         "code": "QUI"
@@ -111,7 +111,7 @@
 {
     "model": "ega.team",
     "fields": {
-        "image": "teams/Racing.gif",
+        "image": "teams/Racing.png",
         "slug": "racing",
         "name": "Racing",
         "code": "RAC"
@@ -120,7 +120,7 @@
 {
     "model": "ega.team",
     "fields": {
-        "image": "teams/RiverPlate.gif",
+        "image": "teams/River.png",
         "slug": "river-plate",
         "name": "River Plate",
         "code": "RIV"
@@ -129,7 +129,7 @@
 {
     "model": "ega.team",
     "fields": {
-        "image": "teams/RosarioCentral.gif",
+        "image": "teams/RosarioCentral.png",
         "slug": "rosario-central",
         "name": "Rosario Central",
         "code": "CEN"
@@ -138,7 +138,7 @@
 {
     "model": "ega.team",
     "fields": {
-        "image": "teams/SanLorenzo.gif",
+        "image": "teams/SanLorenzo.png",
         "slug": "san-lorenzo",
         "name": "San Lorenzo",
         "code": "SLO"
@@ -147,7 +147,7 @@
 {
     "model": "ega.team",
     "fields": {
-        "image": "teams/Velez.gif",
+        "image": "teams/Velez.png",
         "slug": "velez",
         "name": "V\u00e9lez",
         "code": "VEL"
@@ -156,7 +156,7 @@
 {
     "model": "ega.team",
     "fields": {
-        "image": "teams/AtleticoRafaela.gif",
+        "image": "teams/Rafaela.png",
         "slug": "atletico-rafaela",
         "name": "Atl\u00e9tico Rafaela",
         "code": "RAF"
@@ -165,7 +165,7 @@
 {
     "model": "ega.team",
     "fields": {
-        "image": "teams/Belgrano.gif",
+        "image": "teams/Belgrano.png",
         "slug": "belgrano",
         "name": "Belgrano",
         "code": "BEL"
@@ -174,7 +174,7 @@
 {
     "model": "ega.team",
     "fields": {
-        "image": "teams/DefensaYJusticia.gif",
+        "image": "teams/Defensa.png",
         "slug": "defensa-y-justicia",
         "name": "Defensa y Justicia",
         "code": "DYJ"
@@ -183,7 +183,7 @@
 {
     "model": "ega.team",
     "fields": {
-        "image": "teams/GodoyCruz.gif",
+        "image": "teams/GodoyCruz.png",
         "slug": "godoy-cruz",
         "name": "Godoy Cruz",
         "code": "GOD"
@@ -192,7 +192,7 @@
 {
     "model": "ega.team",
     "fields": {
-        "image": "teams/Tigre.gif",
+        "image": "teams/Tigre.png",
         "slug": "tigre",
         "name": "Tigre",
         "code": "TIG"
@@ -201,7 +201,7 @@
 {
     "model": "ega.team",
     "fields": {
-        "image": "teams/Independiente.gif",
+        "image": "teams/Independiente.png",
         "slug": "independiente",
         "name": "Independiente",
         "code": "IND"
@@ -298,6 +298,24 @@
     }
 },
 {
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/Patronato.png",
+        "slug": "patronato",
+        "name": "Patronato",
+        "code": "PAT"
+    }
+},
+{
+    "model": "ega.team",
+    "fields": {
+        "image": "teams/AtleticoTucuman.png",
+        "slug": "atletico-tucuman",
+        "name": "Atlético Tucumán",
+        "code": "TUC"
+    }
+},
+{
     "model": "ega.tournament",
     "fields": {
         "finished": false,
@@ -331,10 +349,12 @@
             50,
             56,
             53,
-            39
+            39,
+            63,
+            64
         ],
-        "slug": "torneo-de-los-30",
-        "name": "Torneo de los 30",
+        "slug": "torneo-transicion-2016",
+        "name": "Torneo de Transición 2016",
         "published": true
     }
 }
