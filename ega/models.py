@@ -169,7 +169,7 @@ class Tournament(models.Model):
         """Return tournament teams ranking."""
         ranking = self.teamstats_set.all().annotate(
             played=F('won')+F('tie')+F('lost'),
-            dg=F('gf')-F('gc')).order_by('-points', '-dg', '-gf')
+            dg=F('gf')-F('gc')).order_by('zone', '-points', '-dg', '-gf')
         return ranking
 
     def most_common_results(self, n):
@@ -222,10 +222,13 @@ class Match(models.Model):
 
     tournament = models.ForeignKey('Tournament')
     round = models.CharField(max_length=128, blank=True)
+    knockout = models.BooleanField(default=False)
+
     description = models.CharField(max_length=128, blank=True)
     when = models.DateTimeField(null=True, blank=True)
     location = models.CharField(max_length=200, blank=True)
     referee = models.CharField(max_length=200, blank=True)
+
     starred = models.BooleanField(default=False)
     suspended = models.BooleanField(default=False)
 
@@ -305,6 +308,8 @@ class TeamStats(models.Model):
     team = models.ForeignKey(Team)
     tournament = models.ForeignKey(Tournament)
 
+    zone = models.CharField(default='', max_length=64, blank=True)
+
     won = models.PositiveIntegerField(default=0)
     tie = models.PositiveIntegerField(default=0)
     lost = models.PositiveIntegerField(default=0)
@@ -318,6 +323,7 @@ class TeamStats(models.Model):
 
     class Meta:
         ordering = ('-points',)
+        unique_together = (('tournament', 'team'),)
 
     def __str__(self):
         return "%s - %s" % (self.team, self.tournament)
@@ -325,10 +331,10 @@ class TeamStats(models.Model):
     def sync(self):
         """Update team stats for tournament."""
         home = Match.objects.filter(
-            tournament=self.tournament, home=self.team,
+            tournament=self.tournament, home=self.team, knockout=False,
             home_goals__isnull=False, away_goals__isnull=False)
         away = Match.objects.filter(
-            tournament=self.tournament, away=self.team,
+            tournament=self.tournament, away=self.team, knockout=False,
             home_goals__isnull=False, away_goals__isnull=False)
 
         self.won = (
