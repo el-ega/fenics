@@ -4,6 +4,7 @@ from datetime import timedelta
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
+from django.db import connection
 from django.utils.timezone import now
 from TwitterAPI import TwitterAPI
 
@@ -11,10 +12,19 @@ from ega.models import Match, Prediction
 
 
 PREDICTION_COUNT_QUERY = """
-    SELECT *, COUNT(*) AS count FROM ega_prediction
+    SELECT home_goals, away_goals, COUNT(*) AS count FROM ega_prediction
     WHERE match_id=%s AND home_goals IS NOT NULL AND away_goals IS NOT NULL
-    GROUP BY home_goals, away_goals ORDER BY count DESC
+    GROUP BY home_goals, away_goals ORDER BY count DESC LIMIT %s
 """
+
+
+def get_top_predictions(match, top=3):
+    """Return the most common predictions for given match."""
+    cursor = connection.cursor()
+
+    cursor.execute(PREDICTION_COUNT_QUERY, [match.id, top])
+    rows = cursor.fetchall()
+    return rows
 
 
 class Command(BaseCommand):
@@ -45,13 +55,11 @@ class Command(BaseCommand):
                 api.request('statuses/update', {'status': tweet})
 
             # get predictions count and tweet
-            counts = Prediction.objects.raw(
-                PREDICTION_COUNT_QUERY, params=[m.id])
+            counts = get_top_predictions(m)
             preds = '\n'.join([
-                '#%s %d - %d #%s (%d)' % (r.match.home.code,
-                                          r.home_goals, r.away_goals,
-                                          r.match.away.code, r.count)
-                for r in counts[:3]
+                '#%s %d - %d #%s (%d)' % (m.home.code, r[0], r[1],
+                                          m.away.code, r[2])
+                for r in counts
             ])
             tweet = 'Los resultados más pronosticados:\n' + preds
             api.request('statuses/update', {'status': tweet})
