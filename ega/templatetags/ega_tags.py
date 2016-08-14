@@ -31,3 +31,8 @@ def get_friends_leagues(user, slug):
 @register.assignment_tag
 def get_latest_matches(team, tournament):
     return team.latest_matches(tournament)
+
+
+@register.assignment_tag
+def get_user_stats(user, tournament):
+    return user.stats(tournament)

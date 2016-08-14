@@ -34,11 +34,11 @@
 
         <ul class="nav nav-tabs">
         <li class="{% if not league %}active{% endif %}">
-            <a href="{% url 'ega-ranking' %}{% if round %}f/{{ round }}{% endif %}">
+            <a href="{% url 'ega-ranking' tournament.slug %}{% if round %}f/{{ round }}{% endif %}">
                 General</a></li>
         {% for l in leagues %}
             <li class="{% if league == l %}active{% endif %}">
-                <a href="{% url 'ega-league-ranking' l.slug %}{% if round %}f/{{ round }}{% endif %}">{{ l.name }}</a>
+                <a href="{% url 'ega-league-ranking' tournament.slug l.slug %}{% if round %}f/{{ round }}{% endif %}">{{ l.name }}</a>
             </li>
         {% endfor %}
         </ul>
