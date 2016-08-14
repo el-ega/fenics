@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load ega_tags %}
+{% load news_tags %}
+{% load staticfiles %}
+
+{% block content-title %}{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="hidden-xs">
+            <h3 class="title">Blog <small><a href="http://blog.el-ega.com.ar">blog.el-ega</a></small></h3>
+            {% latest_news source='ega' latest=3 %}
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <h3 class="title">Próximos partidos</h3>
+
+        {% for m,p in next_matches %}
+        <div class="row">
+        <div class="col-md-3 text-muted">{{ m.when|date:"F j, P" }}</div>
+        <div class="col-md-3 col-xs-5">
+            <strong>{{ m.home.name }}</strong>
+        </div>
+        <div class="col-md-3 col-xs-5">
+            <strong>{{ m.away.name }}</strong>
+        </div>
+        <div class="col-md-3 col-xs-2">
+            {% if p %}<span class="text-success">
+                    <span class="glyphicon glyphicon-check"></span>
+                    ({{ p.home_goals }}-{{ p.away_goals }})</span>
+            {% else %}
+            <a class="text-info" href="{% url 'ega-next-matches' m.tournament.slug %}#{{ m.id }}"><span class="glyphicon glyphicon-pencil"></span></a>
+            {% endif %}
+        </div>
+        </div>
+        {% empty %}
+        <p class="text-muted">No hay partidos por jugar</p>
+        {% endfor %}
+
+        <hr/>
+
+        {% for t in available_tournaments %}
+            <h4 class="title">
+                <strong>{{ t.name }}</strong>
+                <a class="pull-right" href="{% url 'ega-home' t.slug %}"><span class="glyphicon glyphicon-log-in"></span> <small>ir</small></a>
+            </h4>
+            <dl>
+                {% with top3=t.ranking|slice:":3" %}
+                {% if top3 %}
+                <dt>Posiciones
+                    <a class="small" href="{% url 'ega-ranking' t.slug %}"><span class="glyphicon glyphicon-sort-by-order"></span></a>
+                </dt>
+                <dd>
+                {% for row in top3 %}
+                    <span class="text-muted">{{ forloop.counter }}.</span>
+                    {{ row.username }} ({{ row.total }}pts){% if not forloop.last %} |{% endif %}
+                {% endfor %}
+                </dd>
+                {% endif %}
+                {% endwith %}
+
+                {% get_user_stats request.user t as stats %}
+                {% if stats.count > 0 %}
+                <dt>Performance</dt>
+                <dd>
+                {{ stats.score }} punto{{ stats.score|pluralize }}
+                ({{ stats.count }} partido{{ stats.count|pluralize }} jugado{{ stats.count|pluralize }},
+                {{ stats.winners }} acierto{{ stats.winners|pluralize }},
+                {{ stats.exacts }} exacto{{ stats.exacts|pluralize }})
+                </dd>
+                {% endif %}
+
+            </dl>
+        {% endfor %}
+
+        <hr/>
+
+        <h5>Torneos finalizados</h5>
+        <p class="small">
+        {% for t in past_tournaments %}
+            <a href="{% url 'ega-home' t.slug %}">{{ t.name }}</a>{% if not forloop.last %} |{% endif %}
+        {% endfor %}
+        </p>
+
+    </div>
+</div>
+{% endblock %}

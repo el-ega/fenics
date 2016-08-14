@@ -50,7 +50,7 @@ class LoginTestCase(BaseTestCase):
 
     def test_success(self):
         response = self.login(self.user.username, '12345678', follow=True)
-        self.assertRedirects(response, reverse('home'))
+        self.assertRedirects(response, reverse('meta-home'))
         self.assertEqual(
             [m.message for m in response.context['messages']],
             ['Ha iniciado sesión exitosamente como %s.' % self.user.username])
@@ -90,7 +90,7 @@ class SignUpTestCase(BaseTestCase):
     def test_success(self):
         new = 'foobar'
         response = self.signup(new, 'foo@example.com', '12345678', follow=True)
-        self.assertRedirects(response, reverse('home'))
+        self.assertRedirects(response, reverse('meta-home'))
         self.assertEqual(
             sorted(m.message for m in response.context['messages']),
             ['Correo electrónico enviado a foo@example.com.',

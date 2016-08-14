@@ -27,7 +27,7 @@
             </div>
 
         {% for form in group.list %}
-            <a name="{% if form.instance.home_goals == None or form.instance.away_goals == None %}pending-match{% endif %}"></a>
+            <a name="{{ form.match.id }}"></a>
             {{ form.id }}
             {{ form.match }}
 

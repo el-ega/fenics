@@ -11,8 +11,6 @@ def disqus_shortname(request):
 
 def available_tournaments(request):
     """Adds available tournaments information as variable to the context."""
-    enabled = Tournament.objects.filter(published=True, finished=False)
-    available = {t.slug: t for t in enabled}
-    current_slug = request.session.get('tournament', DEFAULT_TOURNAMENT)
-    current = available.get(current_slug, available.get(DEFAULT_TOURNAMENT))
-    return {'available_tournaments': available, 'current_tournament': current}
+    available = Tournament.objects.filter(
+        published=True, finished=False).order_by('name')
+    return {'available_tournaments': available}

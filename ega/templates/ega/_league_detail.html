@@ -5,7 +5,7 @@
       <h3 class="panel-title"><strong>{{ league.name }}</strong>
         {% if league.owner == request.user %}
         <div  class="pull-right">
-        <a href="{% url 'ega-invite-league' league.slug %}">Invitá más amigos a esta liga</a>
+        <a href="{% url 'ega-invite-league' tournament.slug league.slug %}">Invitá más amigos a esta liga</a>
         </div>
         {% endif %}
       </h3>

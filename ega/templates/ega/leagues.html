@@ -7,7 +7,7 @@
 
 <div class="section">
 <h4 class="title">Nueva liga</h4>
-<form method="POST" action="{% url 'ega-leagues' %}" class="form-inline" role="form" id="new-league">
+<form method="POST" action="{% url 'ega-leagues' tournament.slug %}" class="form-inline" role="form" id="new-league">
     {% csrf_token %}
     {% for field in form %}
     <div class="form-group {% if field.errors %}has-error{% endif %}">
@@ -25,7 +25,7 @@
 </div>
 
 <div class="section">
-<h4 class="title">Tus ligas en {{ current_tournament.name }}</h4>
+<h4 class="title">Tus ligas en {{ tournament.name }}</h4>
 {% for league in leagues %}
 {% include  'ega/_league_detail.html' %}
 {% empty %}

@@ -63,7 +63,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         matches = MatchData.all()
-        tournament = Tournament.objects.get(slug='torneo-transicion-2016')
+        tournament = Tournament.objects.get(slug='primera-division')
 
         for i, entry in enumerate(matches):
             when = entry.when
