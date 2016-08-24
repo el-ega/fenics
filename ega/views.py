@@ -63,7 +63,7 @@ def _next_matches(user):
     until = tz_now + timedelta(days=NEXT_MATCHES_DAYS)
     matches = Match.objects.select_related('tournament').filter(
         tournament__published=True, tournament__finished=False,
-        when__range=(tz_now, until))
+        when__range=(tz_now, until)).order_by('tournament', 'when')
     predictions = user.prediction_set.filter(
         match__in=matches, home_goals__isnull=False, away_goals__isnull=False)
     next_matches = []
@@ -73,7 +73,8 @@ def _next_matches(user):
             if p.match == m:
                 pred = p
                 break
-        next_matches.append((m, pred))
+        row = {'match': m, 'prediction': pred}
+        next_matches.append(row)
     return next_matches
 
 @login_required
@@ -156,7 +157,7 @@ def invite_friends(request, slug, league_slug=None):
             else:
                 msg = '1 amigo invitado!'
             messages.success(request, msg)
-            return HttpResponseRedirect(reverse('home', args=[slug]))
+            return HttpResponseRedirect(reverse('ega-home', args=[slug]))
     else:
         subject = INVITE_SUBJECT
         extra_text = ''
@@ -188,7 +189,7 @@ def friend_join(request, key, slug, league_slug=None):
         msg2 = 'No podés unirte con un link de referencia propio.'
         messages.info(request, msg1)
         messages.warning(request, msg2)
-        return HttpResponseRedirect(reverse('home', args=[slug]))
+        return HttpResponseRedirect(reverse('ega-home', args=[slug]))
 
     created = inviting_user.record_referral(request.user)
     if created:

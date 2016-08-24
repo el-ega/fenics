@@ -57,6 +57,7 @@
                             {% endfor %}
                             </ul>
                         </li>
+                        <li><a href="{% url 'ega-home' tournament.slug %}">Inicio</a></li>
                         {% if not tournament.finished %}
                         <li><a href="{% url 'ega-next-matches' tournament.slug %}">Partidos</a></li>
                         {% endif %}
