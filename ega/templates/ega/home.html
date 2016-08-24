@@ -16,8 +16,13 @@
             {% include 'ega/_user_stats.html' %}
 
             <div class="hidden-xs">
+                {% if tournament.slug == 'uruguayo-especial' %}
+                <h3 class="title">Noticias <small><a href="http://ovaciondigital.com.uy">Ovación</a></small></h3>
+                {% latest_news source='ovacion' latest=3 %}
+                {% else %}
                 <h3 class="title">Noticias <small><a href="http://ole.com.ar">Olé</a></small></h3>
                 {% latest_news source='ole' latest=3 %}
+                {% endif %}
             </div>
         </div>
 

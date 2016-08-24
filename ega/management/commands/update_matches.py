@@ -72,8 +72,10 @@ class Command(BaseCommand):
             home = TEAM_MAPPING.get(entry.home, entry.home)
             away = TEAM_MAPPING.get(entry.away, entry.away)
 
-            home_team = Team.objects.get(name=home)
-            away_team = Team.objects.get(name=away)
+            home_team = Team.objects.get(
+                name=home, teamstats__tournament=tournament)
+            away_team = Team.objects.get(
+                name=away, teamstats__tournament=tournament)
 
             match, created = Match.objects.get_or_create(
                 tournament=tournament, home=home_team, away=away_team)

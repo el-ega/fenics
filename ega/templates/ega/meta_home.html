@@ -18,27 +18,43 @@
     <div class="col-md-8">
         <h3 class="title">Próximos partidos</h3>
 
-        {% for m,p in next_matches %}
-        <div class="row">
-        <div class="col-md-3 text-muted">{{ m.when|date:"F j, P" }}</div>
-        <div class="col-md-3 col-xs-5">
-            <strong>{{ m.home.name }}</strong>
+        {% regroup next_matches by match.tournament as match_list %}
+
+        <ul class="nav text-right nav-tabs" role="tablist">
+            {% for tournament in match_list %}
+            <li role="presentation"{% if forloop.first %} class="active"{% endif %}>
+                <a href="#{{ tournament.grouper.slug }}" aria-controls="{{ tournament.grouper.slug }}" role="tab" data-toggle="tab">{{ tournament.grouper.name }}</a></li>
+            {% endfor %}
+        </ul>
+
+        <div class="tab-content">
+            {% for tournament in match_list %}
+            <div role="tabpanel" class="tab-pane{% if forloop.first %} active{% endif %}" id="{{ tournament.grouper.slug }}">
+
+            {% for row in tournament.list %}
+            <div class="row">
+            <div class="col-md-3 text-muted">{{ row.match.when|date:"F j, P" }}</div>
+            <div class="col-md-3 col-xs-5">
+                <strong>{{ row.match.home.name }}</strong>
+            </div>
+            <div class="col-md-3 col-xs-5">
+                <strong>{{ row.match.away.name }}</strong>
+            </div>
+            <div class="col-md-3 col-xs-2">
+                <a class="text-info" href="{% url 'ega-next-matches' tournament.grouper.slug %}#{{ row.match.id }}"><span class="glyphicon glyphicon-pencil"></span></a>
+                {% if p %}<span class="text-success">
+                        <span class="glyphicon glyphicon-check"></span>
+                        ({{ row.prediction.home_goals }}-{{ row.prediction.away_goals }})</span>
+                {% endif %}
+            </div>
+            </div>
+            {% empty %}
+            <p class="text-muted">No hay partidos por jugar</p>
+            {% endfor %}
+
+            </div>
+            {% endfor %}
         </div>
-        <div class="col-md-3 col-xs-5">
-            <strong>{{ m.away.name }}</strong>
-        </div>
-        <div class="col-md-3 col-xs-2">
-            {% if p %}<span class="text-success">
-                    <span class="glyphicon glyphicon-check"></span>
-                    ({{ p.home_goals }}-{{ p.away_goals }})</span>
-            {% else %}
-            <a class="text-info" href="{% url 'ega-next-matches' m.tournament.slug %}#{{ m.id }}"><span class="glyphicon glyphicon-pencil"></span></a>
-            {% endif %}
-        </div>
-        </div>
-        {% empty %}
-        <p class="text-muted">No hay partidos por jugar</p>
-        {% endfor %}
 
         <hr/>
 

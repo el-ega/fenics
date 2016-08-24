@@ -177,6 +177,7 @@ EL_EGA_NO_REPLY = 'noreply@el-ega.com.ar'
 DISQUS_SHORTNAME = 'elega-staging'
 NEWS_FEEDS = (
     ('ole', 'http://www.ole.com.ar/rss/futbol-primera/'),
+    ('ovacion', 'http://www.ovaciondigital.com.uy/rss/ovacion/futbol'),
     ('ega', 'http://blog.el-ega.com.ar/rss'),
 )
 
