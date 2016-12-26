@@ -59,16 +59,16 @@ class LoginTestCase(BaseTestCase):
 class SignUpTestCase(BaseTestCase):
 
     url = reverse('account_signup')
-    bad_username = (
-        'Este usuario ya está en uso. Por favor elija otro.')
+    bad_username = 'Ya existe un usuario con este nombre.'
     bad_email = (
         'Un usuario ya fue registrado con esta dirección de correo '
         'electrónico.')
+    good_pw = '1234567U'
 
     def setUp(self):
         super(SignUpTestCase, self).setUp()
         self.user = EgaUser.objects.create_user(
-            username='test', email='test@example.com', password='12345678')
+            username='test', email='test@example.com', password=self.good_pw)
 
     def signup(self, username, email, password, **kwargs):
         data = dict(
@@ -77,19 +77,21 @@ class SignUpTestCase(BaseTestCase):
         response = self.client.post(self.url, data=data, **kwargs)
         return response
 
-    def test_exiting_username(self):
-        response = self.signup(self.user.username, 'foo@example.com', '123456')
-        self.assertContains(response, self.bad_username)
+    def test_existing_username(self):
+        response = self.signup(
+            self.user.username, 'foo@example.com', self.good_pw)
         self.assertFormError(response, 'form', 'username', self.bad_username)
+        self.assertContains(response, self.bad_username)
 
-    def test_exiting_email(self):
-        response = self.signup('zaraza', self.user.email, '123456')
-        self.assertContains(response, self.bad_email)
+    def test_existing_email(self):
+        response = self.signup('zaraza', self.user.email, self.good_pw)
         self.assertFormError(response, 'form', 'email', self.bad_email)
+        self.assertContains(response, self.bad_email)
 
     def test_success(self):
         new = 'foobar'
-        response = self.signup(new, 'foo@example.com', '12345678', follow=True)
+        response = self.signup(
+            new, 'foo@example.com', self.good_pw, follow=True)
         self.assertRedirects(response, reverse('meta-home'))
         self.assertEqual(
             sorted(m.message for m in response.context['messages']),
