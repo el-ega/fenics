@@ -11,9 +11,12 @@
 <form method="POST" action="{% url 'account_signup' %}" role="form">
     {% csrf_token %}
 
-    {% for field in form %}
-    {% include 'ega/_field_snippet.html' %}
-    {% endfor %}
+    {% include 'ega/_field_snippet.html' with field=form.username %}
+    {% include 'ega/_field_snippet.html' with field=form.email %}
+    {% include 'ega/_field_snippet.html' with field=form.password1 %}
+    {% include 'ega/_field_snippet.html' with field=form.password2 %}
+
+    {% include 'ega/_field_snippet.html' with field=form.captcha %}
 
     {% if redirect_field_value %}
     <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />

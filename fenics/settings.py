@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'ega',
     'news',
     'allauth',
+    'captcha',
     'honeypot',
     'allauth.account',
     'allauth.socialaccount',
@@ -166,6 +167,8 @@ SOCIALACCOUNT_QUERY_EMAIL = True
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 LOGIN_REDIRECT_URL = 'meta-home'
 SITE_ID = 1
+
+ACCOUNT_SIGNUP_FORM_CLASS = 'ega.forms.CustomSignupForm'
 
 from django.contrib.messages import constants as message_constants
 MESSAGE_TAGS = {message_constants.ERROR: 'danger'}

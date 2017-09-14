@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from captcha.fields import ReCaptchaField
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
@@ -119,3 +120,12 @@ class EgaUserForm(forms.ModelForm):
     class Meta:
         model = EgaUser
         fields = ('username', 'first_name', 'last_name', 'avatar')
+
+
+class CustomSignupForm(forms.Form):
+
+    captcha = ReCaptchaField(label='')
+
+    def signup(self, request, user):
+        """ Required, or else it throws deprecation warnings """
+        pass
