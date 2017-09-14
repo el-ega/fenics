@@ -84,7 +84,7 @@ $(document).ready(function () {
             <div class="row">
                 <div class="col-md-12 text-center match-status">
                     <span id="match-status" class="label label-default"></span>
-                    {% if not finished %}<span><img src="{% static 'images/timer.gif' %}"></span>{% endif %}
+                    {% if not match.finished %}<span><img src="{% static 'images/timer.gif' %}"></span>{% endif %}
                     {{ match.when|date:"F j, H:i" }}
                 </div>
             </div>
@@ -106,7 +106,7 @@ $(document).ready(function () {
                         </div>
                         <div class="col-xs-2 text-center">
                             <span class="match-goals" id="{{ home.code }}-goals">
-                            {% if finished %}{{ match.home_goals }}{% else %}-{% endif %}
+                            {{ match.home_goals|default_if_none:"-" }}
                             </span>
                         </div>
                     </div>
@@ -115,7 +115,7 @@ $(document).ready(function () {
                     <div class="row">
                         <div class="col-xs-2 text-center hidden-xs">
                             <span class="match-goals" id="{{ away.code }}-goals">
-                            {% if finished %}{{ match.away_goals }}{% else %}-{% endif %}
+                            {{ match.away_goals|default_if_none:"-" }}
                             </span>
                         </div>
                         <div class="col-xs-10">
@@ -133,7 +133,7 @@ $(document).ready(function () {
                         </div>
                         <div class="col-xs-2 text-center visible-xs">
                             <span class="match-goals" id="{{ away.code }}-goals-responsive">
-                            {% if finished %}{{ match.away_goals }}{% else %}-{% endif %}
+                            {{ match.away_goals|default_if_none:"-" }}
                             </span>
                         </div>
                     </div>
@@ -142,7 +142,7 @@ $(document).ready(function () {
         </div>
     {% endwith %}
 
-    {% if finished %}
+    {% if match.finished %}
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-info">

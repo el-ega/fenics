@@ -12,8 +12,9 @@ from ega.models import Match, Team, Tournament
 
 TEAM_MAPPING = {
     'Def. y Justicia': 'Defensa y Justicia',
-    'Newell`s Old Boys': "Newell's Old Boys",
+    'Newell`s': "Newell's Old Boys",
     'Racing Club': 'Racing',
+    'Talleres': 'Talleres (Cba)',
     'Atl. Rafaela': 'Atlético Rafaela',
 }
 
@@ -62,8 +63,13 @@ class Command(BaseCommand):
     help = 'Import match details'
 
     def handle(self, *args, **options):
-        matches = MatchData.all()
-        tournament = Tournament.objects.get(slug='primera-division')
+        try:
+            matches = MatchData.all()
+        except:
+            # skip if couldn't get data
+            return
+
+        tournament = Tournament.objects.get(slug='superliga')
 
         for i, entry in enumerate(matches):
             when = entry.when
@@ -73,9 +79,9 @@ class Command(BaseCommand):
             away = TEAM_MAPPING.get(entry.away, entry.away)
 
             home_team = Team.objects.get(
-                name=home, teamstats__tournament=tournament)
+                name=home, tournament=tournament)
             away_team = Team.objects.get(
-                name=away, teamstats__tournament=tournament)
+                name=away, tournament=tournament)
 
             match, created = Match.objects.get_or_create(
                 tournament=tournament, home=home_team, away=away_team)
@@ -88,19 +94,20 @@ class Command(BaseCommand):
                 changed = True
 
             if when != match.when and not match.suspended and when.hour != 0:
-                round = (i // 15 + 1)
+                round = (i // 14 + 1)
                 match.when = when
                 match.description = 'Fecha %d' % round
                 match.round = str(round)
                 changed = True
 
-            if ((match.home_goals is None or match.away_goals is None) and
-                    entry.is_finished):
+            if not match.finished and entry.home_goals != '' and entry.away_goals != '':
                 changed = True
                 match.home_goals = entry.home_goals
                 match.away_goals = entry.away_goals
-                self.stdout.write(u'Updated result: %s: %s - %s\n' % (
-                    match, entry.home_goals, entry.away_goals))
+                match.finished = entry.is_finished
+                if match.finished:
+                    self.stdout.write(u'Updated result: %s: %s - %s\n' % (
+                        match, entry.home_goals, entry.away_goals))
 
             if changed:
                 match.save()
