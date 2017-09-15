@@ -16,10 +16,10 @@
                 </strong>
             </div>
             <div class="col-xs-1">
-                <strong>{{ match.home_goals|default_if_none:'-' }}</strong>
+                <strong class="{% if not match.finished %}predicted-score{% endif %}">{{ match.home_goals|default_if_none:'-' }}</strong>
             </div>
             <div class="col-xs-1">
-                <strong>{{ match.away_goals|default_if_none:'-' }}</strong>
+                <strong class="{% if not match.finished %}predicted-score{% endif %}">{{ match.away_goals|default_if_none:'-' }}</strong>
             </div>
             <div class="col-xs-2">
                 <strong>
@@ -36,11 +36,12 @@
         </div>
         <div class="row text-center">
             <div class="col-xs-10 col-xs-offset-1">
-                <small>Pronóstico:
+                <small>{% if not match.finished %}En juego{% else %}Finalizado{% endif %} |
+                Pronóstico:
                 {% if prediction.home_goals != None and prediction.away_goals != None %}
                 {{ prediction.home_goals }} - {{ prediction.away_goals }}
                 {% if prediction.score >= 0 %}({{ prediction.score }} punto{{ prediction.score|pluralize }}){% endif %}
-                {% else %}-{% endif %}
+                {% endif %}
                 | <a href="{% url 'ega-match-details' tournament.slug match.id %}">Detalles</a></small>
             </div>
         </div>

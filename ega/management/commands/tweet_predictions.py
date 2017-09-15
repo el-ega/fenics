@@ -36,7 +36,7 @@ class Command(BaseCommand):
 
         # matches in the last hour
         matches = Match.objects.filter(
-            when__isnull=False,
+            when__isnull=False, suspended=False,
             when__range=(now() - timedelta(minutes=30), now()))
 
         for m in matches:

@@ -42,7 +42,7 @@
             </div>
             <div class="col-md-3 col-xs-2">
                 <a class="text-info" href="{% url 'ega-next-matches' tournament.grouper.slug %}#{{ row.match.id }}"><span class="glyphicon glyphicon-pencil"></span></a>
-                {% if p %}<span class="text-success">
+                {% if row.prediction %}<span class="text-success">
                         <span class="glyphicon glyphicon-check"></span>
                         ({{ row.prediction.home_goals }}-{{ row.prediction.away_goals }})</span>
                 {% endif %}

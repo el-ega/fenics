@@ -111,7 +111,7 @@ class EgaUser(AbstractUser):
         stats = {}
         ranking = Prediction.objects.filter(
             match__tournament=tournament, user=self, score__gte=0,
-            home_goals__isnull=False, away_goals__isnull=False)
+            match__finished=True)
         if round is not None:
             ranking = ranking.filter(match__round=round)
 
@@ -138,8 +138,7 @@ class Tournament(models.Model):
         current = None
         try:
             last_played = self.match_set.filter(
-                home_goals__isnull=False,
-                away_goals__isnull=False).latest('when')
+                finished=True).latest('when')
             current = last_played.round
         except Match.DoesNotExist:
             pass
@@ -207,7 +206,7 @@ class Team(models.Model):
         tz_now = now()
         matches = Match.objects.filter(
             Q(away=self) | Q(home=self),
-            tournament=tournament,
+            tournament=tournament, finished=True,
             when__lte=tz_now)
         matches = matches.order_by('-when')
         return matches
@@ -231,6 +230,7 @@ class Match(models.Model):
 
     starred = models.BooleanField(default=False)
     suspended = models.BooleanField(default=False)
+    finished = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('when',)
@@ -245,10 +245,6 @@ class Match(models.Model):
         if self.when:
             ret = self.when - timedelta(hours=HOURS_TO_DEADLINE)
         return ret
-
-    @property
-    def is_finished(self):
-        return self.home_goals is not None and self.away_goals is not None
 
     @property
     def is_expired(self):
@@ -332,10 +328,10 @@ class TeamStats(models.Model):
         """Update team stats for tournament."""
         home = Match.objects.filter(
             tournament=self.tournament, home=self.team, knockout=False,
-            home_goals__isnull=False, away_goals__isnull=False)
+            finished=True)
         away = Match.objects.filter(
             tournament=self.tournament, away=self.team, knockout=False,
-            home_goals__isnull=False, away_goals__isnull=False)
+            finished=True)
 
         self.won = (
             home.filter(home_goals__gt=F('away_goals')).count() +
@@ -439,9 +435,9 @@ def update_related_predictions(sender, instance, **kwargs):
     away_goals = instance.away_goals
     predictions = instance.prediction_set
 
-    if home_goals is None or away_goals is None:
+    if not instance.finished:
         # update starred field for predictions (only while not played)
-        predictions.update(starred=instance.starred)
+        predictions.update(starred=instance.starred, score=0)
         return
 
     # reset predictions

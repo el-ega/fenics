@@ -281,8 +281,7 @@ def next_matches(request, slug):
                 msg = "%s - %s: el partido expiró, pronóstico NO actualizado."
                 messages.error(request, msg % (m.home.name, m.away.name))
 
-            return HttpResponseRedirect(
-                reverse('ega-next-matches', args=[slug]))
+            return HttpResponseRedirect(reverse('ega-home', args=[slug]))
 
     else:
         formset = PredictionFormSet(queryset=predictions)
@@ -300,8 +299,7 @@ def match_details(request, slug, match_id):
 
     exacts = Prediction.objects.none()
     winners = Prediction.objects.none()
-    finished = match.home_goals is not None and match.away_goals is not None
-    if finished:
+    if match.finished:
         winners = Prediction.objects.filter(
             match=match, score__gt=0, score__lt=EXACTLY_MATCH_POINTS)
         exacts = Prediction.objects.filter(
@@ -310,7 +308,7 @@ def match_details(request, slug, match_id):
 
     return render(
         request, 'ega/match_details.html',
-        {'tournament': tournament, 'match': match, 'finished': finished,
+        {'tournament': tournament, 'match': match,
          'exacts': exacts, 'winners': winners})
 
 
