@@ -11,30 +11,36 @@ from ega.models import Match, Team, Tournament
 
 
 TEAM_MAPPING = {
-    'Def. y Justicia': 'Defensa y Justicia',
+    'Defensa': 'Defensa y Justicia',
     'Newell`s': "Newell's Old Boys",
     'Racing Club': 'Racing',
     'Talleres': 'Talleres (Cba)',
     'Atl. Rafaela': 'Atlético Rafaela',
+    'Argentinos': 'Argentinos Juniors',
+    'S. Martín SJ': 'San Martín (SJ)',
+    'Atl. Tucumán': 'Atlético Tucumán',
+    'Boca': 'Boca Juniors',
+    'River': 'River Plate',
+    'R. Central': 'Rosario Central',
 }
 
 
 class MatchData(demiurge.Item):
-    home = demiurge.TextField(selector='td.equipo:eq(0)')
-    away = demiurge.TextField(selector='td.equipo:eq(1)')
-    home_goals = demiurge.TextField(selector='td.gol.loc')
-    away_goals = demiurge.TextField(selector='td.gol.vis')
-    status = demiurge.TextField(selector='td.estado')
-    _date = demiurge.TextField(selector='td.dia')
-    _time = demiurge.TextField(selector='td.hora')
+    home = demiurge.TextField(selector='div.local div.equipo')
+    away = demiurge.TextField(selector='div.visitante div.equipo')
+    home_goals = demiurge.TextField(selector='div.local div.resultado')
+    away_goals = demiurge.TextField(selector='div.visitante div.resultado')
+    status = demiurge.TextField(selector='div.detalles div.estado')
+
+    _date = demiurge.TextField(selector='div.detalles div.dia')
+    _time = demiurge.TextField(selector='div.detalles div.hora')
 
     class Meta:
-        selector = '#fase_n1 tr.partido'
-        base_url = ('http://mundod.lavoz.com.ar/sites/default/files'
-                    '/Datafactory/html/v1/primeraa/fixture.html')
-
-    def __str__(self):
-        return u"%s vs. %s" % (self.home, self.away)
+        selector = 'div.mc-matchContainer'
+        encoding = 'utf-8'
+        base_url = ('http://staticmd1.lavozdelinterior.com.ar/sites/default/'
+                    'files/Datafactory/html/v3/htmlCenter/data/deportes/'
+                    'futbol/primeraa/pages/es/fixture.html')
 
     @property
     def is_finished(self):
@@ -43,6 +49,10 @@ class MatchData(demiurge.Item):
     @property
     def is_suspended(self):
         return self.status.lower() == 'suspendido'
+
+    @property
+    def in_progress(self):
+        return self.status.lower() == 'en juego'
 
     @property
     def when(self):
