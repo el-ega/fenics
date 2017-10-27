@@ -40,7 +40,7 @@
                 Pronóstico:
                 {% if prediction.home_goals != None and prediction.away_goals != None %}
                 {{ prediction.home_goals }} - {{ prediction.away_goals }}
-                {% if prediction.score >= 0 %}({{ prediction.score }} punto{{ prediction.score|pluralize }}){% endif %}
+                {% if match.finished and prediction.score >= 0 %}({{ prediction.score }} punto{{ prediction.score|pluralize }}){% endif %}
                 {% endif %}
                 | <a href="{% url 'ega-match-details' tournament.slug match.id %}">Detalles</a></small>
             </div>
