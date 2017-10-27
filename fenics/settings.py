@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'ega',
     'news',
     'allauth',
-    'captcha',
+    'nocaptcha_recaptcha',
     'honeypot',
     'allauth.account',
     'allauth.socialaccount',
