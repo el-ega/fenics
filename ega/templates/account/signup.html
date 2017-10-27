@@ -4,6 +4,10 @@
 
 {% block content-title %}{% trans "Sign Up" %}{% endblock %}
 
+{% block extra-head %}
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{% endblock %}
+
 {% block content %}
 
 <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
