@@ -3,8 +3,8 @@
 from __future__ import unicode_literals
 
 from django.contrib.sites.models import Site
-from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.urls import reverse
 from allauth.socialaccount.models import SocialApp
 
 from ega.constants import DEFAULT_TOURNAMENT
