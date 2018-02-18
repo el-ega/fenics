@@ -6,11 +6,11 @@ from allauth.account.models import EmailAddress
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.forms.models import modelformset_factory
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 from django.utils.timezone import now
 from django.views.decorators.http import require_GET, require_http_methods
 

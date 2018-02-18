@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'news',
     'allauth',
     'nocaptcha_recaptcha',
-    'honeypot',
     'allauth.account',
     'allauth.socialaccount',
     #'allauth.socialaccount.providers.facebook',
@@ -52,12 +51,11 @@ INSTALLED_APPS = [
     #'allauth.socialaccount.providers.twitter',
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'honeypot.middleware.HoneypotResponseMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',

@@ -23,16 +23,16 @@ def show_prediction_trends(match):
             'count': total, 'values': values}
 
 
-@register.assignment_tag
+@register.simple_tag
 def get_friends_leagues(user, slug):
     return user.league_set.filter(tournament__slug=slug)
 
 
-@register.assignment_tag
+@register.simple_tag
 def get_latest_matches(team, tournament):
     return team.latest_matches(tournament)
 
 
-@register.assignment_tag
+@register.simple_tag
 def get_user_stats(user, tournament):
     return user.stats(tournament)
