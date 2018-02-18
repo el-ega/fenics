@@ -110,7 +110,8 @@ class Command(BaseCommand):
                 match.round = str(round)
                 changed = True
 
-            if not match.finished and entry.home_goals != '' and entry.away_goals != '':
+            if (not match.finished and entry.home_goals != '' and
+                    entry.away_goals != ''):
                 changed = True
                 match.home_goals = entry.home_goals
                 match.away_goals = entry.away_goals
