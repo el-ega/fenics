@@ -8,7 +8,7 @@ from django.db import connection
 from django.utils.timezone import now
 from TwitterAPI import TwitterAPI
 
-from ega.models import Match, Prediction
+from ega.models import Match
 
 
 PREDICTION_COUNT_QUERY = """

@@ -15,7 +15,6 @@ from django.utils.timezone import now
 from django.views.decorators.http import require_GET, require_http_methods
 
 from ega.constants import (
-    DEFAULT_TOURNAMENT,
     EXACTLY_MATCH_POINTS,
     HISTORY_MATCHES_PER_PAGE,
     HOURS_TO_DEADLINE,
@@ -77,6 +76,7 @@ def _next_matches(user):
         next_matches.append(row)
     return next_matches
 
+
 @login_required
 def meta_home(request):
     past_tournaments = Tournament.objects.filter(
@@ -91,11 +91,11 @@ def meta_home(request):
 def home(request, slug):
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
     matches = tournament.next_matches()
-    played = Prediction.objects.filter(user=request.user, match__in=matches,
-                                       home_goals__isnull=False,
-                                       away_goals__isnull=False)
+    played = Prediction.objects.filter(
+        user=request.user, match__in=matches,
+        home_goals__isnull=False, away_goals__isnull=False)
     pending = Prediction.objects.filter(
-        Q(home_goals__isnull=True)|Q(away_goals__isnull=True),
+        Q(home_goals__isnull=True) | Q(away_goals__isnull=True),
         user=request.user, match__in=matches).first()
 
     current_round = tournament.current_round()

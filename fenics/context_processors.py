@@ -1,6 +1,5 @@
 from django.conf import settings
 
-from ega.constants import DEFAULT_TOURNAMENT
 from ega.models import Tournament
 
 
