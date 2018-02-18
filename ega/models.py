@@ -67,7 +67,7 @@ class EgaUser(AbstractUser):
     invite_key = models.CharField(
         max_length=20, unique=True, default=rand_str)
     referred_by = models.ForeignKey(
-        'self', null=True, related_name='referrals')
+        'self', null=True, related_name='referrals', on_delete=models.CASCADE)
     referred_on = models.DateTimeField(null=True)
 
     def record_referral(self, other):
@@ -214,12 +214,14 @@ class Team(models.Model):
 
 class Match(models.Model):
     """Match metadata."""
-    home = models.ForeignKey(Team, related_name='home_games')
-    away = models.ForeignKey(Team, related_name='away_games')
+    home = models.ForeignKey(
+        Team, related_name='home_games', on_delete=models.CASCADE)
+    away = models.ForeignKey(
+        Team, related_name='away_games', on_delete=models.CASCADE)
     home_goals = models.IntegerField(null=True, blank=True)
     away_goals = models.IntegerField(null=True, blank=True)
 
-    tournament = models.ForeignKey('Tournament')
+    tournament = models.ForeignKey('Tournament', on_delete=models.CASCADE)
     round = models.CharField(max_length=128, blank=True)
     knockout = models.BooleanField(default=False)
 
@@ -255,8 +257,9 @@ class Prediction(models.Model):
     """User prediction for a match."""
     TRENDS = ('L', 'E', 'V')
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    match = models.ForeignKey('Match')
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    match = models.ForeignKey('Match', on_delete=models.CASCADE)
 
     home_goals = models.PositiveIntegerField(null=True, blank=True)
     away_goals = models.PositiveIntegerField(null=True, blank=True)
@@ -301,8 +304,8 @@ class Prediction(models.Model):
 class TeamStats(models.Model):
     """Stats for a team in a given tournament."""
 
-    team = models.ForeignKey(Team)
-    tournament = models.ForeignKey(Tournament)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
 
     zone = models.CharField(default='', max_length=64, blank=True)
 
@@ -374,7 +377,7 @@ class League(models.Model):
 
     name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200)
-    tournament = models.ForeignKey(Tournament)
+    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
     created = models.DateTimeField(default=now)
     members = models.ManyToManyField(
         settings.AUTH_USER_MODEL, through='LeagueMember')
@@ -416,8 +419,9 @@ class League(models.Model):
 class LeagueMember(models.Model):
     """A league member."""
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    league = models.ForeignKey(League)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    league = models.ForeignKey(League, on_delete=models.CASCADE)
     is_owner = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=now)
 

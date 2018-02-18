@@ -1,9 +1,9 @@
-Django==1.10.4
-Pillow==3.4.2
+Django==2.0.2
+Pillow==5.0.0
 demiurge==0.2
-django-allauth==0.29.0
-django-honeypot==0.5.0
-django-nocaptcha-recaptcha==0.0.19
+django-allauth==0.35.0
+django-honeypot==0.6.0
+django-nocaptcha-recaptcha==0.0.20
 feedparser==5.2.1
-#psycopg2==2.6.2
-TwitterAPI==2.4.2
+#psycopg2
+TwitterAPI==2.4.8
