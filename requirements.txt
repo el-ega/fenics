@@ -5,5 +5,3 @@ django-allauth==0.35.0
 django-honeypot==0.6.0
 django-nocaptcha-recaptcha==0.0.20
 feedparser==5.2.1
-#psycopg2
-TwitterAPI==2.4.8
