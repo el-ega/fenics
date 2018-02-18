@@ -191,6 +191,10 @@ MIGRATION_MODULES = {
     'account': 'other_migrations.account',
 }
 
+NORECAPTCHA_SITE_KEY = ''
+NORECAPTCHA_SECRET_KEY = ''
+
+
 try:
     from .local_settings import *
 except ImportError:
