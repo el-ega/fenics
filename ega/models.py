@@ -259,8 +259,7 @@ class Prediction(models.Model):
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    match = models.ForeignKey(
-        'Match', on_delete=models.CASCADE)
+    match = models.ForeignKey('Match', on_delete=models.CASCADE)
 
     home_goals = models.PositiveIntegerField(null=True, blank=True)
     away_goals = models.PositiveIntegerField(null=True, blank=True)

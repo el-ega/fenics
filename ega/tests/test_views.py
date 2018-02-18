@@ -2,6 +2,8 @@
 
 from __future__ import unicode_literals
 
+import os
+
 from django.contrib.sites.models import Site
 from django.test import TestCase
 from django.urls import reverse
@@ -53,7 +55,7 @@ class LoginTestCase(BaseTestCase):
         self.assertRedirects(response, reverse('meta-home'))
         self.assertEqual(
             [m.message for m in response.context['messages']],
-            ['Ha iniciado sesión exitosamente como %s.' % self.user.username])
+            ['Has iniciado sesión exitosamente como %s.' % self.user.username])
 
 
 class SignUpTestCase(BaseTestCase):
@@ -71,9 +73,9 @@ class SignUpTestCase(BaseTestCase):
             username='test', email='test@example.com', password=self.good_pw)
 
     def signup(self, username, email, password, **kwargs):
-        data = dict(
-            username=username, email=email, password1=password,
-            password2=password)
+        data = {
+            'username': username, 'email': email, 'password1': password,
+            'password2': password, 'g-recaptcha-response': 'PASSED'}
         response = self.client.post(self.url, data=data, **kwargs)
         return response
 
@@ -89,6 +91,9 @@ class SignUpTestCase(BaseTestCase):
         self.assertContains(response, self.bad_email)
 
     def test_success(self):
+        os.environ['NORECAPTCHA_TESTING'] = 'True'
+        self.addCleanup(os.environ.pop, 'NORECAPTCHA_TESTING')
+
         new = 'foobar'
         response = self.signup(
             new, 'foo@example.com', self.good_pw, follow=True)
@@ -96,5 +101,5 @@ class SignUpTestCase(BaseTestCase):
         self.assertEqual(
             sorted(m.message for m in response.context['messages']),
             ['Correo electrónico enviado a foo@example.com.',
-             'Ha iniciado sesión exitosamente como %s.' % new])
+             'Has iniciado sesión exitosamente como %s.' % new])
         self.assertEqual(EgaUser.objects.filter(username=new).count(), 1)
