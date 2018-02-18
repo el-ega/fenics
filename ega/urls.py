@@ -25,7 +25,7 @@ urlpatterns = [
         ega.views.league_home, name='ega-league-home'),
     path('<slug:slug>/matches/', ega.views.next_matches,
         name='ega-next-matches'),
-    path('<slug:slug>/matches/(?P<match_id>\d+)/',
+    path('<slug:slug>/matches/<int:match_id>/',
         ega.views.match_details, name='ega-match-details'),
     path('<slug:slug>/ranking/', ega.views.ranking, name='ega-ranking'),
     path('<slug:slug>/ranking/f/<str:round>/', ega.views.ranking,
