@@ -27,28 +27,33 @@ class LeagueMemberInline(admin.TabularInline):
 
 
 class LeagueAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug')
+    list_display = ('name', 'slug', 'tournament')
     inlines = [LeagueMemberInline]
 
 
 class TeamAdmin(admin.ModelAdmin):
+    list_display = ('name', 'code')
     prepopulated_fields = dict(slug=('name',))
 
 
 class TeamStatsAdmin(admin.ModelAdmin):
+    list_display = ('team', 'tournament', 'zone', 'points')
     list_filter = ('tournament', 'team')
 
 
 class MatchAdmin(admin.ModelAdmin):
-    list_filter = ('tournament', 'when')
+    list_display = ('tournament', 'home', 'home_goals', 'away_goals', 'away')
+    list_filter = ('tournament', 'when', 'finished')
 
 
 class PredictionAdmin(admin.ModelAdmin):
-    list_filter = ('match__tournament', 'user')
+    list_display = ('match', 'user', 'score')
+    list_filter = ('match__tournament',)
 
 
 class TournamentAdmin(admin.ModelAdmin):
     filter_horizontal = ('teams',)
+    list_display = ('name', 'published', 'finished')
     prepopulated_fields = dict(slug=('name',))
 
 
