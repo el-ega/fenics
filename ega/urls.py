@@ -1,4 +1,4 @@
-from django.urls import path, re_path
+from django.urls import path
 
 import ega.views
 
@@ -7,8 +7,8 @@ urlpatterns = [
     path('', ega.views.meta_home, name='meta-home'),
     path('logout/', ega.views.logout, name='logout'),
     path('profile/', ega.views.profile, name='profile'),
-    re_path(r'^profile/verify/(?P<email>.+)/$', ega.views.verify_email,
-            name='verify-email'),
+    path('profile/verify/<str:email>/', ega.views.verify_email,
+         name='verify-email'),
 
     path('invite/', ega.views.invite_friends, name='ega-invite'),
     path('<slug:slug>/invite/<slug:league_slug>/',
