@@ -1,0 +1,21 @@
+language: python
+sudo: false
+dist: trusty
+
+python:
+    - "3.5"
+    - "3.6"
+
+services: postgresql
+
+env:
+    - DJANGO_VERSION=2.0.2
+
+install:
+    - pip install -r requirements.txt
+
+before_script:
+    - psql -U postgres -c 'create database travisdb;'
+
+script:
+- SECRET_KEY=testkey DATABASE_URL='postgres://localhost/travisdb' python manage.py test
