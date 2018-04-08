@@ -10,7 +10,7 @@ from ega.models import EgaUser, League, Prediction
 
 
 class PredictionForm(forms.ModelForm):
-    GOAL_CHOICES = [('', '-')] + [(i, i) for i in range(100)]
+    GOAL_CHOICES = [('', '-')] + [(i, i) for i in range(20)]
 
     home_goals = forms.ChoiceField(
         choices=GOAL_CHOICES, required=False,
@@ -18,10 +18,17 @@ class PredictionForm(forms.ModelForm):
     away_goals = forms.ChoiceField(
         choices=GOAL_CHOICES, required=False,
         widget=forms.Select(attrs={'class': 'form-control input-lg'}))
+    penalties = forms.ChoiceField(
+        choices=[], required=False, widget=forms.RadioSelect())
 
     def __init__(self, *args, **kwargs):
         super(PredictionForm, self).__init__(*args, **kwargs)
         self.expired = False
+        if self.instance.match.knockout:
+            self.fields['penalties'].choices = [
+                ('L', self.instance.match.home.code),
+                ('V', self.instance.match.away.code),
+            ]
 
     def _clean_goals(self, field_name):
         goals = self.cleaned_data.get(field_name)
@@ -42,9 +49,14 @@ class PredictionForm(forms.ModelForm):
 
         msg = "Pronóstico incompleto."
         if (home_goals and not away_goals):
-            self._errors["away_goals"] = self.error_class([msg])
+            raise forms.ValidationError(msg)
         if (not home_goals and away_goals):
-            self._errors["home_goals"] = self.error_class([msg])
+            raise forms.ValidationError(msg)
+
+        penalties = cleaned_data.get('penalties')
+        if penalties and home_goals != away_goals:
+            msg = "Penales se puede pronosticar sólo en caso de empate."
+            raise forms.ValidationError(msg)
 
         return cleaned_data
 
@@ -58,7 +70,7 @@ class PredictionForm(forms.ModelForm):
 
     class Meta:
         model = Prediction
-        fields = ('home_goals', 'away_goals')
+        fields = ('home_goals', 'away_goals', 'penalties')
 
 
 class InviteFriendsForm(forms.Form):

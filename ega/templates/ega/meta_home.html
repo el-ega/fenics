@@ -34,17 +34,20 @@
             {% for row in tournament.list %}
             <div class="row">
             <div class="col-md-3 text-muted">{{ row.match.when|date:"F j, P" }}</div>
-            <div class="col-md-3 col-xs-5">
+            <div class="col-md-3 col-xs-4">
                 <strong>{{ row.match.home.name }}</strong>
             </div>
-            <div class="col-md-3 col-xs-5">
+            <div class="col-md-3 col-xs-4">
                 <strong>{{ row.match.away.name }}</strong>
             </div>
-            <div class="col-md-3 col-xs-2">
+            <div class="col-md-3 col-xs-4">
                 <a class="text-info" href="{% url 'ega-next-matches' tournament.grouper.slug %}#{{ row.match.id }}"><span class="glyphicon glyphicon-pencil"></span></a>
                 {% if row.prediction %}<span class="text-success">
                         <span class="glyphicon glyphicon-check"></span>
-                        ({{ row.prediction.home_goals }}-{{ row.prediction.away_goals }})</span>
+                        {% with prediction=row.prediction %}
+                        ({{ prediction.home_goals }}-{{ prediction.away_goals }}{% if prediction.penalties_home %}, pasa {{ row.match.home.code }}{% elif prediction.penalties_away %}, pasa {{ row.match.away.code }}{% endif %})
+                        {% endwith %}
+                        </span>
                 {% endif %}
             </div>
             </div>

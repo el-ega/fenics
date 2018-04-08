@@ -220,6 +220,8 @@ class Match(models.Model):
         Team, related_name='away_games', on_delete=models.CASCADE)
     home_goals = models.IntegerField(null=True, blank=True)
     away_goals = models.IntegerField(null=True, blank=True)
+    pk_home_goals = models.IntegerField(null=True, blank=True)
+    pk_away_goals = models.IntegerField(null=True, blank=True)
 
     tournament = models.ForeignKey('Tournament', on_delete=models.CASCADE)
     round = models.CharField(max_length=128, blank=True)
@@ -263,6 +265,9 @@ class Prediction(models.Model):
 
     home_goals = models.PositiveIntegerField(null=True, blank=True)
     away_goals = models.PositiveIntegerField(null=True, blank=True)
+    # only knockout, and for ties
+    penalties = models.CharField(max_length=1, blank=True)
+
     trend = models.CharField(max_length=1, editable=False)
     starred = models.BooleanField(default=False)
 
@@ -288,6 +293,14 @@ class Prediction(models.Model):
         stats, _ = self.match.away.teamstats_set.get_or_create(
             tournament=self.match.tournament)
         return stats
+
+    @property
+    def penalties_home(self):
+        return self.penalties == 'L'
+
+    @property
+    def penalties_away(self):
+        return self.penalties == 'V'
 
     def save(self, *args, **kwargs):
         # set trend value before saving
@@ -470,6 +483,16 @@ def update_related_predictions(sender, instance, **kwargs):
 
     # update starred predictions
     predictions.filter(score__gt=0, starred=True).update(score=F('score') + 1)
+
+    # update penalties predictions
+    penalties = (instance.pk_home_goals is not None and
+                 instance.pk_away_goals is not None)
+    if penalties:
+        ties = predictions.filter(score__gt=0, home_goals=F('away_goals'))
+        if instance.pk_home_goals > instance.pk_away_goals:
+            ties.filter(penalties='L').update(score=F('score') + 1)
+        else:
+            ties.filter(penalties='V').update(score=F('score') + 1)
 
 
 @receiver(post_save, sender=Match, dispatch_uid="update-stats")

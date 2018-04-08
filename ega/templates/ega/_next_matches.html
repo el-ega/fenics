@@ -12,10 +12,10 @@
             </div>
             {% if match.user_prediction %}
             <div class="col-xs-1">
-                <strong class="predicted-score">{{ match.user_prediction.home_goals }}</strong>
+                <strong class="predicted-score">{{ match.user_prediction.home_goals }}{% if match.user_prediction.penalties_home %}<small>[P]</small>{% endif %}</strong>
             </div>
             <div class="col-xs-1">
-                <strong class="predicted-score">{{ match.user_prediction.away_goals }}</strong>
+                <strong class="predicted-score">{{ match.user_prediction.away_goals }}{% if match.user_prediction.penalties_away %}<small>[P]</small>{% endif %}</strong>
             </div>
             {% else %}
             <div class="col-xs-2"></div>

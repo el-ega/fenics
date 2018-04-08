@@ -38,6 +38,11 @@ dt {
     color: #a17f1a;
 }
 
+.starred-xs {
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
+
 .title {
     border-bottom: 1px solid #EEE;
     margin-bottom: 20px;
@@ -132,6 +137,10 @@ table.ranking {
     padding-bottom: 10px;
 }
 
+.penalties-input {
+    margin-bottom: 20px;
+}
+
 .match-metadata {
     position: relative;
     top: -50px;
@@ -154,7 +163,7 @@ table.ranking {
 }
 
 .match-goals {
-    font-size: 50px;
+    font-size: 40px;
 }
 
 .match-status {
