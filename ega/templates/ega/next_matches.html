@@ -3,6 +3,31 @@
 {% load humanize %}
 {% load staticfiles %}
 
+{% block extra-head %}
+<script type="text/javascript">
+
+    function check_tie(prefix) {
+        if ($('select[name=' + prefix + '-home_goals]').val() == $('select[name=' + prefix + '-away_goals]').val()){
+            $('input[name=' + prefix + '-penalties]').prop( "disabled", false);
+            $('span#' + prefix + '-help').css("color", "#333");
+        }else{
+            $('input[name=' + prefix + '-penalties]').prop({"disabled": true, "checked": false});
+            $('span#' + prefix + '-help').css("color", "#bbb");
+        }
+    }
+
+    $(document).ready(function () {
+        var prefixes = [{% for form in formset.forms %}'{{ form.prefix }}'{% if not forloop.last %},{% endif %}{% endfor %}];
+        $.each(prefixes, function(index, prefix) {
+            $('select[name=' + prefix + '-home_goals]').change(function() {check_tie(prefix)});
+            $('select[name=' + prefix + '-away_goals]').change(function() {check_tie(prefix)});
+
+            check_tie(prefix);
+        });
+    });
+</script>
+{% endblock %}
+
 {% block content-title %}Próximos partidos{% endblock %}
 
 {% block content %}
@@ -40,21 +65,38 @@
                     </div>
                 </div>
                 {% if form.instance.starred %}
-                <div class="text-center visible-xs" style="margin-top:-10px; margin-bottom:10px">
+                <div class="text-center visible-xs" class="starred-xs">
                     <img src="{% static 'images/star.jpg' %}" style="max-width:25px"/>
                 </div>
                 {% endif %}
                 <div class="row {% if form.instance.starred %}starred{% endif %}">
-                    <div class="col-md-4">
+                    <div class="col-xs-12 col-md-4">
                         {% include "ega/_team_details.html" with condition="home" team=home stats=form.instance.home_team_stats %}
                     </div>
-                    <div class="col-md-2 text-center{% if form.home_goals.errors %} has-error{% endif %}">
-                        <p class="goals-input">{{ form.home_goals }}</p>
+                    <div class="col-xs-12 col-md-4 text-center{% if form.home_goals.errors or form.away_goals.errors %} has-error{% endif %}">
+                        {% if form.non_field_errors %}
+                        <div class="row">
+                            <div class="col-md-12 text-center bg-danger">
+                                {{ form.non_field_errors|join:", " }}
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="row">
+                            <div class="col-xs-6"><p class="goals-input">{{ form.home_goals }}</p></div>
+                            <div class="col-xs-6"><p class="goals-input">{{ form.away_goals }}</p></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 penalties-input">
+                                <small>{% if match.knockout %}
+                                {% with penalties=form.penalties %}
+                                {{ penalties.0.tag }} <span id="{{ form.prefix }}-help">
+                                <label for="{{ penalties.0.id_for_label }}">{{ penalties.0.choice_label }}</label> | penales |
+                                <label for="{{ penalties.1.id_for_label }}">{{ penalties.1.choice_label }}</label></span> {{ penalties.1.tag }}
+                                {% endwith %}{% endif %}</small>
+                                </div>
+                        </div>
                     </div>
-                    <div class="col-md-2 text-center{% if form.away_goals.errors %} has-error{% endif %}">
-                        <p class="goals-input">{{ form.away_goals }}</p>
-                    </div>
-                    <div class="col-md-4">
+                    <div class="col-xs-12 col-md-4">
                         {% include "ega/_team_details.html" with condition="away" team=away stats=form.instance.away_team_stats %}
                     </div>
                 </div>

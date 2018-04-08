@@ -16,10 +16,14 @@
                 </strong>
             </div>
             <div class="col-xs-1">
-                <strong class="{% if not match.finished %}predicted-score{% endif %}">{{ match.home_goals|default_if_none:'-' }}</strong>
+                <strong class="{% if not match.finished %}predicted-score{% endif %}">
+                    {{ match.home_goals|default_if_none:'-' }}{% if match.pk_home_goals != None %}<small>[{{ match.pk_home_goals }}]</small>{% endif %}
+                </strong>
             </div>
             <div class="col-xs-1">
-                <strong class="{% if not match.finished %}predicted-score{% endif %}">{{ match.away_goals|default_if_none:'-' }}</strong>
+                <strong class="{% if not match.finished %}predicted-score{% endif %}">
+                    {% if match.pk_away_goals != None %}<small>[{{ match.pk_away_goals }}]</small>{% endif %}{{ match.away_goals|default_if_none:'-' }}
+                </strong>
             </div>
             <div class="col-xs-2">
                 <strong>
@@ -36,10 +40,13 @@
         </div>
         <div class="row text-center">
             <div class="col-xs-10 col-xs-offset-1">
-                <small>{% if not match.finished %}En juego{% else %}Finalizado{% endif %} |
+                <small>{% if not match.finished %}En juego |{% endif %}
                 Pronóstico:
                 {% if prediction.home_goals != None and prediction.away_goals != None %}
                 {{ prediction.home_goals }} - {{ prediction.away_goals }}
+                {% if prediction.penalties_home %}<small>[{{ match.home.code }}]</small>
+                {% elif prediction.penalties_away %}<small>[{{ match.away.code }}]</small>
+                {% endif %}
                 {% if match.finished and prediction.score >= 0 %}({{ prediction.score }} punto{{ prediction.score|pluralize }}){% endif %}
                 {% endif %}
                 | <a href="{% url 'ega-match-details' tournament.slug match.id %}">Detalles</a></small>
