@@ -6,7 +6,7 @@ from django.core.validators import validate_email
 from nocaptcha_recaptcha.fields import NoReCaptchaField
 
 from ega.constants import EMAILS_PLACEHOLDER
-from ega.models import EgaUser, League, Prediction
+from ega.models import ChampionPrediction, EgaUser, League, Prediction, Team
 
 
 class PredictionForm(forms.ModelForm):
@@ -71,6 +71,21 @@ class PredictionForm(forms.ModelForm):
     class Meta:
         model = Prediction
         fields = ('home_goals', 'away_goals', 'penalties')
+
+
+class ChampionPredictionForm(forms.ModelForm):
+    team = forms.ModelChoiceField(
+        queryset=Team.objects.none(),
+        widget=forms.Select(attrs={'class': 'form-control'}))
+
+    def __init__(self, *args, **kwargs):
+        super(ChampionPredictionForm, self).__init__(*args, **kwargs)
+        tournament_teams = self.instance.tournament.teams.order_by('name')
+        self.fields['team'].queryset = tournament_teams
+
+    class Meta:
+        model = ChampionPrediction
+        fields = ('team',)
 
 
 class InviteFriendsForm(forms.Form):

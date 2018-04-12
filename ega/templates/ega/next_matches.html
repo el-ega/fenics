@@ -100,7 +100,7 @@
                         {% include "ega/_team_details.html" with condition="away" team=away stats=form.instance.away_team_stats %}
                     </div>
                 </div>
-                <div class="text-center hidden-xs match-metadata">
+                <div class="text-center hidden-xs">
                     <small>
                     {% if match.description %}{{ match.description }}{% endif %}
                     {% if match.location %}| {{ match.location }}{% endif %}

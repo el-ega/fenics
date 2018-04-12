@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from ega.models import (
+    ChampionPrediction,
     EgaUser,
     League,
     LeagueMember,
@@ -47,8 +48,13 @@ class MatchAdmin(admin.ModelAdmin):
 
 
 class PredictionAdmin(admin.ModelAdmin):
-    list_display = ('match', 'user', 'score')
+    list_display = ('match', 'user', 'score', 'last_updated')
     list_filter = ('match__tournament',)
+
+
+class ChampionPredictionAdmin(admin.ModelAdmin):
+    list_display = ('user', 'tournament', 'team', 'last_updated')
+    list_filter = ('tournament',)
 
 
 class TournamentAdmin(admin.ModelAdmin):
@@ -57,6 +63,7 @@ class TournamentAdmin(admin.ModelAdmin):
     prepopulated_fields = dict(slug=('name',))
 
 
+admin.site.register(ChampionPrediction, ChampionPredictionAdmin)
 admin.site.register(EgaUser, EgaUserAdmin)
 admin.site.register(League, LeagueAdmin)
 admin.site.register(Match, MatchAdmin)
