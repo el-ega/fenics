@@ -1,5 +1,9 @@
 from django import template
-from django.db.models import Count
+from django.db.models import Count, Q
+from django.utils.timezone import now
+
+from ega.models import Prediction
+
 
 register = template.Library()
 
@@ -36,3 +40,12 @@ def get_latest_matches(team, tournament):
 @register.simple_tag
 def get_user_stats(user, tournament):
     return user.stats(tournament)
+
+
+@register.simple_tag
+def get_pending_predictions(user, tournament):
+    tz_now = now()
+    return Prediction.objects.filter(
+        Q(home_goals__isnull=True) | Q(away_goals__isnull=True),
+        user=user, match__tournament=tournament,
+        match__when__gt=tz_now).count()
