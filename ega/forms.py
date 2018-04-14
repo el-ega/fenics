@@ -25,10 +25,10 @@ class PredictionForm(forms.ModelForm):
         super(PredictionForm, self).__init__(*args, **kwargs)
         self.expired = False
         if self.instance.match.knockout:
-            self.fields['penalties'].choices = [
-                ('L', self.instance.match.home.code),
-                ('V', self.instance.match.away.code),
-            ]
+            match = self.instance.match
+            home = match.home.code if match.home else match.home_placeholder
+            away = match.away.code if match.away else match.away_placeholder
+            self.fields['penalties'].choices = [('L', home), ('V', away)]
 
     def _clean_goals(self, field_name):
         goals = self.cleaned_data.get(field_name)

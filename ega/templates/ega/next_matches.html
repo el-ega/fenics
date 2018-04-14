@@ -57,7 +57,7 @@
             {{ form.match }}
 
             {% with match=form.instance.match %}
-            {% with home=match.home away=match.away %}
+            {% with home=match.home home_placeholder=match.home_placeholder away=match.away away_placeholder=match.away_placeholder %}
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-12 text-center">
@@ -71,7 +71,7 @@
                 {% endif %}
                 <div class="row {% if form.instance.starred %}starred{% endif %}">
                     <div class="col-xs-12 col-md-4">
-                        {% include "ega/_team_details.html" with condition="home" team=home stats=form.instance.home_team_stats %}
+                        {% include "ega/_team_details.html" with condition="home" team=home placeholder=home_placeholder stats=form.instance.home_team_stats %}
                     </div>
                     <div class="col-xs-12 col-md-4 text-center{% if form.home_goals.errors or form.away_goals.errors %} has-error{% endif %}">
                         {% if form.non_field_errors %}
@@ -97,7 +97,7 @@
                         </div>
                     </div>
                     <div class="col-xs-12 col-md-4">
-                        {% include "ega/_team_details.html" with condition="away" team=away stats=form.instance.away_team_stats %}
+                        {% include "ega/_team_details.html" with condition="away" team=away placeholder=away_placeholder stats=form.instance.away_team_stats %}
                     </div>
                 </div>
                 <div class="text-center hidden-xs">
