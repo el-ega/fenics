@@ -129,6 +129,7 @@ class Tournament(models.Model):
     name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique=True)
     teams = models.ManyToManyField('Team')
+    image = models.ImageField(upload_to='tournaments', null=True, blank=True)
     published = models.BooleanField(default=False)
     finished = models.BooleanField(default=False)
 

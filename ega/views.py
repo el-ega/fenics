@@ -96,9 +96,6 @@ def home(request, slug):
     played = Prediction.objects.filter(
         user=request.user, match__in=matches,
         home_goals__isnull=False, away_goals__isnull=False)
-    pending = Prediction.objects.filter(
-        Q(home_goals__isnull=True) | Q(away_goals__isnull=True),
-        user=request.user, match__in=matches).first()
 
     current_round = tournament.current_round()
     matches = matches[:3]
@@ -122,7 +119,7 @@ def home(request, slug):
         request, 'ega/home.html',
         {'top_ranking': top_ranking,
          'tournament': tournament, 'current_round': current_round,
-         'pending': pending, 'matches': matches, 'history': history,
+         'matches': matches, 'history': history,
          'stats': stats, 'champion_form': champion_form})
 
 

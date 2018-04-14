@@ -64,6 +64,14 @@ dt {
     font-size: larger;
 }
 
+.tournament-icon {
+    max-height: 20px;
+}
+
+.badge-pending {
+    background-color: #3c463e;
+}
+
 .predicted-score {
     color: grey;
 }

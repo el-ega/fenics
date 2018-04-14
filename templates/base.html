@@ -38,7 +38,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{% url 'meta-home' %}">
+            <a class="navbar-brand" href="{% if tournament %}{% url 'ega-home' tournament.slug %}{% else %}{% url 'meta-home' %}{% endif %}">
                 <img class="nav-logo" src="{% static 'images/logo.png' %}" />el Ega</a>
             </div>
 
@@ -46,38 +46,37 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     {% if user.is_authenticated %}
+                        {% for t in available_tournaments %}
+                            {% get_pending_predictions request.user t as pending_count %}
+                            <li class="{% if t == tournament %}active{% endif %}">
+                                <a href="{% url 'ega-home' t.slug %}" title="{{ t.name }}: {{ pending_count }} pronóstico{{ pending_count|pluralize }} pendiente{{ pending_count|pluralize }}">
+                                    {% if t.image %}<img class="tournament-icon" src="{{ t.image.url }}" />
+                                    {% else %}<img class="tournament-icon" src="{% static 'images/ball_icon.png' %}" />{% endif %}
+                                    <strong class="{% if t != tournament %}visible-xs-inline{% endif %}">{{ t.name }}</strong>
+                                    <span class="badge badge-pending"><small>{{ pending_count }}</small></span></a>
+                            </li>
+                        {% endfor %}
                         {% if tournament %}
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><strong>{{ tournament.name }}</strong><b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                            {% for t in available_tournaments %}
-                                {% if t != tournament %}
-                                <li><a href="{% url 'ega-home' t.slug %}">{{ t.name }}</a></li>
-                                {% endif %}
-                            {% endfor %}
-                            </ul>
-                        </li>
-                        <li><a href="{% url 'ega-home' tournament.slug %}">Inicio</a></li>
-                        {% if not tournament.finished %}
-                        <li><a href="{% url 'ega-next-matches' tournament.slug %}">Partidos</a></li>
-                        {% endif %}
-                        <li><a href="{% url 'ega-ranking' tournament.slug %}">Posiciones</a></li>
-                        <li><a href="{% url 'ega-stats' tournament.slug %}">{% trans "Estadísticas" %}</a></li>
-                        {% if not tournament.finished %}
-                        <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Ligas de amigos <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            {% get_friends_leagues user tournament.slug as leagues %}
-                            {% for league in leagues %}
-                                <li><a href="{% url 'ega-league-home' tournament.slug league.slug %}">{{ league.name }}</a></li>
-                            {% endfor %}
-                            {% if leagues %}
-                                <li class="divider"></li>
+                            {% if not tournament.finished %}
+                            <li><a href="{% url 'ega-next-matches' tournament.slug %}">Partidos</a></li>
                             {% endif %}
-                            <li><a href="{% url 'ega-leagues' tournament.slug %}">Ver y crear ligas</a></li>
-                        </ul>
-                        </li>
-                        {% endif %}
+                            <li><a href="{% url 'ega-ranking' tournament.slug %}">Posiciones</a></li>
+                            <li><a href="{% url 'ega-stats' tournament.slug %}">{% trans "Estadísticas" %}</a></li>
+                            {% if not tournament.finished %}
+                            <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Ligas de amigos <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                {% get_friends_leagues user tournament.slug as leagues %}
+                                {% for league in leagues %}
+                                    <li><a href="{% url 'ega-league-home' tournament.slug league.slug %}">{{ league.name }}</a></li>
+                                {% endfor %}
+                                {% if leagues %}
+                                    <li class="divider"></li>
+                                {% endif %}
+                                <li><a href="{% url 'ega-leagues' tournament.slug %}">Ver y crear ligas</a></li>
+                            </ul>
+                            </li>
+                            {% endif %}
                         {% endif %}
                     <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
