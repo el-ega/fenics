@@ -19,6 +19,8 @@ urlpatterns = [
          ega.views.friend_join, name='ega-join'),
 
     path('<slug:slug>/', ega.views.home, name='ega-home'),
+    path('<slug:slug>/update-champion', ega.views.update_champion_prediction,
+         name='ega-update-champion'),
     path('<slug:slug>/history/', ega.views.history, name='ega-history'),
     path('<slug:slug>/league/', ega.views.leagues, name='ega-leagues'),
     path('<slug:slug>/league/<slug:league_slug>/',

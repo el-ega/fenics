@@ -25,12 +25,14 @@ from ega.constants import (
     RANKING_TEAMS_PER_PAGE,
 )
 from ega.forms import (
+    ChampionPredictionForm,
     EgaUserForm,
     InviteFriendsForm,
     LeagueForm,
     PredictionForm,
 )
 from ega.models import (
+    ChampionPrediction,
     EgaUser,
     League,
     LeagueMember,
@@ -110,12 +112,39 @@ def home(request, slug):
     history = request.user.history(tournament)[:3]
     stats = request.user.stats(tournament)
 
+    champion_form = None
+    if slug == 'rusia-2018':
+        champion, _ = ChampionPrediction.objects.get_or_create(
+            user=request.user, tournament=tournament)
+        champion_form = ChampionPredictionForm(instance=champion)
+
     return render(
         request, 'ega/home.html',
         {'top_ranking': top_ranking,
          'tournament': tournament, 'current_round': current_round,
          'pending': pending, 'matches': matches, 'history': history,
-         'stats': stats})
+         'stats': stats, 'champion_form': champion_form})
+
+
+@require_http_methods(('POST',))
+@login_required
+def update_champion_prediction(request, slug):
+    """Update user prediction for a tournament champion."""
+    tournament = get_object_or_404(Tournament, slug=slug, published=True)
+    prediction, _ = ChampionPrediction.objects.get_or_create(
+        user=request.user, tournament=tournament)
+
+    form = ChampionPredictionForm(instance=prediction, data=request.POST)
+    if form.is_valid():
+        form.save()
+        team = form.cleaned_data['team']
+        team_name = team.name if team is not None else '-'
+        messages.success(
+            request, 'Pronóstico de campeón actualizado: %s.' % team_name)
+        return HttpResponseRedirect(reverse('ega-home', args=[slug]))
+
+    messages.error(request, 'Equipo no válido')
+    return HttpResponseRedirect(reverse('ega-home', args=[slug]))
 
 
 @require_http_methods(('GET', 'POST'))
@@ -126,8 +155,7 @@ def profile(request):
             instance=request.user, data=request.POST, files=request.FILES)
         if form.is_valid():
             form.save()
-            messages.success(
-                request, 'Perfil actualizado.')
+            messages.success(request, 'Perfil actualizado.')
             return HttpResponseRedirect(reverse('profile'))
     else:
         form = EgaUserForm(instance=request.user)

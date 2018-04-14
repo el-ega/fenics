@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import collections
+import json
 import random
 import string
 
@@ -261,6 +262,7 @@ class Prediction(models.Model):
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    last_updated = models.DateTimeField(auto_now=True, null=True)
     match = models.ForeignKey('Match', on_delete=models.CASCADE)
 
     home_goals = models.PositiveIntegerField(null=True, blank=True)
@@ -312,6 +314,34 @@ class Prediction(models.Model):
             else:
                 self.trend = self.TRENDS[1]
         super(Prediction, self).save(*args, **kwargs)
+
+
+class ChampionPrediction(models.Model):
+    """User prediction for tournament champion."""
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    tournament = models.ForeignKey('Tournament', on_delete=models.CASCADE)
+    team = models.ForeignKey(
+        'Team', blank=True, null=True, on_delete=models.CASCADE)
+
+    score = models.PositiveIntegerField(default=0) 
+    last_updated = models.DateTimeField(auto_now=True)
+    log = models.TextField(blank=True)
+
+    class Meta:
+        unique_together = (('user', 'tournament'),)
+
+    def __str__(self):
+        return "%s - %s" % (self.user.username, self.team)
+
+    def save(self, *args, **kwargs):
+        # update log before saving
+        if self.last_updated:
+            log = json.loads(self.log) if self.log else []
+            log.append(dict(timestamp=self.last_updated.isoformat(),
+                            team=self.team.name if self.team else None))
+            self.log = json.dumps(log)
+        super(ChampionPrediction, self).save(*args, **kwargs)
 
 
 class TeamStats(models.Model):

@@ -15,8 +15,20 @@
 
             {% include 'ega/_user_stats.html' %}
 
-            <div class="hidden-xs">
-                {% if tournament.slug == 'uruguay-clausura-2017' %}
+            <div class="">
+                {% if champion_form %}
+                <h3 class="title">Pronosticá el campeón</h3>
+                <div>
+                    <form class="form-inline" method="POST" action={% url 'ega-update-champion' tournament.slug %}>
+                    {% csrf_token %}
+                    <div class="form-group">{{ champion_form.team }}</div>
+                    <button name="save" type="submit" class="btn btn-primary">Actualizar</button>
+                    <br/><small class="text-info">última actualizacion: {{ champion_form.instance.last_updated }}</small>
+                    <br/><small>Acertando sin modificar tu pronóstico antes del comienzo del campeonato, 8 puntos; cambiándolo durante la primera fase, 5 puntos; antes de la semifinal, 2 puntos.</small>
+                    </form>
+                </div>
+                </p>
+                {% elif tournament.slug == 'uruguay-clausura-2017' %}
                 <h3 class="title">Noticias <small><a href="http://ovaciondigital.com.uy">Ovación</a></small></h3>
                 {% latest_news source='ovacion' latest=3 %}
                 {% else %}
