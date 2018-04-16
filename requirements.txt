@@ -6,3 +6,4 @@ django-allauth==0.35.0
 django-nocaptcha-recaptcha==0.0.20
 feedparser==5.2.1
 psycopg2==2.7.4
+pygal==2.4.0

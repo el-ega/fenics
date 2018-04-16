@@ -1,8 +1,11 @@
+import pygal
+
 from django import template
 from django.db.models import Count, Q
 from django.utils.timezone import now
+from pygal.style import LightGreenStyle
 
-from ega.models import Prediction
+from ega.models import ChampionPrediction, Prediction
 
 
 register = template.Library()
@@ -52,3 +55,26 @@ def get_pending_predictions(user, tournament):
         Q(home_goals__isnull=True) | Q(away_goals__isnull=True),
         user=user, match__tournament=tournament,
         match__when__gt=tz_now).count()
+
+
+@register.simple_tag
+def champion_predictions_chart(tournament):
+    data = ChampionPrediction.objects.filter(
+        tournament=tournament).values('team__name')
+    data = data.annotate(num=Count('team__name')).order_by('-num')
+
+    font_size = 32
+    chart_style = LightGreenStyle(
+        legend_font_size=font_size,
+        tooltip_font_size=font_size,
+        label_font_size=font_size-10,
+        major_label_font_size=font_size
+    )
+    max_num = max(data[0]['num'] + 1, 10)
+    chart = pygal.HorizontalBar(
+        style=chart_style, legend_at_bottom=True,
+        legend_at_bottom_columns=1, range=(1, max_num))
+    for e in data[:5]:
+        chart.add(e['team__name'], e['num'])
+
+    return chart.render_data_uri()
