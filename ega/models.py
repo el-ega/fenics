@@ -217,9 +217,13 @@ class Team(models.Model):
 class Match(models.Model):
     """Match metadata."""
     home = models.ForeignKey(
-        Team, related_name='home_games', on_delete=models.CASCADE)
+        Team, blank=True, null=True, related_name='home_games',
+        on_delete=models.CASCADE)
+    home_placeholder = models.CharField(max_length=200, blank=True)
     away = models.ForeignKey(
-        Team, related_name='away_games', on_delete=models.CASCADE)
+        Team, blank=True, null=True, related_name='away_games',
+        on_delete=models.CASCADE)
+    away_placeholder = models.CharField(max_length=200, blank=True)
     home_goals = models.IntegerField(null=True, blank=True)
     away_goals = models.IntegerField(null=True, blank=True)
     pk_home_goals = models.IntegerField(null=True, blank=True)
@@ -242,7 +246,9 @@ class Match(models.Model):
         ordering = ('when',)
 
     def __str__(self):
-        return "%s vs %s" % (self.home.name, self.away.name)
+        home = self.home.name if self.home else self.home_placeholder
+        away = self.away.name if self.away else self.away_placeholder
+        return "%s vs %s" % (home, away)
 
     @property
     def deadline(self):
@@ -287,12 +293,16 @@ class Prediction(models.Model):
 
     @property
     def home_team_stats(self):
+        if self.match.home is None:
+            return None
         stats, _ = self.match.home.teamstats_set.get_or_create(
             tournament=self.match.tournament)
         return stats
 
     @property
     def away_team_stats(self):
+        if self.match.away is None:
+            return None
         stats, _ = self.match.away.teamstats_set.get_or_create(
             tournament=self.match.tournament)
         return stats
@@ -529,7 +539,8 @@ def update_related_predictions(sender, instance, **kwargs):
 @receiver(post_save, sender=Match, dispatch_uid="update-stats")
 def update_related_stats(sender, instance, **kwargs):
     """Update team stats related to the changed match."""
-    for team in (instance.home, instance.away):
-        stats, created = TeamStats.objects.get_or_create(
-            team=team, tournament=instance.tournament)
-        stats.sync()
+    if instance.home and instance.away:
+        for team in (instance.home, instance.away):
+            stats, created = TeamStats.objects.get_or_create(
+                team=team, tournament=instance.tournament)
+            stats.sync()

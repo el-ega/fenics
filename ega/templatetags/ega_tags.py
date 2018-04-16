@@ -23,7 +23,8 @@ def show_prediction_trends(match):
         diff = 100 - sum(values.values())
         values[list(values.keys())[-1]] += diff
 
-    return {'home_team': match.home, 'away_team': match.away,
+    return {'home_team': match.home or match.home_placeholder,
+            'away_team': match.away or match.away_placeholder,
             'count': total, 'values': values}
 
 
@@ -34,6 +35,8 @@ def get_friends_leagues(user, slug):
 
 @register.simple_tag
 def get_latest_matches(team, tournament):
+    if team is None:
+        return None
     return team.latest_matches(tournament)
 
 

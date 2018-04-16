@@ -95,7 +95,7 @@ $(document).ready(function () {
                             <div class="panel panel-info">
                                 <div class="panel-heading">
                                     <h6 class="panel-title home-stats">
-                                    <strong>{{ home }}</strong>
+                                    <strong>{% firstof home match.home_placeholder %}</strong>
                                     {% if home.image %}
                                     <img class="team-image-small home-image" src="{{ home.image.url }}" />
                                     {% endif %}</h6>
@@ -120,7 +120,7 @@ $(document).ready(function () {
                             <div class="panel panel-info">
                                 <div class="panel-heading">
                                     <h6 class="panel-title away-stats">
-                                    <strong>{{ away }}</strong>
+                                    <strong>{% firstof away match.away_placeholder %}</strong>
                                     {% if away.image %}
                                     <img class="team-image-small away-image" src="{{ away.image.url }}" />
                                     {% endif %}</h6>
