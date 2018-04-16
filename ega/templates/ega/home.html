@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load ega_tags %}
 {% load news_tags %}
 {% load staticfiles %}
 
@@ -26,6 +27,12 @@
                     <br/><small>Acertando sin modificar tu pronóstico antes del comienzo del campeonato, 8 puntos; cambiándolo durante la primera fase, 5 puntos; antes de la semifinal, 2 puntos.</small>
                     </form>
                 </div>
+
+                <div>
+                    {% champion_predictions_chart tournament as chart %}
+                    <embed type="image/svg+xml" src= {{ chart|safe }} />
+                </div>
+
                 {% elif tournament.slug == 'uruguay-clausura-2017' %}
                 <h3 class="title">Noticias <small><a href="http://ovaciondigital.com.uy">Ovación</a></small></h3>
                 {% latest_news source='ovacion' latest=3 %}
