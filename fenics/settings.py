@@ -163,6 +163,7 @@ ADMINS = [
 ]
 AUTH_USER_MODEL = 'ega.EgaUser'
 ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_SESSION_REMEMBER = True
 SOCIALACCOUNT_QUERY_EMAIL = True
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 LOGIN_REDIRECT_URL = 'meta-home'
