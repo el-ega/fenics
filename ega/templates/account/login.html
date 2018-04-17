@@ -5,74 +5,111 @@
 {% load socialaccount %}
 {% load staticfiles %}
 
+{% block navbar-brand-logo %}{% endblock %}
 {% block content-title %}{% endblock %}
 
 {% block content %}
 
-<div class="text-center">
-    <h2>el Ega</h2>
-    <p><small>El juego de pronósticos deportivos</small></p>
-
-    <p>Visitá <a href="http://blog.el-ega.com.ar">nuestro blog</a>!</p>
-
-    <a href="https://twitter.com/elEgaOk" class="twitter-follow-button" data-show-count="false">Follow @elEgaOk</a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-
-</div>
-
-{% get_providers as socialaccount_providers %}
-{% if socialaccount_providers  %}
-<div class="text-center providers-login">
-    <p><label>Logueate con</label></p>
-    <div>
-    {% for provider in socialaccount_providers %}
-        {% if provider.id == 'twitter' %}
-        <a title="Twitter" href="{% provider_login_url 'twitter' process='login' %}">
-            <img src="{% static 'images/twitter.png' %}" /></a>
-        {% endif %}
-        {% if provider.id == 'google' %}
-        <a title="Google" href="{% provider_login_url 'google' process='login' %}">
-            <img src="{% static 'images/google.png' %}" /></a>
-        {% endif %}
-        {% if provider.id == 'facebook' %}
-        <a title="Facebook" href="{% provider_login_url 'facebook' process='login' %}">
-            <img src="{% static 'images/facebook.png' %}" /></a>
-        {% endif %}
-    {% endfor %}
-    </div>
-    {% include "socialaccount/snippets/login_extra.html" %}
-</div>
-
-<div class="text-center">
-<p>Si hiciste al menos un pronóstico en una edición anterior, tu usuario todavía es válido!</p>
-<p>O podés <a href="{{ signup_url }}">registrarte</a> y luego iniciar sesión acá:</p>
-</div>
-{% endif %}
-
-<div class="text-center providers-login">
-<form method="POST" action="{% url 'account_login' %}" role="form">
-    {% csrf_token %}
-
-    {% include 'ega/_form_errors_all_snippet.html' %}
-
-    <div class="center-block text-left login-form">
-    {% for field in form %}
-        {% if field.name == 'remember' %}
-            {{ field }}
-            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-        {% else %}
-            {% include 'ega/_field_snippet.html' %}
-        {% endif %}
-    {% endfor %}
+<div class="row">
+    <div class="col-md-3 hidden-xs">
+        <img src="{% static 'images/logo.png' %}" class="login-logo" />
     </div>
 
-    {% if redirect_field_value %}
-    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    <div class="col-md-5">
+        <h2>el Ega</h2>
+        <p><small>El juego de pronósticos deportivos</small></p>
+
+        <p>Visitá <a href="http://blog.el-ega.com.ar">nuestro blog</a>, seguinos en <a href="https://twitter.com/elEgaOk">twitter</a>!</p>
+
+        <dl>
+            <dt>Pronosticá</dt>
+            <dd>Intentá acertar los resultados de los partidos y ganá puntos de acuerdo a la precisión de tus pronósticos.</dd>
+
+            <dt>Competí</dt>
+            <dd>No sólo con todos los usuarios del sitio, también podés armar una liga propia entre amigos y/o compañeros de trabajo.</dd>
+
+            <dt>Jugá!</dt>
+            <dd>Si hiciste al menos un pronóstico en una edición anterior, tu usuario todavía es válido!
+                Si no, es un buen momento para <a href="{{ signup_url }}">registrarte</a>.</dd>
+        </dl>
+
+    </div>
+
+    <div class="col-md-4">
+    {% get_providers as socialaccount_providers %}
+    {% if socialaccount_providers  %}
+        <div class="text-center providers-login">
+            <p><label>Logueate con</label></p>
+            <div>
+            {% for provider in socialaccount_providers %}
+                {% if provider.id == 'twitter' %}
+                <a title="Twitter" href="{% provider_login_url 'twitter' process='login' %}">
+                    <img src="{% static 'images/twitter.png' %}" /></a>
+                {% endif %}
+                {% if provider.id == 'google' %}
+                <a title="Google" href="{% provider_login_url 'google' process='login' %}">
+                    <img src="{% static 'images/google.png' %}" /></a>
+                {% endif %}
+                {% if provider.id == 'facebook' %}
+                <a title="Facebook" href="{% provider_login_url 'facebook' process='login' %}">
+                    <img src="{% static 'images/facebook.png' %}" /></a>
+                {% endif %}
+            {% endfor %}
+            </div>
+            {% include "socialaccount/snippets/login_extra.html" %}
+        </div>
     {% endif %}
 
-    <div class="form-group">
-        <button type="submit" class="btn btn-default">{% trans "Sign In" %}</button><br/>
-        <a href="{% url 'account_reset_password' %}">Olvidaste tu contraseña?</a>
+    <div class="text-center providers-login">
+        <form method="POST" action="{% url 'account_login' %}" role="form">
+            {% csrf_token %}
+
+            {% include 'ega/_form_errors_all_snippet.html' %}
+
+            <div class="center-block text-left login-form">
+            {% for field in form %}
+                {% if field.name == 'remember' %}
+                    {{ field }}
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {% else %}
+                    {% include 'ega/_field_snippet.html' %}
+                {% endif %}
+            {% endfor %}
+            </div>
+
+            {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+            {% endif %}
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">{% trans "Sign In" %}</button>
+                <br/><a href="{% url 'account_reset_password' %}">Olvidaste tu contraseña?</a>
+                <br/><a href="{{ signup_url }}">Crea una cuenta</a>
+            </div>
+        </form>
     </div>
-</form>
+    </div>
+
+</div>
+
+<div class="row" class="testimonials">
+    <div class="col-md-4 text-center">
+        <img src="{% static 'images/testimonials/paul.jpg' %}" class="img-circle" />
+        <p><strong>Pulpo Paul</strong>
+        <br/>"Oráculos éramos los de antes, no me vengan con redes neuronales y machine learning."</p>
+    </div>
+
+    <div class="col-md-4 text-center">
+        <img src="{% static 'images/testimonials/diegom.jpg' %}" class="img-circle" />
+        <p><strong>Diego M.</strong>
+        <br/>"Eh... eehhhh... ehhh... ga."</p>
+    </div>
+
+    <div class="col-md-4 text-center">
+        <img src="{% static 'images/testimonials/gonzaloh.png' %}" class="img-circle" />
+        <p><strong>Gonzalo H.</strong>
+        <br/>"Nunca me pierdo una edición de el gran DT."</p>
+    </div>
+
 </div>
 {% endblock %}
