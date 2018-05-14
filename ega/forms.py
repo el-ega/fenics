@@ -26,8 +26,8 @@ class PredictionForm(forms.ModelForm):
         self.expired = False
         if self.instance.match.knockout:
             match = self.instance.match
-            home = match.home.code if match.home else match.home_placeholder
-            away = match.away.code if match.away else match.away_placeholder
+            home = match.home.name if match.home else match.home_placeholder
+            away = match.away.name if match.away else match.away_placeholder
             self.fields['penalties'].choices = [('L', home), ('V', away)]
 
     def _clean_goals(self, field_name):

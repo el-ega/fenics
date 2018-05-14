@@ -1,10 +1,4 @@
 {% if values %}
-    <div class="text-left">
-        <small>Tendencia:
-            {% if values.L > values.E and values.L > values.V %}gana {{ home_team }}
-            {% elif values.V > values.E and values.V > values.L %}gana {{ away_team }}
-            {% else %}empate {% endif %}
-            (sobre {{ count }} pronóstico{{ count|pluralize }})</small></div>
     <div class="progress">
         <div class="progress-bar progress-bar-success progress-local" style="width: {{ values.L }}%">
         {% firstof home_team.code 'Local' %} {{ values.L }}%
@@ -15,5 +9,9 @@
         <div class="progress-bar progress-bar-info progress-away" style="width: {{ values.V }}%">
         {% firstof away_team.code 'Visitante' %} {{ values.V }}%
         </div>
+    </div>
+{% else %}
+    <div class="progress">
+        <small class="text-muted">(sin pronósticos)</small>
     </div>
 {% endif %}

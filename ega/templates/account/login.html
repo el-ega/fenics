@@ -5,7 +5,11 @@
 {% load socialaccount %}
 {% load staticfiles %}
 
-{% block navbar-brand-logo %}{% endblock %}
+{% block navbar-brand-logo %}
+    <a class="navbar-brand visible-xs" href="{% if tournament %}{% url 'ega-home' tournament.slug %}{% else %}{% url 'meta-home' %}{% endif %}">
+        <img class="nav-logo" src="{% static 'images/logo.png' %}" />el Ega</a>
+{% endblock %}
+
 {% block content-title %}{% endblock %}
 
 {% block content %}
@@ -83,16 +87,17 @@
 
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">{% trans "Sign In" %}</button>
-                <br/><a href="{% url 'account_reset_password' %}">Olvidaste tu contraseña?</a>
-                <br/><a href="{{ signup_url }}">Crea una cuenta</a>
             </div>
+
+            <p><a href="{% url 'account_reset_password' %}">Olvidaste tu contraseña?</a>
+                <br/><a href="{{ signup_url }}">Crea una cuenta</a></p>
         </form>
     </div>
     </div>
 
 </div>
 
-<div class="row" class="testimonials">
+<div class="row testimonials">
     <div class="col-md-4 text-center">
         <img src="{% static 'images/testimonials/paul.jpg' %}" class="img-circle" />
         <p><strong>Pulpo Paul</strong>
