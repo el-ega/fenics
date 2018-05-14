@@ -164,15 +164,26 @@ table.ranking {
 }
 
 .home-stats {
+    color: #333;
     text-align: left;
 }
+
+.home-stats .label {
+    opacity: 0.7;
+}
+
 
 .home-image {
     float: right;
 }
 
 .away-stats {
+    color: #333;
     text-align: right;
+}
+
+.away-stats .label {
+    opacity: 0.7;
 }
 
 .away-image {

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load ega_tags %}
 {% load humanize %}
 {% load staticfiles %}
@@ -9,10 +10,12 @@
     function check_tie(prefix) {
         if ($('select[name=' + prefix + '-home_goals]').val() == $('select[name=' + prefix + '-away_goals]').val()){
             $('input[name=' + prefix + '-penalties]').prop( "disabled", false);
-            $('span#' + prefix + '-help').css("color", "#333");
+            $('[id^=id_' + prefix + '-penalties]').removeAttr("disabled");
+            $('#' + prefix + '-help').css("color", "#333");
         }else{
+            $('[id^=id_' + prefix + '-penalties]').attr({"disabled": "disabled"}).removeClass('active');
             $('input[name=' + prefix + '-penalties]').prop({"disabled": true, "checked": false});
-            $('span#' + prefix + '-help').css("color", "#bbb");
+            $('#' + prefix + '-help').css("color", "#bbb");
         }
     }
 
@@ -32,31 +35,28 @@
 
 {% block content %}
 
-<p><small>Se muestran los partidos a jugarse dentro de los próximos 7 días. Los pronósticos se pueden modificar hasta la fecha límite (deadline) de cada partido. Asegurarse de guardar los cambios.</small></p>
-
 {% if formset.forms %}
-
-    {% regroup formset.forms by instance.match.when as form_list %}
 
     <form method="POST" action="">
         {% csrf_token %}
         {{ formset.management_form }}
 
-        {% for group in form_list %}
+        {% for form in formset.forms %}
 
         <div class="panel panel-default">
+            {% with match=form.instance.match %}
             <div class="panel-heading">
                 <h6 class="panel-title">
-                <small>{{ group.grouper|date:"F j, H:i" }} |
-                    DEADLINE: {{ group.list.0.instance.match.deadline|naturaltime }}</small></h6>
+                <small>{{ match.when|date:"F j, H:i" }} |
+                       {{ match.description }}
+                       {% if match.location %}<span class="hidden-xs">| {{ match.location }}</span>{% endif %}
+                       </small></h6>
             </div>
 
-        {% for form in group.list %}
             <a name="{{ form.instance.match_id }}"></a>
             {{ form.id }}
             {{ form.match }}
 
-            {% with match=form.instance.match %}
             {% with home=match.home home_placeholder=match.home_placeholder away=match.away away_placeholder=match.away_placeholder %}
             <div class="panel-body">
                 <div class="row">
@@ -85,31 +85,31 @@
                             <div class="col-xs-6"><p class="goals-input">{{ form.home_goals }}</p></div>
                             <div class="col-xs-6"><p class="goals-input">{{ form.away_goals }}</p></div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12 penalties-input">
-                                <small>{% if match.knockout %}
-                                {% with penalties=form.penalties %}
-                                {{ penalties.0.tag }} <span id="{{ form.prefix }}-help">
-                                <label for="{{ penalties.0.id_for_label }}">{{ penalties.0.choice_label }}</label> | penales |
-                                <label for="{{ penalties.1.id_for_label }}">{{ penalties.1.choice_label }}</label></span> {{ penalties.1.tag }}
-                                {% endwith %}{% endif %}</small>
+                        {% if match.knockout %}
+                            {% with penalties=form.penalties %}
+                            <div class="row">
+                                <div class="col-md-12 penalties-input">
+                                <strong id="{{ form.prefix }}-help" class="small">En los penales gana</strong><br/>
+                                <div class="btn-group btn-group-xs" data-toggle="buttons">
+                                    <label id="{{ penalties.0.id_for_label }}" class="btn btn-success {% if penalties.0.data.selected %}active{% endif %}">
+                                        <input type="radio" value="{{ penalties.0.data.value }}" name="{{ penalties.0.data.name }}" {% if penalties.0.data.selected %}checked{% endif %}>{{ penalties.0.choice_label }}
+                                    </label>
+                                    <label id="{{ penalties.1.id_for_label }}" class="btn btn-success {% if penalties.1.data.selected %}active{% endif %}">
+                                        <input type="radio" value="{{ penalties.1.data.value }}" name="{{ penalties.1.data.name }}" {% if penalties.1.data.selected %}checked{% endif %}>{{ penalties.1.choice_label }}
+                                    </label>
                                 </div>
-                        </div>
+                                </div>
+                            </div>
+                            {% endwith %}
+                        {% endif %}
                     </div>
                     <div class="col-xs-12 col-md-4">
                         {% include "ega/_team_details.html" with condition="away" team=away placeholder=away_placeholder stats=form.instance.away_team_stats %}
                     </div>
                 </div>
-                <div class="text-center hidden-xs">
-                    <small>
-                    {% if match.description %}{{ match.description }}{% endif %}
-                    {% if match.location %}| {{ match.location }}{% endif %}
-                    </small>
-                </div>
             </div>
             {% endwith %}
             {% endwith %}
-        {% endfor %}
         </div>
         {% endfor %}
 
