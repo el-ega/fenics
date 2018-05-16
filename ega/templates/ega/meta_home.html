@@ -31,7 +31,7 @@
             {% for tournament in match_list %}
             <div role="tabpanel" class="tab-pane{% if forloop.first %} active{% endif %}" id="{{ tournament.grouper.slug }}">
 
-            {% for row in tournament.list %}
+            {% for row in tournament.list|slice:":20" %}
             <div class="row">
             <div class="col-md-3 text-muted">{{ row.match.when|date:"F j, P" }}</div>
             <div class="col-md-3 col-xs-4">

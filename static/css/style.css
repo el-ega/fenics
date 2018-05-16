@@ -133,6 +133,29 @@ table.ranking {
     max-height: 130px;
 }
 
+.navbar-matches {
+    background-color: rgba(248,248,248,0.6);
+    border: 0;
+    text-align: center;
+    padding: 5px;
+}
+
+.navbar-matches.affix-top {
+    position: fixed;
+    bottom: 25px;
+    right: 0px;
+    width: 100%;
+    z-index: 9999 !important;
+}
+
+.navbar-matches.affix {
+    position: fixed;
+    bottom: 25px;
+    right: 0px;
+    width: 100%;
+    z-index: 9999 !important;
+}
+
 .team-image {
     max-width: 65px;
 }

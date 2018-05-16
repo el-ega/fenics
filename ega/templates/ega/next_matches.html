@@ -5,6 +5,7 @@
 {% load staticfiles %}
 
 {% block extra-head %}
+
 <script type="text/javascript">
 
     function check_tie(prefix) {
@@ -19,13 +20,42 @@
         }
     }
 
+    function saved_changes() {
+        $('#changes-update').text('Pronósticos actualizados!');
+        $('#changes-update').removeClass('text-warning text-danger').addClass('text-success');
+    }
+
+    function error_changes() {
+        $('#changes-update').text('Pronósticos inválidos o incompletos');
+        $('#changes-update').removeClass('text-warning text-success').addClass('text-danger');
+    }
+
+    function pending_changes() {
+        $('#changes-update').text('Hay cambios sin guardar');
+        $('#changes-update').removeClass('text-success text-danger').addClass('text-warning');
+    }
+
     $(document).ready(function () {
         var prefixes = [{% for form in formset.forms %}'{{ form.prefix }}'{% if not forloop.last %},{% endif %}{% endfor %}];
         $.each(prefixes, function(index, prefix) {
-            $('select[name=' + prefix + '-home_goals]').change(function() {check_tie(prefix)});
-            $('select[name=' + prefix + '-away_goals]').change(function() {check_tie(prefix)});
+            $('select[name=' + prefix + '-home_goals]').change(function() {pending_changes(); check_tie(prefix)});
+            $('select[name=' + prefix + '-away_goals]').change(function() {pending_changes(); check_tie(prefix)});
 
             check_tie(prefix);
+        });
+
+        $("#matches-form").submit(function(event){
+            event.preventDefault();
+            var post_url = $(this).attr("action");
+            var form_data = $(this).serialize();
+
+            $.post(post_url, form_data, function(response) {
+                if (response.ok) {
+                    saved_changes();
+                } else {
+                    error_changes();
+                }
+            }, 'json');
         });
     });
 </script>
@@ -37,7 +67,7 @@
 
 {% if formset.forms %}
 
-    <form method="POST" action="">
+    <form id="matches-form" method="POST" action="">
         {% csrf_token %}
         {{ formset.management_form }}
 
@@ -113,10 +143,9 @@
         </div>
         {% endfor %}
 
-        <div class="row">
-            <div class="col-xs-12 text-center">
-                <button name="save" type="submit" class="btn btn-lg btn-primary">Guardar</button>
-            </div>
+        <div class="navbar-matches" data-spy="affix" data-offset-top="197">
+            <strong id="changes-update"></strong><br/>
+            <button name="save" type="submit" class="btn btn-info">Guardar</button>
         </div>
 
     </form>
