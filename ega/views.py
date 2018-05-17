@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 
 from datetime import timedelta
 
@@ -8,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from django.forms.models import modelformset_factory
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils.timezone import now
@@ -299,14 +300,21 @@ def next_matches(request, slug):
         formset = PredictionFormSet(request.POST)
         if formset.is_valid():
             formset.save()
-            messages.success(request, 'Pronósticos actualizados.')
 
+            if request.is_ajax():
+                return HttpResponse(json.dumps({'ok': True}))
+
+            messages.success(request, 'Pronósticos actualizados.')
             expired_matches = [f.instance.match for f in formset if f.expired]
             for m in expired_matches:
                 msg = "%s - %s: el partido expiró, pronóstico NO actualizado."
                 messages.error(request, msg % (m.home.name, m.away.name))
 
             return HttpResponseRedirect(reverse('ega-home', args=[slug]))
+
+        # invalid form
+        if request.is_ajax():
+            return HttpResponse(json.dumps({'ok': False}))
 
     else:
         formset = PredictionFormSet(queryset=predictions)
