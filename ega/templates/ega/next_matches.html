@@ -7,6 +7,8 @@
 {% block extra-head %}
 
 <script type="text/javascript">
+    var changed = false;
+    var loading = '<img height="25" src="{% static 'images/loading.gif' %}" />';
 
     function check_tie(prefix) {
         if ($('select[name=' + prefix + '-home_goals]').val() == $('select[name=' + prefix + '-away_goals]').val()){
@@ -21,7 +23,11 @@
     }
 
     function saved_changes() {
-        $('#changes-update').text('Pronósticos actualizados!');
+        if (changed) {
+            $('#changes-update').text('Cambios anteriores actualizados, pero todavía tenés pronósticos sin guardar');
+        } else {
+            $('#changes-update').text('Pronósticos actualizados!');
+        }
         $('#changes-update').removeClass('text-warning text-danger').addClass('text-success');
     }
 
@@ -31,7 +37,8 @@
     }
 
     function pending_changes() {
-        $('#changes-update').text('Hay cambios sin guardar');
+        changed = true;
+        $('#changes-update').text('Tenés pronósticos sin guardar');
         $('#changes-update').removeClass('text-success text-danger').addClass('text-warning');
     }
 
@@ -40,6 +47,7 @@
         $.each(prefixes, function(index, prefix) {
             $('select[name=' + prefix + '-home_goals]').change(function() {pending_changes(); check_tie(prefix)});
             $('select[name=' + prefix + '-away_goals]').change(function() {pending_changes(); check_tie(prefix)});
+            $('input[name=' + prefix + '-penalties]').change(function() {pending_changes()});
 
             check_tie(prefix);
         });
@@ -48,6 +56,8 @@
             event.preventDefault();
             var post_url = $(this).attr("action");
             var form_data = $(this).serialize();
+            changed = false;
+            $('#changes-update').html(loading);
 
             $.post(post_url, form_data, function(response) {
                 if (response.ok) {
@@ -145,7 +155,7 @@
 
         <div class="navbar-matches" data-spy="affix" data-offset-top="197">
             <strong id="changes-update"></strong><br/>
-            <button name="save" type="submit" class="btn btn-info">Guardar</button>
+            <button name="save" type="submit" class="btn btn-primary">Guardar</button>
         </div>
 
     </form>

@@ -82,6 +82,12 @@ def _next_matches(user):
 
 @login_required
 def meta_home(request):
+    try:
+        t = Tournament.objects.get(published=True, finished=False)
+        return HttpResponseRedirect(reverse('ega-home', args=[t.slug]))
+    except (Tournament.DoesNotExist, Tournament.MultipleObjectsReturned):
+        pass
+
     past_tournaments = Tournament.objects.filter(
         published=True, finished=True).order_by('-id')
     next_matches = _next_matches(request.user)
@@ -285,17 +291,22 @@ def league_home(request, slug, league_slug):
 def next_matches(request, slug):
     """Return coming matches for the specified tournament."""
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
-    matches = tournament.next_matches()
-    for m in matches:
-        # create prediction for user if missing
-        Prediction.objects.get_or_create(
-            user=request.user, match=m, defaults={'starred': m.starred})
+    # create empty predictions if needed
+    missing = Match.objects.filter(
+        tournament=tournament).exclude(prediction__user=request.user)
+    Prediction.objects.bulk_create([
+        Prediction(user=request.user, match=m) for m in missing
+    ])
+
+    # predictions for the next matches
+    tz_now = now() + timedelta(hours=HOURS_TO_DEADLINE)
+    until = tz_now + timedelta(days=NEXT_MATCHES_DAYS)
+    predictions = Prediction.objects.filter(
+        user=request.user, match__tournament=tournament,
+        match__when__range=(tz_now, until))
 
     PredictionFormSet = modelformset_factory(
         Prediction, form=PredictionForm, extra=0)
-    predictions = Prediction.objects.filter(
-        user=request.user, match__in=matches)
-
     if request.method == 'POST':
         formset = PredictionFormSet(request.POST)
         if formset.is_valid():

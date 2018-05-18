@@ -62,11 +62,11 @@ class PredictionForm(forms.ModelForm):
 
     def save(self, *args, **kwargs):
         match = self.instance.match
-        if not match.is_expired:
+        if not match.is_expired and self.has_changed():
             return super(PredictionForm, self).save(*args, **kwargs)
-        else:
+        elif match.is_expired:
             self.expired = True
-            return None
+        return None
 
     class Meta:
         model = Prediction
