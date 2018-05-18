@@ -22,6 +22,7 @@ class BaseTestCase(TestCase):
             client_id='lorem', secret='ipsum')
         app.sites.add(Site.objects.get_current())
         Tournament.objects.create(slug=DEFAULT_TOURNAMENT, published=True)
+        Tournament.objects.create(slug='other', published=True)
 
 
 class LoginTestCase(BaseTestCase):
