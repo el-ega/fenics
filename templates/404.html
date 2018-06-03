@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load staticfiles %}
 
 {% block content-title %}{% endblock %}
@@ -9,8 +10,8 @@
     <p><img src="{% static 'images/logo.png' %}" /></p>
 
     <blockquote>
-        <p>Tiraste la pelota afuera... acá no está lo que estás buscando.<br/>
-        <a href="/">Volvé a sacar del medio</a></p>
+        <p>{% trans "Tiraste la pelota afuera... acá no está lo que estás buscando." %}<br/>
+        <a href="/">{% trans "Volvé a sacar del medio" %}</a></p>
     </blockquote>
 </div>
 

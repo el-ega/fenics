@@ -1,3 +1,4 @@
+{% load i18n %}
 {% for prediction in history %}
     <div class="{% if prediction.starred %}starred-row{% endif %}">
     {% with match=prediction.match %}
@@ -40,16 +41,16 @@
         </div>
         <div class="row text-center">
             <div class="col-xs-10 col-xs-offset-1">
-                <small>{% if not match.finished %}En juego |{% endif %}
-                Pronóstico:
+                <small>{% if not match.finished %}{% trans 'En juego' %} |{% endif %}
+                {% trans 'Pronóstico:' %}
                 {% if prediction.home_goals != None and prediction.away_goals != None %}
                 {{ prediction.home_goals }} - {{ prediction.away_goals }}
                 {% if prediction.penalties_home %}<small>[{{ match.home.code }}]</small>
                 {% elif prediction.penalties_away %}<small>[{{ match.away.code }}]</small>
                 {% endif %}
-                {% if match.finished and prediction.score >= 0 %}({{ prediction.score }} punto{{ prediction.score|pluralize }}){% endif %}
+                {% if match.finished and prediction.score >= 0 %}({{ prediction.score }} {% trans 'punto' %}{{ prediction.score|pluralize }}){% endif %}
                 {% endif %}
-                | <a href="{% url 'ega-match-details' tournament.slug match.id %}">Detalles</a></small>
+                | <a href="{% url 'ega-match-details' tournament.slug match.id %}">{% trans 'Detalles' %}</a></small>
             </div>
         </div>
     {% endwith %}

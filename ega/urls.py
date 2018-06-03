@@ -1,10 +1,12 @@
-from django.urls import path
+from django.urls import path, re_path
 
 import ega.views
 
 
 urlpatterns = [
     path('', ega.views.meta_home, name='meta-home'),
+    re_path(r'^l/(?P<lang>en|es)/$', ega.views.switch_language,
+            name='switch-language'),
     path('logout/', ega.views.logout, name='logout'),
     path('profile/', ega.views.profile, name='profile'),
     path('profile/verify/<str:email>/', ega.views.verify_email,

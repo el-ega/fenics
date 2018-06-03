@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block content-title %}Ligas de amigos{% endblock %}
+{% block content-title %}{% blocktrans %}Ligas de amigos{% endblocktrans %}{% endblock %}
 
 {% block content %}
 
 <div class="section">
-<h4 class="title">Nueva liga</h4>
+<h4 class="title">{% trans 'Nueva liga' %}</h4>
 <form method="POST" action="{% url 'ega-leagues' tournament.slug %}" class="form-inline" role="form" id="new-league">
     {% csrf_token %}
     {% for field in form %}
@@ -20,16 +20,16 @@
         {% endif %}
     </div>
     {% endfor %}
-    <button name="create" type="submit" class="btn btn-primary">Crear liga</button>
+    <button name="create" type="submit" class="btn btn-primary">{% trans 'Crear liga' %}</button>
 </form>
 </div>
 
 <div class="section">
-<h4 class="title">Tus ligas en {{ tournament.name }}</h4>
+<h4 class="title">{% blocktrans %}Tus ligas en {{ tournament.name }}{% endblocktrans %}</h4>
 {% for league in leagues %}
 {% include  'ega/_league_detail.html' %}
 {% empty %}
-    <p>No tenés ligas de amigos... create una ahora!</p>
+    <p>{% trans 'No tenés ligas de amigos... create una ahora!' %}</p>
 {% endfor %}
 </ul>
 </div>

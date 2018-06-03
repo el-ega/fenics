@@ -21,20 +21,20 @@
 
     <div class="col-md-5">
         <h2>el Ega</h2>
-        <p><small>El juego de pronósticos deportivos</small></p>
+        <p><small>{% trans 'El juego de pronósticos deportivos' %}</small></p>
 
-        <p>Visitá <a href="http://blog.el-ega.com.ar">nuestro blog</a>, seguinos en <a href="https://twitter.com/elEgaOk">twitter</a>!</p>
+        <p>{% blocktrans %}Visitá <a href="http://blog.el-ega.com.ar">nuestro blog</a>, seguinos en <a href="https://twitter.com/elEgaOk">twitter</a>!{% endblocktrans%}</p>
 
         <dl>
-            <dt>Pronosticá</dt>
-            <dd>Intentá acertar los resultados de los partidos y ganá puntos de acuerdo a la precisión de tus pronósticos.</dd>
+            <dt>{% trans 'Pronosticá' %}</dt>
+            <dd>{% trans 'Intentá acertar los resultados de los partidos y ganá puntos de acuerdo a la precisión de tus pronósticos.' %}</dd>
 
-            <dt>Competí</dt>
-            <dd>No sólo con todos los usuarios del sitio, también podés armar una liga propia entre amigos y/o compañeros de trabajo.</dd>
+            <dt>{% trans 'Competí' %}</dt>
+            <dd>{% trans 'No sólo con todos los usuarios del sitio, también podés armar una liga propia entre amigos y/o compañeros de trabajo.' %}</dd>
 
-            <dt>Jugá!</dt>
-            <dd>Si hiciste al menos un pronóstico en una edición anterior, tu usuario todavía es válido!
-                Si no, es un buen momento para <a href="{{ signup_url }}">registrarte</a>.</dd>
+            <dt>{% trans 'Jugá!' %}</dt>
+            <dd>{% blocktrans %}Si hiciste al menos un pronóstico en una edición anterior, tu usuario todavía es válido!
+                Si no, es un buen momento para <a href="{{ signup_url }}">registrarte</a>.{% endblocktrans %}</dd>
         </dl>
 
     </div>
@@ -43,7 +43,7 @@
     {% get_providers as socialaccount_providers %}
     {% if socialaccount_providers  %}
         <div class="text-center providers-login">
-            <p><label>Logueate con</label></p>
+            <p><label>{% trans 'Logueate con' %}</label></p>
             <div>
             {% for provider in socialaccount_providers %}
                 {% if provider.id == 'twitter' %}
@@ -89,8 +89,8 @@
                 <button type="submit" class="btn btn-primary">{% trans "Sign In" %}</button>
             </div>
 
-            <p><a href="{% url 'account_reset_password' %}">Olvidaste tu contraseña?</a>
-                <br/><a href="{{ signup_url }}">Crea una cuenta</a></p>
+            <p><a href="{% url 'account_reset_password' %}">{% trans 'Olvidaste tu contraseña?' %}</a>
+                <br/><a href="{{ signup_url }}">{% trans 'Crea una cuenta' %}</a></p>
         </form>
     </div>
     </div>
@@ -100,20 +100,20 @@
 <div class="row testimonials">
     <div class="col-md-4 text-center">
         <img src="{% static 'images/testimonials/paul.jpg' %}" class="img-circle" />
-        <p><strong>Pulpo Paul</strong>
-        <br/>"Oráculos éramos los de antes, no me vengan con redes neuronales y machine learning."</p>
+        <p><strong>{% trans 'Pulpo Paul' %}</strong>
+        <br/>{% trans '"Oráculos éramos los de antes, no me vengan con redes neuronales y machine learning."' %}</p>
     </div>
 
     <div class="col-md-4 text-center">
         <img src="{% static 'images/testimonials/diegom.jpg' %}" class="img-circle" />
-        <p><strong>Diego M.</strong>
-        <br/>"Eh... eehhhh... ehhh... ga."</p>
+        <p><strong>{% trans 'Diego M.' %}</strong>
+        <br/>{% trans '"Eh... eehhhh... ehhh... ga."' %}</p>
     </div>
 
     <div class="col-md-4 text-center">
         <img src="{% static 'images/testimonials/gonzaloh.png' %}" class="img-circle" />
-        <p><strong>Gonzalo H.</strong>
-        <br/>"Nunca me pierdo una edición de el gran DT."</p>
+        <p><strong>{% trans 'Gonzalo H.' %}</strong>
+        <br/>{% trans '"Nunca me pierdo una edición de el gran DT."' %}</p>
     </div>
 
 </div>

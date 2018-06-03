@@ -1,0 +1,859 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-03 18:13-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ega/forms.py:138
+msgid "Nombre"
+msgstr "Name"
+
+#: ega/templates/account/account_inactive.html:5
+msgid "Account Inactive"
+msgstr ""
+
+#: ega/templates/account/account_inactive.html:8
+msgid "This account is inactive."
+msgstr ""
+
+#: ega/templates/account/email.html:5
+msgid "E-mail Addresses"
+msgstr ""
+
+#: ega/templates/account/email.html:9
+msgid "The following e-mail addresses are associated with your account:"
+msgstr ""
+
+#: ega/templates/account/email.html:23
+msgid "Verified"
+msgstr ""
+
+#: ega/templates/account/email.html:25
+msgid "Unverified"
+msgstr ""
+
+#: ega/templates/account/email.html:27
+msgid "Primary"
+msgstr ""
+
+#: ega/templates/account/email.html:33
+msgid "Make Primary"
+msgstr ""
+
+#: ega/templates/account/email.html:34
+msgid "Re-send Verification"
+msgstr ""
+
+#: ega/templates/account/email.html:35
+#: ega/templates/socialaccount/connections.html:35
+msgid "Remove"
+msgstr ""
+
+#: ega/templates/account/email.html:42
+msgid "Warning:"
+msgstr ""
+
+#: ega/templates/account/email.html:42
+msgid ""
+"You currently do not have any e-mail address set up. You should really add "
+"an e-mail address so you can receive notifications, reset your password, etc."
+msgstr ""
+
+#: ega/templates/account/email.html:46
+msgid "Add E-mail Address"
+msgstr ""
+
+#: ega/templates/account/email.html:57
+msgid "Add E-mail"
+msgstr ""
+
+#: ega/templates/account/email.html:65
+msgid "Do you really want to remove the selected e-mail address?"
+msgstr ""
+
+#: ega/templates/account/email_confirm.html:6
+#: ega/templates/account/email_confirmed.html:6
+msgid "Confirm E-mail Address"
+msgstr ""
+
+#: ega/templates/account/email_confirm.html:19
+msgid "Confirm"
+msgstr ""
+
+#: ega/templates/account/email_confirm.html:26
+#, python-format
+msgid ""
+"This e-mail confirmation link expired or is invalid.\n"
+"Please <a href=\"%(email_url)s\">issue a new e-mail confirmation request</"
+"a>.\n"
+msgstr ""
+
+#: ega/templates/account/email_confirmed.html:11
+#, python-format
+msgid ""
+"You have confirmed that <a href=\"mailto:%(email)s\">%(email)s</a> is an e-"
+"mail address for user %(user_display)s."
+msgstr ""
+
+#: ega/templates/account/login.html:24
+msgid "El juego de pronósticos deportivos"
+msgstr "The soccer prediction game"
+
+#: ega/templates/account/login.html:26
+msgid ""
+"Visitá <a href=\"http://blog.el-ega.com.ar\">nuestro blog</a>, seguinos en "
+"<a href=\"https://twitter.com/elEgaOk\">twitter</a>!"
+msgstr ""
+"Visit <a href=\"http://blog.el-ega.com.ar\">our blog</a>, follow us in <a "
+"href=\"https://twitter.com/elEgaOk\">twitter</a>!"
+
+#: ega/templates/account/login.html:29
+msgid "Pronosticá"
+msgstr "Predict"
+
+#: ega/templates/account/login.html:30
+msgid ""
+"Intentá acertar los resultados de los partidos y ganá puntos de acuerdo a la "
+"precisión de tus pronósticos."
+msgstr ""
+"Try to predict the matches' scores and get points depending on your precision"
+
+#: ega/templates/account/login.html:32
+msgid "Competí"
+msgstr "Challenge your friends"
+
+#: ega/templates/account/login.html:33
+msgid ""
+"No sólo con todos los usuarios del sitio, también podés armar una liga "
+"propia entre amigos y/o compañeros de trabajo."
+msgstr ""
+"Besides competing against all users, you can create your own leagues with "
+"frieds or colleagues."
+
+#: ega/templates/account/login.html:35
+msgid "Jugá!"
+msgstr "Play!"
+
+#: ega/templates/account/login.html:36
+#, python-format
+msgid ""
+"Si hiciste al menos un pronóstico en una edición anterior, tu usuario "
+"todavía es válido!\n"
+"                Si no, es un buen momento para <a href=\"%(signup_url)s"
+"\">registrarte</a>."
+msgstr ""
+"If you played a previous edition, your user is still valid. If not, <a href="
+"\"%(signup_url)s\">create a new one</a>."
+
+#: ega/templates/account/login.html:46
+msgid "Logueate con"
+msgstr "Sign in with"
+
+#: ega/templates/account/login.html:89 templates/base.html:92
+msgid "Sign In"
+msgstr ""
+
+#: ega/templates/account/login.html:92
+msgid "Olvidaste tu contraseña?"
+msgstr "Forgot your password?"
+
+#: ega/templates/account/login.html:93
+msgid "Crea una cuenta"
+msgstr "Create an account"
+
+#: ega/templates/account/login.html:103
+msgid "Pulpo Paul"
+msgstr "Octopus Paul"
+
+#: ega/templates/account/login.html:104
+msgid ""
+"\"Oráculos éramos los de antes, no me vengan con redes neuronales y machine "
+"learning.\""
+msgstr "We were oracles, don't believe in neural nets or machine learning."
+
+#: ega/templates/account/login.html:109
+msgid "Diego M."
+msgstr ""
+
+#: ega/templates/account/login.html:110
+msgid "\"Eh... eehhhh... ehhh... ga.\""
+msgstr ""
+
+#: ega/templates/account/login.html:115
+msgid "Gonzalo H."
+msgstr ""
+
+#: ega/templates/account/login.html:116
+msgid "\"Nunca me pierdo una edición de el gran DT.\""
+msgstr "I'm always ready for el gran DT."
+
+#: ega/templates/account/password_change.html:12
+#: ega/templates/account/password_change.html:22
+#: ega/templates/account/password_reset_from_key.html:12
+#: ega/templates/account/password_reset_from_key.html:27
+#: ega/templates/account/password_reset_from_key_done.html:10
+msgid "Change Password"
+msgstr ""
+
+#: ega/templates/account/password_reset.html:13
+#: ega/templates/account/password_reset_done.html:12
+msgid "Password Reset"
+msgstr ""
+
+#: ega/templates/account/password_reset.html:18
+msgid ""
+"Forgotten your password? Enter your e-mail address below, and we'll send you "
+"an e-mail allowing you to reset it."
+msgstr ""
+
+#: ega/templates/account/password_reset.html:30
+msgid "Reset My Password"
+msgstr ""
+
+#: ega/templates/account/password_reset_done.html:17
+msgid ""
+"We have sent you an e-mail. Please contact us if you do not receive it "
+"within a few minutes."
+msgstr ""
+
+#: ega/templates/account/password_reset_from_key.html:12
+msgid "Bad Token"
+msgstr ""
+
+#: ega/templates/account/password_reset_from_key.html:15
+#, python-format
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a <a href=\"%(passwd_reset_url)s\">new password reset</"
+"a>."
+msgstr ""
+
+#: ega/templates/account/password_reset_from_key.html:29
+#: ega/templates/account/password_reset_from_key_done.html:11
+msgid "Your password is now changed."
+msgstr ""
+
+#: ega/templates/account/password_set.html:12
+#: ega/templates/account/password_set.html:23
+msgid "Set Password"
+msgstr ""
+
+#: ega/templates/account/signup.html:16 ega/templates/account/signup.html:35
+#: ega/templates/socialaccount/signup.html:5
+#: ega/templates/socialaccount/signup.html:27 templates/base.html:93
+msgid "Sign Up"
+msgstr ""
+
+#: ega/templates/account/signup.html:18
+#, python-format
+msgid ""
+"Already have an account? Then please <a href=\"%(login_url)s\">sign in</a>."
+msgstr ""
+
+#: ega/templates/account/signup_closed.html:5
+msgid "Sign Up Closed"
+msgstr ""
+
+#: ega/templates/account/signup_closed.html:8
+msgid "We are sorry, but the sign up is currently closed."
+msgstr ""
+
+#: ega/templates/account/verification_sent.html:5
+#: ega/templates/account/verified_email_required.html:5
+msgid "Verify Your E-mail Address"
+msgstr ""
+
+#: ega/templates/account/verification_sent.html:8
+msgid ""
+"We have sent an e-mail to you for verification. Follow the link provided to "
+"finalize the signup process. Please contact us if you do not receive it "
+"within a few minutes."
+msgstr ""
+
+#: ega/templates/account/verified_email_required.html:11
+msgid ""
+"This part of the site requires us to verify that\n"
+"you are who you claim to be. For this purpose, we require that you\n"
+"verify ownership of your e-mail address. "
+msgstr ""
+
+#: ega/templates/account/verified_email_required.html:15
+msgid ""
+"We have sent an e-mail to you for\n"
+"verification. Please click on the link inside this e-mail. Please\n"
+"contact us if you do not receive it within a few minutes."
+msgstr ""
+
+#: ega/templates/account/verified_email_required.html:19
+#, python-format
+msgid ""
+"<strong>Note:</strong> you can still <a href=\"%(email_url)s\">change your e-"
+"mail address</a>."
+msgstr ""
+
+#: ega/templates/ega/_league_detail.html:9
+msgid "Invitá más amigos a esta liga"
+msgstr "Invite more friends to this league"
+
+#: ega/templates/ega/_league_detail.html:22
+msgid "vos"
+msgstr "you"
+
+#: ega/templates/ega/_league_detail.html:23
+msgid "creador"
+msgstr "owner"
+
+#: ega/templates/ega/_next_matches.html:17
+#: ega/templates/ega/_next_matches.html:21
+msgid "[P]"
+msgstr ""
+
+#: ega/templates/ega/_predictions.html:44
+msgid "En juego"
+msgstr "In progress"
+
+#: ega/templates/ega/_predictions.html:45
+msgid "Pronóstico:"
+msgstr "Prediction:"
+
+#: ega/templates/ega/_predictions.html:51
+msgid "punto"
+msgstr "point"
+
+#: ega/templates/ega/_predictions.html:53
+msgid "Detalles"
+msgstr "Details"
+
+#: ega/templates/ega/_ranking_table.html:9
+msgid "Usuario"
+msgstr "User"
+
+#: ega/templates/ega/_ranking_table.html:15 ega/templates/ega/stats.html:39
+msgid "Puntos"
+msgstr "Points"
+
+#: ega/templates/ega/_team_details.html:14
+#, python-format
+msgid "%(won)s ganado,"
+msgid_plural "%(won)s ganados,"
+msgstr[0] "%(won)s win,"
+msgstr[1] "%(won)s wins,"
+
+#: ega/templates/ega/_team_details.html:15
+#, python-format
+msgid "%(tie)s empatado,"
+msgid_plural "%(tie)s empatados,"
+msgstr[0] "%(tie)s draw,"
+msgstr[1] "%(tie)s draws,"
+
+#: ega/templates/ega/_team_details.html:16
+#, python-format
+msgid "%(lost)s perdido"
+msgid_plural "%(lost)s perdidos"
+msgstr[0] "%(lost)s lost"
+msgstr[1] "%(lost)s losts"
+
+#: ega/templates/ega/_team_details.html:23 ega/templates/ega/home.html:58
+msgid "Últimos resultados"
+msgstr "Latest matches"
+
+#: ega/templates/ega/_trends.html:5
+msgid "Local"
+msgstr "Home"
+
+#: ega/templates/ega/_trends.html:8
+msgid "Empate"
+msgstr "Draw"
+
+#: ega/templates/ega/_trends.html:11
+msgid "Visitante"
+msgstr "Away"
+
+#: ega/templates/ega/_trends.html:16
+msgid "(sin pronósticos)"
+msgstr "(no predictions)"
+
+#: ega/templates/ega/_user_stats.html:15
+msgid "Posición:"
+msgstr "Ranking:"
+
+#: ega/templates/ega/_user_stats.html:17 ega/templates/ega/meta_home.html:89
+#, python-format
+msgid "%(score)s punto"
+msgid_plural "%(score)s puntos"
+msgstr[0] "%(score)s point"
+msgstr[1] "%(score)s points"
+
+#: ega/templates/ega/_user_stats.html:18
+#, python-format
+msgid "%(played)s partido jugado"
+msgid_plural "%(played)s partidos jugados"
+msgstr[0] "%(played)s match played"
+msgstr[1] "%(played)s matches played"
+
+#: ega/templates/ega/_user_stats.html:19
+#, python-format
+msgid "%(winners)s acierto"
+msgid_plural "%(winners)s aciertos"
+msgstr[0] "%(winners)s guess"
+msgstr[1] "%(winners)s guesses"
+
+#: ega/templates/ega/_user_stats.html:20 ega/templates/ega/meta_home.html:92
+#, python-format
+msgid "%(exacts)s exacto"
+msgid_plural "%(exacts)s exactos"
+msgstr[0] "%(exacts)s exact guess"
+msgstr[1] "%(exacts)s exact guesses"
+
+#: ega/templates/ega/history.html:5
+msgid "Historial"
+msgstr "see history"
+
+#: ega/templates/ega/home.html:17
+msgid "Pronosticá el campeón"
+msgstr "Predict the champion"
+
+#: ega/templates/ega/home.html:23
+msgid "Actualizar"
+msgstr "Update"
+
+#: ega/templates/ega/home.html:25
+msgid "Tu candidato actual es"
+msgstr "Your current candidate is"
+
+#: ega/templates/ega/home.html:27
+msgid "Última actualizacion:"
+msgstr "Last update:"
+
+#: ega/templates/ega/home.html:28
+msgid ""
+"Acertando sin modificar tu pronóstico antes del comienzo del campeonato, 8 "
+"puntos; cambiándolo durante la primera fase, 5 puntos; antes de la "
+"semifinal, 2 puntos."
+msgstr ""
+"Guessing without further changes before tournament starts, 8 points; if you "
+"update it during qualification round, 5 points; during final round but "
+"before semifinal, 2 points."
+
+#: ega/templates/ega/home.html:38 ega/templates/ega/home.html:41
+msgid "Noticias"
+msgstr "News"
+
+#: ega/templates/ega/home.html:50 ega/templates/ega/meta_home.html:20
+#: ega/templates/ega/next_matches.html:74
+msgid "Próximos partidos"
+msgstr "Next matches"
+
+#: ega/templates/ega/home.html:53
+msgid "mis pronósticos"
+msgstr "my predictions"
+
+#: ega/templates/ega/home.html:61
+msgid "ver historial"
+msgstr "see history"
+
+#: ega/templates/ega/home.html:68 ega/templates/ega/league_home.html:15
+#: ega/templates/ega/ranking.html:14 templates/base.html:65
+msgid "Posiciones"
+msgstr "Ranking"
+
+#: ega/templates/ega/home.html:71 ega/templates/ega/league_home.html:20
+msgid "ver tabla completa"
+msgstr "see full ranking"
+
+#: ega/templates/ega/home.html:73
+#, python-format
+msgid "ver fecha %(current_round)s"
+msgstr "see %(current_round)s"
+
+#: ega/templates/ega/invite.html:7
+#, python-format
+msgid "Invitar amigos a la liga %(league)s"
+msgstr "Invite friends to the %(league)s league"
+
+#: ega/templates/ega/invite.html:9
+msgid "Invitar amigos a el Ega"
+msgstr "Invite friends to el Ega"
+
+#: ega/templates/ega/invite.html:14
+msgid "Invitá a tus amigos compartiendo un link en"
+msgstr "Invite your friends sharing a link through"
+
+#: ega/templates/ega/invite.html:21
+msgid "o como quieras!"
+msgstr "or wherever you want!"
+
+#: ega/templates/ega/invite.html:23
+#, python-format
+msgid ""
+"Tu link para referir usuarios es este:\n"
+"<a href=\"%(invite_url)s\">%(invite_url)s"
+msgstr ""
+"Your link to refer your friends:\n"
+"<a href=\"%(invite_url)s\">%(invite_url)s"
+
+#: ega/templates/ega/league_home.html:5
+#, python-format
+msgid "Liga %(league)s"
+msgstr "%(league)s league"
+
+#: ega/templates/ega/leagues.html:4 templates/base.html:69
+msgid "Ligas de amigos"
+msgstr "Custom leagues"
+
+#: ega/templates/ega/leagues.html:9
+msgid "Nueva liga"
+msgstr "New league"
+
+#: ega/templates/ega/leagues.html:23
+msgid "Crear liga"
+msgstr "Create a league"
+
+#: ega/templates/ega/leagues.html:28
+#, python-format
+msgid "Tus ligas en %(tournament.name)s"
+msgstr "Your leagues for %(tournament.name)s"
+
+#: ega/templates/ega/leagues.html:32
+msgid "No tenés ligas de amigos... create una ahora!"
+msgstr "You don't have any custom league, create one!"
+
+#: ega/templates/ega/meta_home.html:14 templates/base.html:124
+msgid "Blog"
+msgstr ""
+
+#: ega/templates/ega/meta_home.html:49
+msgid "pasa"
+msgstr "passes"
+
+#: ega/templates/ega/meta_home.html:56
+msgid "No hay partidos por jugar"
+msgstr "No matches to play"
+
+#: ega/templates/ega/meta_home.html:87
+msgid "Performance"
+msgstr ""
+
+#: ega/templates/ega/meta_home.html:90
+#, python-format
+msgid "%(played)s partido jugado,"
+msgid_plural "%(played)s partidos jugados,"
+msgstr[0] "%(played)s match played,"
+msgstr[1] "%(played)s matches played,"
+
+#: ega/templates/ega/meta_home.html:91
+#, python-format
+msgid "%(winners)s acierto,"
+msgid_plural "%(winners)s aciertos,"
+msgstr[0] "%(winners)s guess"
+msgstr[1] "%(winners)s guesses"
+
+#: ega/templates/ega/meta_home.html:101
+msgid "Torneos finalizados"
+msgstr "Finished tournaments"
+
+#: ega/templates/ega/next_matches.html:27
+msgid ""
+"'Cambios anteriores actualizados, pero todavía tenés pronósticos sin guardar'"
+msgstr "'Some changes saved, but you still have unsaved predictions'"
+
+#: ega/templates/ega/next_matches.html:29
+msgid "'Pronósticos actualizados!'"
+msgstr "'Predictions updated!'"
+
+#: ega/templates/ega/next_matches.html:35
+msgid "'Pronósticos inválidos o incompletos'"
+msgstr "'Invalid or incomplete predictions'"
+
+#: ega/templates/ega/next_matches.html:41
+msgid "'Tenés pronósticos sin guardar'"
+msgstr "'You have unsaved predictions'"
+
+#: ega/templates/ega/next_matches.html:78
+msgid "El horario de los partidos está en GMT-3."
+msgstr "Match times are displayed in GMT-3."
+
+#: ega/templates/ega/next_matches.html:134
+msgid "En los penales gana"
+msgstr "In the penalties wins"
+
+#: ega/templates/ega/next_matches.html:160
+msgid "Guardar"
+msgstr "Save"
+
+#: ega/templates/ega/next_matches.html:166
+msgid "No hay partidos para jugar."
+msgstr "No matches to play."
+
+#: ega/templates/ega/profile.html:28
+msgid "Emails"
+msgstr ""
+
+#: ega/templates/ega/profile.html:33
+msgid "verificar"
+msgstr "verify"
+
+#: ega/templates/ega/profile.html:34
+msgid "verificada"
+msgstr "verified"
+
+#: ega/templates/ega/profile.html:35
+msgid "principal"
+msgstr "main"
+
+#: ega/templates/ega/profile.html:41
+msgid "Actualizar perfil"
+msgstr "Update profile"
+
+#: ega/templates/ega/ranking.html:14
+#, python-format
+msgid "Fecha %(round)s"
+msgstr "Round %(round)s"
+
+#: ega/templates/ega/ranking.html:27
+msgid "Total"
+msgstr "Total"
+
+#: ega/templates/ega/ranking.html:31
+#, python-format
+msgid "Fecha %(f)s"
+msgstr "Round %(f)s"
+
+#: ega/templates/ega/ranking.html:39
+msgid "General"
+msgstr "General"
+
+#: ega/templates/ega/stats.html:14 templates/base.html:66
+msgid "Estadísticas"
+msgstr "Stats"
+
+#: ega/templates/ega/stats.html:32
+msgid "J"
+msgstr "P"
+
+#: ega/templates/ega/stats.html:33
+msgid "G"
+msgstr "W"
+
+#: ega/templates/ega/stats.html:34
+msgid "E"
+msgstr "D"
+
+#: ega/templates/ega/stats.html:35
+msgid "P"
+msgstr "L"
+
+#: ega/templates/ega/stats.html:36
+msgid "GF"
+msgstr "GF"
+
+#: ega/templates/ega/stats.html:37
+msgid "GC"
+msgstr "GA"
+
+#: ega/templates/ega/stats.html:38
+msgid "DG"
+msgstr "GD"
+
+#: ega/templates/ega/stats.html:69
+msgid "Top 5 - Más repetidos"
+msgstr "Top 5 - More occurrences"
+
+#: ega/templates/ega/stats.html:73
+msgid "Resultados"
+msgstr "Scores"
+
+#: ega/templates/ega/stats.html:74
+msgid "Pronósticos"
+msgstr "Predictions"
+
+#: ega/templates/ega/stats.html:94
+msgid "Sin derrotas todavía"
+msgstr "No loses yet"
+
+#: ega/templates/ega/stats.html:97
+msgid "No quedan invictos en el torneo"
+msgstr "No unbeaten teams in the tournament"
+
+#: ega/templates/ega/stats.html:100
+msgid "Sin empates todavía"
+msgstr "No draws yet"
+
+#: ega/templates/ega/stats.html:104
+msgid "Sin victorias todavía"
+msgstr "No wins yet"
+
+#: ega/templates/socialaccount/authentication_error.html:5
+msgid "Social Network Login Failure"
+msgstr ""
+
+#: ega/templates/socialaccount/authentication_error.html:8
+msgid ""
+"An error occurred while attempting to login via your social network account."
+msgstr ""
+
+#: ega/templates/socialaccount/connections.html:5
+msgid "Account Connections"
+msgstr ""
+
+#: ega/templates/socialaccount/connections.html:10
+msgid ""
+"\n"
+"You can sign in to your account using any of the following third party "
+"accounts:\n"
+msgstr ""
+
+#: ega/templates/socialaccount/connections.html:43
+msgid ""
+"You currently have no social network accounts connected to this account."
+msgstr ""
+
+#: ega/templates/socialaccount/connections.html:46
+msgid "Add a 3rd Party Account"
+msgstr ""
+
+#: ega/templates/socialaccount/login_cancelled.html:5
+msgid "Login Cancelled"
+msgstr ""
+
+#: ega/templates/socialaccount/login_cancelled.html:11
+#, python-format
+msgid ""
+"You decided to cancel logging in to our site using one of your existing "
+"accounts. If this was a mistake, please proceed to <a href=\"%(login_url)s"
+"\">sign in</a>."
+msgstr ""
+
+#: ega/templates/socialaccount/signup.html:9
+#, python-format
+msgid ""
+"Estás por loguearte en %(site_name)s usando tu cuenta de\n"
+"%(provider_name)s, lo único que falta es que por favor\n"
+"completes los siguientes datos:"
+msgstr ""
+"You are about to log-in to %(site_name)s using your \n"
+"%(provider_name)s account, but first we need the following\n"
+"information:"
+
+#: ega/views.py:60
+msgid "Cerraste sesión exitosamente!"
+msgstr "Succesfully signed out."
+
+#: ega/views.py:158
+#, python-format
+msgid "Pronóstico de campeón actualizado: %s."
+msgstr "Champion prediction was updated: %s."
+
+#: ega/views.py:161
+msgid "Equipo no válido"
+msgstr "Invalid team"
+
+#: ega/views.py:173
+msgid "Perfil actualizado."
+msgstr "Profile was updated."
+
+#: ega/views.py:199
+#, python-format
+msgid "%s amigos invitados!"
+msgstr "%s friends invited"
+
+#: ega/views.py:201
+msgid "1 amigo invitado!"
+msgstr "1 friend invited"
+
+#: ega/views.py:208
+#, python-format
+msgid ", jugando en mi liga de amigos %s"
+msgstr ", playing in my %s league"
+
+#: ega/views.py:231
+#, python-format
+msgid "Vos sos el dueño del link %s!"
+msgstr "You are the owner of the %s link!"
+
+#: ega/views.py:232
+msgid "No podés unirte con un link de referencia propio."
+msgstr "You cannot join with your own link."
+
+#: ega/views.py:239
+msgid "Te uniste a el Ega! "
+msgstr "You joined el Ega! "
+
+#: ega/views.py:241
+msgid "Hola de nuevo! "
+msgstr "Hi again!"
+
+#: ega/views.py:249
+#, python-format
+msgid "Bienvenido a la liga %s."
+msgstr "Welcome to the %s league."
+
+#: ega/views.py:251
+#, python-format
+msgid "Ya sos miembro de la liga %s."
+msgstr "You are already member of %s league."
+
+#: ega/views.py:329
+msgid "Pronósticos actualizados."
+msgstr "Predictions updated."
+
+#: ega/views.py:332
+#, python-format
+msgid "%s - %s: el partido expiró, pronóstico NO actualizado."
+msgstr "%s - %s: match expired, prediction was not updated."
+
+#: ega/views.py:462
+#, python-format
+msgid "Email de verificación enviado a %s"
+msgstr "Verification email sent to %s"
+
+#: templates/404.html:13
+msgid "Tiraste la pelota afuera... acá no está lo que estás buscando."
+msgstr "Ball out... it isn't here what you are looking for."
+
+#: templates/404.html:14 templates/500.html:14
+msgid "Volvé a sacar del medio"
+msgstr "Back to kick-off"
+
+#: templates/500.html:13
+msgid ""
+"Ooops... Quedamos en offside. Culpa nuestra, estamos revisando el problema."
+msgstr "Ooops... We are in offside. Our fault, we are looking at the issue."
+
+#: templates/base.html:63
+msgid "Partidos"
+msgstr "Matches"
+
+#: templates/base.html:78
+msgid "Ver y crear ligas"
+msgstr "Manage your leagues"
+
+#: templates/base.html:87
+msgid "Perfil"
+msgstr "Profile"
+
+#: templates/base.html:88
+msgid "Sign Out"
+msgstr ""
+
+#: templates/base.html:125
+msgid "Reglas"
+msgstr "Rules"
+
+#: templates/base.html:126
+msgid "FAQ"
+msgstr ""

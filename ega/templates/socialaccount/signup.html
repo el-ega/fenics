@@ -6,9 +6,9 @@
 
 {% block content %}
 
-<p>Estás por loguearte en {{ site.name }} usando tu cuenta de
-{{ account.get_provider.name }}, lo único que falta es que por favor
-completes los siguientes datos:</p>
+<p>{% blocktrans with provider_name=account.get_provider.name site_name=site.name %}Estás por loguearte en {{ site_name }} usando tu cuenta de
+{{ provider_name }}, lo único que falta es que por favor
+completes los siguientes datos:{% endblocktrans %}</p>
 
 <form id="signup_form" method="POST" action="{% url 'socialaccount_signup' %}">
     {% csrf_token %}

@@ -13,6 +13,7 @@ from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils.timezone import now
+from django.utils.translation import LANGUAGE_SESSION_KEY, gettext_lazy as _
 from django.views.decorators.http import require_GET, require_http_methods
 
 from ega.constants import (
@@ -56,7 +57,13 @@ def build_invite_url(request, slug, key=None, league_slug=None):
 
 def logout(request):
     auth.logout(request)
-    messages.success(request, 'Cerraste sesión exitosamente!')
+    messages.success(request, _('Cerraste sesión exitosamente!'))
+    return HttpResponseRedirect(reverse('meta-home'))
+
+
+def switch_language(request, lang):
+    if lang in ('es', 'en'):
+        request.session[LANGUAGE_SESSION_KEY] = lang
     return HttpResponseRedirect(reverse('meta-home'))
 
 
@@ -82,6 +89,10 @@ def _next_matches(user):
 
 @login_required
 def meta_home(request):
+    lang_code = request.session.get(LANGUAGE_SESSION_KEY)
+    if not lang_code:
+        # prefer 'es' if nothing was set
+        request.session[LANGUAGE_SESSION_KEY] = 'es'
     try:
         t = Tournament.objects.get(published=True, finished=False)
         return HttpResponseRedirect(reverse('ega-home', args=[t.slug]))
@@ -118,7 +129,7 @@ def home(request, slug):
 
     champion_form = None
     if slug == 'rusia-2018':
-        champion, _ = ChampionPrediction.objects.get_or_create(
+        champion, created = ChampionPrediction.objects.get_or_create(
             user=request.user, tournament=tournament)
         champion_form = ChampionPredictionForm(instance=champion)
 
@@ -135,7 +146,7 @@ def home(request, slug):
 def update_champion_prediction(request, slug):
     """Update user prediction for a tournament champion."""
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
-    prediction, _ = ChampionPrediction.objects.get_or_create(
+    prediction, created = ChampionPrediction.objects.get_or_create(
         user=request.user, tournament=tournament)
 
     form = ChampionPredictionForm(instance=prediction, data=request.POST)
@@ -144,10 +155,10 @@ def update_champion_prediction(request, slug):
         team = form.cleaned_data['team']
         team_name = team.name if team is not None else '-'
         messages.success(
-            request, 'Pronóstico de campeón actualizado: %s.' % team_name)
+            request, _('Pronóstico de campeón actualizado: %s.') % team_name)
         return HttpResponseRedirect(reverse('ega-home', args=[slug]))
 
-    messages.error(request, 'Equipo no válido')
+    messages.error(request, _('Equipo no válido'))
     return HttpResponseRedirect(reverse('ega-home', args=[slug]))
 
 
@@ -159,7 +170,7 @@ def profile(request):
             instance=request.user, data=request.POST, files=request.FILES)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Perfil actualizado.')
+            messages.success(request, _('Perfil actualizado.'))
             return HttpResponseRedirect(reverse('profile'))
     else:
         form = EgaUserForm(instance=request.user)
@@ -185,21 +196,21 @@ def invite_friends(request, slug, league_slug=None):
         if form.is_valid():
             emails = form.invite(sender=request.user)
             if emails > 1:
-                msg = '%s amigos invitados!' % emails
+                msg = _('%s amigos invitados!') % emails
             else:
-                msg = '1 amigo invitado!'
+                msg = _('1 amigo invitado!')
             messages.success(request, msg)
             return HttpResponseRedirect(reverse('ega-home', args=[slug]))
     else:
-        subject = INVITE_SUBJECT
+        subject = _(INVITE_SUBJECT)
         extra_text = ''
         if league:
-            subject += ', jugando en mi liga de amigos %s' % league.name
+            subject += _(', jugando en mi liga de amigos %s') % league.name
             extra_text = INVITE_LEAGUE % dict(league_name=league.name)
 
         initial = dict(
             subject=subject,
-            body=INVITE_BODY % dict(
+            body=_(INVITE_BODY) % dict(
                 extra_text=extra_text, url=invite_url,
                 inviter=request.user.visible_name()),
         )
@@ -217,17 +228,17 @@ def friend_join(request, key, slug, league_slug=None):
     if inviting_user == request.user:
         invite_url = build_invite_url(
             request, slug=slug, league_slug=league_slug)
-        msg1 = 'Vos sos el dueño del link %s!' % invite_url
-        msg2 = 'No podés unirte con un link de referencia propio.'
+        msg1 = _('Vos sos el dueño del link %s!') % invite_url
+        msg2 = _('No podés unirte con un link de referencia propio.')
         messages.info(request, msg1)
         messages.warning(request, msg2)
         return HttpResponseRedirect(reverse('ega-home', args=[slug]))
 
     created = inviting_user.record_referral(request.user)
     if created:
-        msg = 'Te uniste a el Ega! '
+        msg = _('Te uniste a el Ega! ')
     else:
-        msg = 'Hola de nuevo! '
+        msg = _('Hola de nuevo! ')
 
     if league_slug:
         league = get_object_or_404(
@@ -235,9 +246,9 @@ def friend_join(request, key, slug, league_slug=None):
         member, created = LeagueMember.objects.get_or_create(
             user=request.user, league=league)
         if created:
-            msg += 'Bienvenido a la liga %s.' % league
+            msg += _('Bienvenido a la liga %s.') % league
         else:
-            msg += 'Ya sos miembro de la liga %s.' % league
+            msg += _('Ya sos miembro de la liga %s.') % league
 
     messages.success(request, msg)
     # switch to the tournament this user was invited to
@@ -308,17 +319,17 @@ def next_matches(request, slug):
     PredictionFormSet = modelformset_factory(
         Prediction, form=PredictionForm, extra=0)
     if request.method == 'POST':
-        formset = PredictionFormSet(request.POST)
+        formset = PredictionFormSet(request.POST, queryset=predictions)
         if formset.is_valid():
             formset.save()
 
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}))
 
-            messages.success(request, 'Pronósticos actualizados.')
+            messages.success(request, _('Pronósticos actualizados.'))
             expired_matches = [f.instance.match for f in formset if f.expired]
             for m in expired_matches:
-                msg = "%s - %s: el partido expiró, pronóstico NO actualizado."
+                msg = _("%s - %s: el partido expiró, pronóstico NO actualizado.")
                 messages.error(request, msg % (m.home.name, m.away.name))
 
             return HttpResponseRedirect(reverse('ega-home', args=[slug]))
@@ -448,5 +459,5 @@ def verify_email(request, email):
     email_address = get_object_or_404(
         EmailAddress, user=request.user, email=email)
     email_address.send_confirmation(request)
-    messages.success(request, 'Email de verificación enviado a %s' % email)
+    messages.success(request, _('Email de verificación enviado a %s') % email)
     return HttpResponseRedirect(reverse('profile'))

@@ -3,6 +3,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
+from django.utils.translation import gettext_lazy as _
 from nocaptcha_recaptcha.fields import NoReCaptchaField
 
 from ega.constants import EMAILS_PLACEHOLDER
@@ -134,7 +135,7 @@ class LeagueForm(forms.ModelForm):
 
     name = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
-        label='Nombre',
+        label=_('Nombre'),
     )
 
     class Meta:

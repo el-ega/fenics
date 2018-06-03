@@ -60,13 +60,13 @@
                         {% endfor %}
                         {% if tournament %}
                             {% if not tournament.finished %}
-                            <li><a href="{% url 'ega-next-matches' tournament.slug %}">Partidos</a></li>
+                            <li><a href="{% url 'ega-next-matches' tournament.slug %}">{% trans "Partidos" %}</a></li>
                             {% endif %}
-                            <li><a href="{% url 'ega-ranking' tournament.slug %}">Posiciones</a></li>
+                            <li><a href="{% url 'ega-ranking' tournament.slug %}">{% trans "Posiciones" %}</a></li>
                             <li><a href="{% url 'ega-stats' tournament.slug %}">{% trans "Estadísticas" %}</a></li>
                             {% if not tournament.finished %}
                             <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Ligas de amigos <b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans "Ligas de amigos" %} <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 {% get_friends_leagues user tournament.slug as leagues %}
                                 {% for league in leagues %}
@@ -75,7 +75,7 @@
                                 {% if leagues %}
                                     <li class="divider"></li>
                                 {% endif %}
-                                <li><a href="{% url 'ega-leagues' tournament.slug %}">Ver y crear ligas</a></li>
+                                <li><a href="{% url 'ega-leagues' tournament.slug %}">{% trans "Ver y crear ligas" %}</a></li>
                             </ul>
                             </li>
                             {% endif %}
@@ -84,7 +84,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <span class="glyphicon glyphicon-user"></span> {{ user }} <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{% url 'profile' %}">Perfil</a></li>
+                        <li><a href="{% url 'profile' %}">{% trans "Perfil" %}</a></li>
                         <li><a href="{% url 'logout' %}">{% trans "Sign Out" %}</a></li>
                     </ul>
                     </li>
@@ -124,6 +124,9 @@
                 <a href="http://blog.el-ega.com.ar">{% trans "Blog" %}</a> |
                 <a href="/rules/">{% trans "Reglas" %}</a> |
                 <a href="/faq/">{% trans "FAQ" %}</a> |
+                {% get_current_language as LANGUAGE_CODE %}
+                {% if LANGUAGE_CODE == 'es' %}<a href="{% url 'switch-language' 'en' %}">In English</a> |
+                {% else %}<a href="{% url 'switch-language' 'es' %}">En Español</a> |{% endif %}
                 &copy 2004-{% now "Y" %} el Ega </strong></small>
             </div>
             {% endblock %}

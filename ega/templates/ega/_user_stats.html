@@ -1,4 +1,5 @@
 {% load humanize %}
+{% load i18n %}
 {% load staticfiles %}
 
 <div class="media well user-stats">
@@ -11,10 +12,11 @@
     </span>
     <div class="media-body">
         <h4 class="media-heading">{{ user.username }}</h4>
-        {% if user_position %}<strong>Posición: {{ user_position|ordinal }}</strong><br/>{% endif %}
-        <strong>{{ stats.score }} punto{{ stats.score|pluralize }}</strong><br/>
-        {{ stats.count }} partido{{ stats.count|pluralize }} jugado{{ stats.count|pluralize }}<br/>
-        {{ stats.winners }} acierto{{ stats.winners|pluralize }}<br/>
-        {{ stats.exacts }} exacto{{ stats.exacts|pluralize }}
+        {% if user_position %}<strong>{% trans 'Posición:' %} {{ user_position|ordinal }}</strong><br/>{% endif %}
+        <strong>
+        {% blocktrans count score=stats.score %}{{ score }} punto{% plural %}{{ score }} puntos{% endblocktrans %}</strong><br/>
+        {% blocktrans count played=stats.count %}{{ played }} partido jugado{% plural %}{{ played }} partidos jugados{% endblocktrans %}<br/>
+        {% blocktrans count winners=stats.winners %}{{ winners }} acierto{% plural %}{{ winners }} aciertos{% endblocktrans %}<br/>
+        {% blocktrans count exacts=stats.exacts %}{{ exacts }} exacto{% plural %}{{ exacts }} exactos{% endblocktrans %}
     </div>
 </div>

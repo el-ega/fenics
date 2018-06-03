@@ -21,7 +21,7 @@ pip-log.txt
 .tox
 
 # Translations
-*.mo
+#*.mo
 
 # Env
 .env

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load staticfiles %}
 
 {% block extra-head %}
@@ -10,7 +11,7 @@
 </script>
 {% endblock %}
 
-{% block content-title %}Posiciones{% if round %}<small> | Fecha {{ round }}</small>{% endif %}{% endblock %}
+{% block content-title %}{% trans 'Posiciones' %}{% if round %}<small> | {% blocktrans %}Fecha {{ round }}{% endblocktrans %}</small>{% endif %}{% endblock %}
 
 {% block content %}
 
@@ -23,11 +24,11 @@
 <div class="row">
     <div class="col-md-8">
         <select name="round" class="pull-right">
-            <option value="{{ base_url }}">Total</option>
+            <option value="{{ base_url }}">{% trans 'Total' %}</option>
             {% for f in choices %}
                 <option value="{{ base_url }}f/{{ f }}"
                         {% ifequal round f %}selected="selected"{% endifequal %}>
-                    Fecha {{ f }}</option>
+                    {% blocktrans %}Fecha {{ f }}{% endblocktrans %}</option>
             {% endfor %}
         </select>
         <div class="clearfix visible-xs"></div>
@@ -35,7 +36,7 @@
         <ul class="nav nav-tabs">
         <li class="{% if not league %}active{% endif %}">
             <a href="{% url 'ega-ranking' tournament.slug %}{% if round %}f/{{ round }}{% endif %}">
-                General</a></li>
+                {% trans 'General' %}</a></li>
         {% for l in leagues %}
             <li class="{% if league == l %}active{% endif %}">
                 <a href="{% url 'ega-league-ranking' tournament.slug l.slug %}{% if round %}f/{{ round }}{% endif %}">{{ l.name }}</a>

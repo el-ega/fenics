@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load ega_tags %}
 {% load news_tags %}
 {% load staticfiles %}
@@ -10,13 +11,13 @@
 <div class="row">
     <div class="col-md-4">
         <div class="hidden-xs">
-            <h3 class="title">Blog <small><a href="http://blog.el-ega.com.ar">blog.el-ega</a></small></h3>
+            <h3 class="title">{% trans 'Blog' %} <small><a href="http://blog.el-ega.com.ar">blog.el-ega</a></small></h3>
             {% latest_news source='ega' latest=3 %}
         </div>
     </div>
 
     <div class="col-md-8">
-        <h3 class="title">Próximos partidos</h3>
+        <h3 class="title">{% trans 'Próximos partidos' %}</h3>
 
         {% regroup next_matches by match.tournament as match_list %}
 
@@ -45,14 +46,14 @@
                 {% if row.prediction %}<span class="text-success">
                         <span class="glyphicon glyphicon-check"></span>
                         {% with prediction=row.prediction %}
-                        ({{ prediction.home_goals }}-{{ prediction.away_goals }}{% if prediction.penalties_home %}, pasa {{ row.match.home.code }}{% elif prediction.penalties_away %}, pasa {{ row.match.away.code }}{% endif %})
+                        ({{ prediction.home_goals }}-{{ prediction.away_goals }}{% if prediction.penalties_home %}, {% trans 'pasa' %} {{ row.match.home.code }}{% elif prediction.penalties_away %}, {% trans 'pasa'%} {{ row.match.away.code }}{% endif %})
                         {% endwith %}
                         </span>
                 {% endif %}
             </div>
             </div>
             {% empty %}
-            <p class="text-muted">No hay partidos por jugar</p>
+            <p class="text-muted">{% trans 'No hay partidos por jugar' %}</p>
             {% endfor %}
 
             </div>
@@ -83,12 +84,12 @@
 
                 {% get_user_stats request.user t as stats %}
                 {% if stats.count > 0 %}
-                <dt>Performance</dt>
+                <dt>{% trans 'Performance' %}</dt>
                 <dd>
-                {{ stats.score }} punto{{ stats.score|pluralize }}
-                ({{ stats.count }} partido{{ stats.count|pluralize }} jugado{{ stats.count|pluralize }},
-                {{ stats.winners }} acierto{{ stats.winners|pluralize }},
-                {{ stats.exacts }} exacto{{ stats.exacts|pluralize }})
+                {% blocktrans count score=stats.score %}{{ score }} punto{% plural %}{{ score }} puntos{% endblocktrans %}
+                {% blocktrans count played=stats.count %}{{ played }} partido jugado,{% plural %}{{ played }} partidos jugados,{% endblocktrans %}
+                {% blocktrans count winners=stats.winners %}{{ winners }} acierto,{% plural %}{{ winners }} aciertos,{% endblocktrans %}
+                {% blocktrans count exacts=stats.exacts %}{{ exacts }} exacto{% plural %}{{ exacts }} exactos{% endblocktrans %}
                 </dd>
                 {% endif %}
 
@@ -97,7 +98,7 @@
 
         <hr/>
 
-        <h5>Torneos finalizados</h5>
+        <h5>{% trans 'Torneos finalizados' %}</h5>
         <p class="small">
         {% for t in past_tournaments %}
             <a href="{% url 'ega-home' t.slug %}">{{ t.name }}</a>{% if not forloop.last %} |{% endif %}

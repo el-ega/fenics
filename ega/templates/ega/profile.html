@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load staticfiles %}
 
 {% block content-title %}{% endblock %}
@@ -24,20 +25,20 @@
                 {% include 'ega/_field_snippet.html' %}
             {% endfor %}
 
-            <label>Emails</label>
+            <label>{% trans 'Emails' %}</label>
             <ul class="list-unstyled">
             {% for email in request.user.emailaddress_set.all %}
                 <li>
                     {{ email.email }}
-                    {% if not email.verified %}<a href="{% url 'verify-email' email.email %}">verificar</a>
-                    {% else %}<span class="badge">verificada</span>{% endif %}
-                    {% if email.primary %}<span class="badge">principal</span>{% endif %}
+                    {% if not email.verified %}<a href="{% url 'verify-email' email.email %}">{% trans 'verificar' %}</a>
+                    {% else %}<span class="badge">{% trans 'verificada' %}</span>{% endif %}
+                    {% if email.primary %}<span class="badge">{% trans 'principal' %}</span>{% endif %}
                 </li>
             {% endfor%}
             </ul>
 
             <div>
-                <button name="update" type="submit" class="btn btn-primary">Actualizar perfil</button>
+                <button name="update" type="submit" class="btn btn-primary">{% trans 'Actualizar perfil' %}</button>
             </div>
         </form>
     </div>
