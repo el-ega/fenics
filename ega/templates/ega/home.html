@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load ega_tags %}
 {% load news_tags %}
 {% load staticfiles %}
@@ -13,18 +14,18 @@
 
             <div class="">
                 {% if champion_form %}
-                <h3 class="title">Pronosticá el campeón</h3>
+                <h3 class="title">{% trans 'Pronosticá el campeón' %}</h3>
 
                 <div>
                     <form class="form-inline" method="POST" action={% url 'ega-update-champion' tournament.slug %}>
                     {% csrf_token %}
                     <div class="form-group">{{ champion_form.team }}</div>
-                    <button name="save" type="submit" class="btn btn-primary">Actualizar</button>
+                    <button name="save" type="submit" class="btn btn-primary">{% trans 'Actualizar' %}</button>
                     {% if champion_form.instance.team %}
-                    <br/><small class="text-muted">Tu candidato actual es {{ champion_form.instance.team.name }}</small>
+                    <br/><small class="text-muted">{% trans 'Tu candidato actual es' %} {{ champion_form.instance.team.name }}</small>
                     {% endif %}
-                    <br/><small class="text-muted">Última actualizacion: {{ champion_form.instance.last_updated }}</small>
-                    <br/><small>Acertando sin modificar tu pronóstico antes del comienzo del campeonato, 8 puntos; cambiándolo durante la primera fase, 5 puntos; antes de la semifinal, 2 puntos.</small>
+                    <br/><small class="text-muted">{% trans 'Última actualizacion:' %} {{ champion_form.instance.last_updated }}</small>
+                    <br/><small>{% trans 'Acertando sin modificar tu pronóstico antes del comienzo del campeonato, 8 puntos; cambiándolo durante la primera fase, 5 puntos; antes de la semifinal, 2 puntos.' %}</small>
                     </form>
                 </div>
 
@@ -34,10 +35,10 @@
                 </div>
 
                 {% elif tournament.slug == 'uruguay-clausura-2017' %}
-                <h3 class="title">Noticias <small><a href="http://ovaciondigital.com.uy">Ovación</a></small></h3>
+                <h3 class="title">{% trans 'Noticias' %} <small><a href="http://ovaciondigital.com.uy">Ovación</a></small></h3>
                 {% latest_news source='ovacion' latest=3 %}
                 {% else %}
-                <h3 class="title">Noticias <small><a href="http://ole.com.ar">Olé</a></small></h3>
+                <h3 class="title">{% trans 'Noticias' %} <small><a href="http://ole.com.ar">Olé</a></small></h3>
                 {% latest_news source='ole' latest=3 %}
                 {% endif %}
             </div>
@@ -46,30 +47,30 @@
         <div class="col-md-4">
             {% if matches %}
                 <h3 class="title">
-                    Próximos partidos
+                    {% trans 'Próximos partidos' %}
                 </h3>
                 {% include 'ega/_next_matches.html' %}
-                <p class="title-main-action"><strong><a href="{% url 'ega-next-matches' tournament.slug %}">{% if pending > 0 %}completar {% endif %}mis pronósticos <span class="glyphicon glyphicon-log-in"></span></a></strong></p>
+                <p class="title-main-action"><strong><a href="{% url 'ega-next-matches' tournament.slug %}">{% trans 'mis pronósticos' %} <span class="glyphicon glyphicon-log-in"></span></a></strong></p>
             {% endif %}
 
             {% if history %}
                 <h3 class="title history-section">
-                    Últimos resultados
+                    {% trans 'Últimos resultados' %}
                 </h3>
                 {% include 'ega/_predictions.html' with use_code=1 %}
-                <p class="title-action"><strong><a href="{% url 'ega-history' tournament.slug %}">ver historial</a></strong></p>
+                <p class="title-action"><strong><a href="{% url 'ega-history' tournament.slug %}">{% trans 'ver historial' %}</a></strong></p>
             {% endif %}
         </div>
 
         <div class="col-md-4">
             {% if top_ranking %}
                 <h3 class="title">
-                    Posiciones
+                    {% trans 'Posiciones' %}
                 </h3>
                 {% include 'ega/_ranking_table.html' with ranking=top_ranking delta=1 %}
-                <p class="title-action"><strong><a href="{% url 'ega-ranking' tournament.slug %}">ver tabla completa</a>
+                <p class="title-action"><strong><a href="{% url 'ega-ranking' tournament.slug %}">{% trans 'ver tabla completa' %}</a>
                 {% if current_round %}|
-                <a href="{% url 'ega-ranking' tournament.slug current_round %}">ver fecha {{ current_round }}</a></strong>{% endif %}</p>
+                <a href="{% url 'ega-ranking' tournament.slug current_round %}">{% blocktrans %}ver fecha {{ current_round }}{% endblocktrans %}</a></strong>{% endif %}</p>
             {% endif %}
         </div>
 

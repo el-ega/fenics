@@ -24,21 +24,21 @@
 
     function saved_changes() {
         if (changed) {
-            $('#changes-update').text('Cambios anteriores actualizados, pero todavía tenés pronósticos sin guardar');
+            $('#changes-update').text({% trans "'Cambios anteriores actualizados, pero todavía tenés pronósticos sin guardar'" %});
         } else {
-            $('#changes-update').text('Pronósticos actualizados!');
+            $('#changes-update').text({% trans "'Pronósticos actualizados!'" %});
         }
         $('#changes-update').removeClass('text-warning text-danger').addClass('text-success');
     }
 
     function error_changes() {
-        $('#changes-update').text('Pronósticos inválidos o incompletos');
+        $('#changes-update').text({% trans "'Pronósticos inválidos o incompletos'" %});
         $('#changes-update').removeClass('text-warning text-success').addClass('text-danger');
     }
 
     function pending_changes() {
         changed = true;
-        $('#changes-update').text('Tenés pronósticos sin guardar');
+        $('#changes-update').text({% trans "'Tenés pronósticos sin guardar'" %});
         $('#changes-update').removeClass('text-success text-danger').addClass('text-warning');
     }
 
@@ -71,9 +71,11 @@
 </script>
 {% endblock %}
 
-{% block content-title %}Próximos partidos{% endblock %}
+{% block content-title %}{% trans 'Próximos partidos' %}{% endblock %}
 
 {% block content %}
+
+<p class="small">{% trans 'El horario de los partidos está en GMT-3.' %}</p>
 
 {% if formset.forms %}
 
@@ -129,7 +131,7 @@
                             {% with penalties=form.penalties %}
                             <div class="row">
                                 <div class="col-md-12 penalties-input">
-                                <strong id="{{ form.prefix }}-help" class="small">En los penales gana</strong><br/>
+                                <strong id="{{ form.prefix }}-help" class="small">{% trans 'En los penales gana' %}</strong><br/>
                                 <div class="btn-group btn-group-xs" data-toggle="buttons">
                                     <label id="{{ penalties.0.id_for_label }}" class="btn btn-success {% if penalties.0.data.selected %}active{% endif %}">
                                         <input type="radio" value="{{ penalties.0.data.value }}" name="{{ penalties.0.data.name }}" {% if penalties.0.data.selected %}checked{% endif %}>{{ penalties.0.choice_label }}
@@ -155,13 +157,13 @@
 
         <div class="navbar-matches" data-spy="affix" data-offset-top="197">
             <strong id="changes-update"></strong><br/>
-            <button name="save" type="submit" class="btn btn-primary">Guardar</button>
+            <button name="save" type="submit" class="btn btn-primary">{% trans 'Guardar' %}</button>
         </div>
 
     </form>
 
 {% else %}
-    <p>No hay partidos para jugar.</p>
+    <p>{% trans 'No hay partidos para jugar.' %}</p>
 {% endif %}
 
 {% endblock %}

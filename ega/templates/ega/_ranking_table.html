@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load staticfiles %}
 
 <table class="table table-striped table-hover ranking">
@@ -5,13 +6,13 @@
         <tr>
             <th>#</th>
             <th></th>
-            <th>Usuario</th>
+            <th>{% trans 'Usuario' %}</th>
             {% if score_details %}
             <th class="text-right">x1</th>
             <th class="text-right">x3</th>
             <th class="text-right"><img src="{% static 'images/star.jpg' %}" style="max-width:15px"></th>
             {% endif %}
-            <th class="text-right score">Puntos</th>
+            <th class="text-right score">{% trans 'Puntos' %}</th>
         </tr>
     </thead>
     <tbody>

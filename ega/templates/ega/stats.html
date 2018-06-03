@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load staticfiles %}
 
 {% block extra-head %}
@@ -10,7 +11,7 @@
 </script>
 {% endblock %}
 
-{% block content-title %}Estadísticas{% endblock %}
+{% block content-title %}{% trans 'Estadísticas' %}{% endblock %}
 
 {% block content %}
 
@@ -28,14 +29,14 @@
                     <th>#</th>
                     <th></th>
                     <th></th>
-                    <th class="text-right hidden-xs">J</th>
-                    <th class="text-right hidden-xs">G</th>
-                    <th class="text-right hidden-xs">E</th>
-                    <th class="text-right hidden-xs">P</th>
-                    <th class="text-right hidden-xs">GF</th>
-                    <th class="text-right hidden-xs">GC</th>
-                    <th class="text-right hidden-xs">DG</th>
-                    <th class="text-right score">Puntos</th>
+                    <th class="text-right hidden-xs">{% trans 'J' %}</th>
+                    <th class="text-right hidden-xs">{% trans 'G' %}</th>
+                    <th class="text-right hidden-xs">{% trans 'E' %}</th>
+                    <th class="text-right hidden-xs">{% trans 'P' %}</th>
+                    <th class="text-right hidden-xs">{% trans 'GF' %}</th>
+                    <th class="text-right hidden-xs">{% trans 'GC' %}</th>
+                    <th class="text-right hidden-xs">{% trans 'DG' %}</th>
+                    <th class="text-right score">{% trans 'Puntos' %}</th>
                 </tr>
             </thead>
             <tbody>
@@ -65,12 +66,12 @@
     </div>
 
     <div class="col-md-4">
-        <h4 class="title">Top 5 - Más repetidos</h4>
+        <h4 class="title">{% trans 'Top 5 - Más repetidos' %}</h4>
         <table class="table table-striped table-hover text-center">
             <thead>
                 <tr>
-                    <th>Resultados</th>
-                    <th>Pronósticos</th>
+                    <th>{% trans 'Resultados' %}</th>
+                    <th>{% trans 'Pronósticos' %}</th>
                 </tr>
             </thead>
             <tbody>
@@ -90,17 +91,17 @@
         <div>
             <dl>
                 {% if no_loses %}
-                <dt>No perdi{{ no_loses|pluralize:'ó,eron' }} todavía</dt>
+                <dt>{% blocktrans %}Sin derrotas todavía{% endblocktrans %}</dt>
                 <dd>{{ no_loses|join:', '}}</dd>
                 {% else %}
-                <dt>No quedan invictos en el torneo</dt><dd></dd>
+                <dt>{% trans 'No quedan invictos en el torneo' %}</dt><dd></dd>
                 {% endif %}
                 {% if no_ties %}
-                <dt>No empat{{ no_ties|pluralize:'ó,aron' }} todavía</dt>
+                <dt>{% blocktrans %}Sin empates todavía{% endblocktrans %}</dt>
                 <dd>{{ no_ties|join:', '}}</dd>
                 {% endif %}
                 {% if no_wins %}
-                <dt>No gan{{ no_wins|pluralize:'ó,aron' }} todavía</dt>
+                <dt>{% blocktrans %}Sin victorias todavía{% endblocktrans %}</dt>
                 <dd>{{ no_wins|join:', '}}</dd>
                 {% endif %}
             </dl>

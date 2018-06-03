@@ -1,11 +1,12 @@
 {% load humanize %}
+{% load i18n %}
 
 <div class="panel panel-default">
     <div class="panel-heading">
       <h3 class="panel-title"><strong>{{ league.name }}</strong>
         {% if league.owner == request.user %}
         <div  class="pull-right">
-        <a href="{% url 'ega-invite-league' tournament.slug league.slug %}">Invitá más amigos a esta liga</a>
+        <a href="{% url 'ega-invite-league' tournament.slug league.slug %}">{% trans 'Invitá más amigos a esta liga' %}</a>
         </div>
         {% endif %}
       </h3>
@@ -18,8 +19,8 @@
         {% for m in league.leaguemember_set.all %}
         <li class="list-group-item">
             {{ m.user.visible_name }}
-            {% ifequal m.user user %}<span class="badge">vos</span>{% endifequal %}
-            {% if m.is_owner %}<span class="badge">creador</span>{% endif %}
+            {% ifequal m.user user %}<span class="badge">{% trans 'vos' %}</span>{% endifequal %}
+            {% if m.is_owner %}<span class="badge">{% trans 'creador' %}</span>{% endif %}
         </li>
         {% endfor %}
     </ul>

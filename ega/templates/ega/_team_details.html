@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load ega_tags %}
 <div class="panel panel-info">
     <div class="panel-heading">
@@ -10,15 +11,16 @@
     <div class="panel-body {{ condition }}-stats">
         {% if stats %}
         <p><small>{# <strong>1ero</strong> | #}
-        {{ stats.won }} ganado{{ stats.won|pluralize }},
-        {{ stats.tie }} empatado{{ stats.tie|pluralize }},
-        {{ stats.lost }} perdido{{ stats.lost|pluralize }}</small></p>
+        {% blocktrans count won=stats.won %}{{ won }} ganado,{% plural %}{{ won }} ganados,{% endblocktrans %}
+        {% blocktrans count tie=stats.tie %}{{ tie }} empatado,{% plural %}{{ tie }} empatados,{% endblocktrans %}
+        {% blocktrans count lost=stats.lost %}{{ lost }} perdido{% plural %}{{ lost }} perdidos{% endblocktrans %}
+        </small></p>
         {% endif %}
         {% get_latest_matches team tournament as latest_matches %}
         {% if latest_matches %}
         <small>
         <table class="table table-condensed latest-results">
-            <thead><th colspan="4">Últimos resultados</th></thead>
+            <thead><th colspan="4">{% trans 'Últimos resultados' %}</th></thead>
             <tbody>
             {% for m in latest_matches|slice:':3' %}
             <tr class="text-center">

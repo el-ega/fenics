@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load staticfiles %}
 
-{% block content-title %}Liga {{ league.name }}{% endblock %}
+{% block content-title %}{% blocktrans %}Liga {{ league }}{% endblocktrans %}{% endblock %}
 
 {% block content %}
 
@@ -11,12 +12,12 @@
 
             {% if top_ranking %}
                 <h3 class="title">
-                    Posiciones
+                    {% trans 'Posiciones' %}
                 </h3>
                 {% include 'ega/_ranking_table.html' with ranking=top_ranking delta=1 %}
                 <p class="title-action"><strong>
                 <a href="{% url 'ega-league-ranking' tournament.slug league.slug %}">
-                ver tabla completa</a></strong></p>
+                {% trans 'ver tabla completa' %}</a></strong></p>
             {% endif %}
         </div>
 
