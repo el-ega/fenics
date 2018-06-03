@@ -89,10 +89,6 @@ def _next_matches(user):
 
 @login_required
 def meta_home(request):
-    lang_code = request.session.get(LANGUAGE_SESSION_KEY)
-    if not lang_code:
-        # prefer 'es' if nothing was set
-        request.session[LANGUAGE_SESSION_KEY] = 'es'
     try:
         t = Tournament.objects.get(published=True, finished=False)
         return HttpResponseRedirect(reverse('ega-home', args=[t.slug]))
