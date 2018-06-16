@@ -22,11 +22,14 @@
         }
     }
 
-    function saved_changes() {
+    function saved_changes(expired) {
         if (changed) {
-            $('#changes-update').text({% trans "'Cambios anteriores actualizados, pero todavía tenés pronósticos sin guardar'" %});
+            $('#changes-update').text({% trans "'Cambios anteriores actualizados, pero todavía tenés pronósticos sin guardar!'" %});
         } else {
             $('#changes-update').text({% trans "'Pronósticos actualizados!'" %});
+        }
+        if (expired) {
+            $('#changes-update').text($('#changes-update').text() + {% trans "' Se ignoraron los partidos en juego y/o finalizados'" %});
         }
         $('#changes-update').removeClass('text-warning text-danger').addClass('text-success');
     }
@@ -61,7 +64,7 @@
 
             $.post(post_url, form_data, function(response) {
                 if (response.ok) {
-                    saved_changes();
+                    saved_changes(response.expired);
                 } else {
                     error_changes();
                 }

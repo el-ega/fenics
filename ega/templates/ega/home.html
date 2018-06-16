@@ -7,6 +7,14 @@
 {% block content-title %}{% endblock %}
 
 {% block content %}
+
+    {% if not champion_form.instance.team %}
+        <div class="alert alert-danger" role="alert">
+        <strong>{% trans 'Tu candidato a campeón?' %}</strong><br/>
+        {% trans 'Elegí tu equipo y asegurate de guardar el pronóstico haciendo click en Actualizar.' %}
+        </div>
+    {% endif %}
+
     <div class="row">
         <div class="col-md-4">
 

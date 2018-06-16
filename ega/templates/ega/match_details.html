@@ -4,7 +4,7 @@
 {% load staticfiles %}
 
 
-{# block extra-head #}
+{% block extra-head %}
 
 <script type="text/javascript">
 
@@ -26,9 +26,11 @@ function process_data(data){
     var home_events = match.home_team_events;
     var away_events = match.away_team_events;
 
+    {% if not match.finished %}
     $('#' + home_team.code + '-goals').text(home_team.goals);
     $('#' + away_team.code + '-goals').text(away_team.goals);
     $('#' + away_team.code + '-goals-responsive').text(away_team.goals);
+    {% endif %}
 
     $('#' + home_team.code + '-stats').text('');
     $.each(home_events, function(key, value){
@@ -55,10 +57,10 @@ function process_data(data){
 
 
 function update_match(){
-    {% if finished %}
-    var url = 'http://worldcup.sfg.io/matches/country?fifa_code={{ match.home.code }}';
+    {% if match.finished %}
+    var url = 'https://world-cup-json.herokuapp.com/matches/country?fifa_code={{ match.home.code }}';
     {% else %}
-    var url = 'http://worldcup.sfg.io/matches/today/';
+    var url = 'https://world-cup-json.herokuapp.com/matches/today/';
     {% endif %}
     $.get(url, {}, process_data);
 }
@@ -68,7 +70,7 @@ $(document).ready(function () {
 });
 </script>
 
-{# endblock #}
+{% endblock %}
 
 
 {% block content-title %}{% endblock %}

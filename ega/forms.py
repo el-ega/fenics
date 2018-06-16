@@ -20,12 +20,13 @@ class PredictionForm(forms.ModelForm):
         choices=GOAL_CHOICES, required=False,
         widget=forms.Select(attrs={'class': 'form-control input-lg'}))
     penalties = forms.ChoiceField(
-        choices=[], required=False, widget=forms.RadioSelect())
+        choices=[('L', _('Local')), ('V', _('Visitante'))], required=False,
+        widget=forms.RadioSelect())
 
     def __init__(self, *args, **kwargs):
         super(PredictionForm, self).__init__(*args, **kwargs)
-        self.expired = False
-        if self.instance.match.knockout:
+        self.expired = self.instance is not None
+        if not self.expired and self.instance.match.knockout:
             match = self.instance.match
             home = match.home.name if match.home else match.home_placeholder
             away = match.away.name if match.away else match.away_placeholder
@@ -62,6 +63,10 @@ class PredictionForm(forms.ModelForm):
         return cleaned_data
 
     def save(self, *args, **kwargs):
+        if self.expired:
+            # ignore predictions we already know expired
+            return None
+
         match = self.instance.match
         if not match.is_expired and self.has_changed():
             return super(PredictionForm, self).save(*args, **kwargs)
