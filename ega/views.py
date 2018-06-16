@@ -318,15 +318,17 @@ def next_matches(request, slug):
         formset = PredictionFormSet(request.POST, queryset=predictions)
         if formset.is_valid():
             formset.save()
+            expired_matches = any(f.expired for f in formset)
 
             if request.is_ajax():
-                return HttpResponse(json.dumps({'ok': True}))
+                return HttpResponse(
+                    json.dumps({'ok': True, 'expired': expired_matches}))
 
+            if expired_matches:
+                msg = _("Los pronósticos de partidos en juego o "
+                        "finalizados no se actualizaron.")
+                messages.error(request, msg)
             messages.success(request, _('Pronósticos actualizados.'))
-            expired_matches = [f.instance.match for f in formset if f.expired]
-            for m in expired_matches:
-                msg = _("%s - %s: el partido expiró, pronóstico NO actualizado.")
-                messages.error(request, msg % (m.home.name, m.away.name))
 
             return HttpResponseRedirect(reverse('ega-home', args=[slug]))
 
