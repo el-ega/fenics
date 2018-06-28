@@ -25,7 +25,7 @@ class PredictionForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(PredictionForm, self).__init__(*args, **kwargs)
-        self.expired = self.instance is not None
+        self.expired = self.instance.match_id is None
         if not self.expired and self.instance.match.knockout:
             match = self.instance.match
             home = match.home.name if match.home else match.home_placeholder

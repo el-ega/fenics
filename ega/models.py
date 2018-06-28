@@ -169,8 +169,8 @@ class Tournament(models.Model):
     def team_ranking(self):
         """Return tournament teams ranking."""
         ranking = self.teamstats_set.all().annotate(
-            played=F('won')+F('tie')+F('lost'),
-            dg=F('gf')-F('gc')).order_by('zone', '-points', '-dg', '-gf')
+            played=F('won')+F('tie')+F('lost'), dg=F('gf')-F('gc')
+            ).order_by('zone', '-points', '-dg', '-gf', 'tie_breaker')
         return ranking
 
     def most_common_results(self, n):
@@ -371,6 +371,7 @@ class TeamStats(models.Model):
     gc = models.PositiveIntegerField(default=0)
 
     points = models.PositiveIntegerField(default=0)
+    tie_breaker = models.PositiveIntegerField(default=0)
 
     objects = TeamStatsManager()
 
