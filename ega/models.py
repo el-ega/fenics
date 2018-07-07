@@ -33,17 +33,43 @@ from ega.managers import LeagueManager, PredictionManager, TeamStatsManager
 ALNUM_CHARS = string.ascii_letters + string.digits
 RANKING_SQL = """
 SELECT u.username as username, u.avatar as avatar,
-       r.x1 as x1, r.x3 as x3, r.xx1 as xx1, r.xx3 as xx3, r.total as total
+       r.x1 as x1, r.x3 as x3, r.xx1 as xx1, r.xx3 as xx3,
+       cp.score as champion, cp.score + r.total as total
 FROM (SELECT
     pred.user_id,
     SUM(case when score=1 then 1 else 0 end) AS x1,
     SUM(case when score=3 then 1 else 0 end) AS x3,
     SUM(case when score=2 then 1 else 0 end) AS xx1,
-    SUM(case when score=4 then 1 else 0 end) AS xx3, SUM(score) AS total
+    SUM(case when score=4 then 1 else 0 end) AS xx3,
+    SUM(score) AS total
     FROM ega_prediction pred
-    INNER JOIN ega_match m ON (pred.match_id=m.id) {where}
+    INNER JOIN ega_match m ON (pred.match_id=m.id)
+    WHERE tournament_id=%s
     GROUP BY pred.user_id
-) r INNER JOIN ega_egauser u ON (r.user_id=u.id) ORDER BY total DESC, x3 DESC
+) r
+INNER JOIN ega_championprediction cp
+    ON (cp.user_id=r.user_id AND cp.tournament_id=%s)
+INNER JOIN ega_egauser u ON (r.user_id=u.id)
+ORDER BY total DESC, x3 DESC, champion DESC
+"""
+ROUND_RANKING_SQL = """
+SELECT u.username as username, u.avatar as avatar,
+       r.x1 as x1, r.x3 as x3, r.xx1 as xx1, r.xx3 as xx3,
+       r.total as total
+FROM (SELECT
+    pred.user_id,
+    SUM(case when score=1 then 1 else 0 end) AS x1,
+    SUM(case when score=3 then 1 else 0 end) AS x3,
+    SUM(case when score=2 then 1 else 0 end) AS xx1,
+    SUM(case when score=4 then 1 else 0 end) AS xx3,
+    SUM(score) AS total
+    FROM ega_prediction pred
+    INNER JOIN ega_match m ON (pred.match_id=m.id)
+    WHERE tournament_id=%s AND m.round=%s
+    GROUP BY pred.user_id
+) r
+INNER JOIN ega_egauser u ON (r.user_id=u.id)
+ORDER BY total DESC, x3 DESC
 """
 
 
@@ -154,15 +180,15 @@ class Tournament(models.Model):
 
     def ranking(self, round=None):
         """Users ranking in the tournament."""
-        params = [self.id]
-        where = "WHERE m.tournament_id = %s "
         if round is not None:
-            where += "AND m.round = %s "
-            params += [round]
+            params = [self.id, round]
+            query = ROUND_RANKING_SQL
+        else:
+            params = [self.id, self.id]
+            query = RANKING_SQL
 
-        sql = RANKING_SQL.format(where=where)
         cursor = connection.cursor()
-        cursor.execute(sql, params)
+        cursor.execute(query, params)
         ranking = dictfetchall(cursor)
         return ranking
 
