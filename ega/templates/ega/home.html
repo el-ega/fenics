@@ -8,13 +8,6 @@
 
 {% block content %}
 
-    {% if not champion_form.instance.team %}
-        <div class="alert alert-danger" role="alert">
-        <strong>{% trans 'Tu candidato a campeón?' %}</strong><br/>
-        {% trans 'Elegí tu equipo y asegurate de guardar el pronóstico haciendo click en Actualizar.' %}
-        </div>
-    {% endif %}
-
     <div class="row">
         <div class="col-md-4">
 
@@ -33,7 +26,7 @@
                     <br/><small class="text-muted">{% trans 'Tu candidato actual es' %} {{ champion_form.instance.team.name }}</small>
                     {% endif %}
                     <br/><small class="text-muted">{% trans 'Última actualizacion:' %} {{ champion_form.instance.last_updated }}</small>
-                    <br/><small>{% trans 'Acertando sin modificar tu pronóstico antes del comienzo del campeonato, 8 puntos; cambiándolo durante la primera fase, 5 puntos; antes de la semifinal, 2 puntos.' %}</small>
+                    <br/><small>{% trans 'Al final del torneo sumás puntos de acuerdo a la antigüedad del pronóstico: antes del comienzo, 8 puntos; por cada 3 fechas que pasan, un punto menos (por ejemplo, cambiando en la fecha 7, jugás por 6 puntos).' %}</small>
                     </form>
                 </div>
 
