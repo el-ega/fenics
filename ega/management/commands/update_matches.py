@@ -18,6 +18,7 @@ TEAM_MAPPING = {
     'Atl. Rafaela': 'Atlético Rafaela',
     'Argentinos': 'Argentinos Juniors',
     'S. Martín SJ': 'San Martín (SJ)',
+    'S. Martín T': 'San Martín (T)',
     'Atl. Tucumán': 'Atlético Tucumán',
     'Boca': 'Boca Juniors',
     'River': 'River Plate',
@@ -104,7 +105,7 @@ class Command(BaseCommand):
                 changed = True
 
             if when != match.when and not match.suspended and when.hour != 0:
-                round = (i // 14 + 1)
+                round = (i // 13 + 1)
                 match.when = when
                 match.description = 'Fecha %d' % round
                 match.round = str(round)

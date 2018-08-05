@@ -123,11 +123,9 @@ def home(request, slug):
     history = request.user.history(tournament)[:3]
     stats = request.user.stats(tournament)
 
-    champion_form = None
-    if slug == 'rusia-2018':
-        champion, created = ChampionPrediction.objects.get_or_create(
-            user=request.user, tournament=tournament)
-        champion_form = ChampionPredictionForm(instance=champion)
+    champion, created = ChampionPrediction.objects.get_or_create(
+        user=request.user, tournament=tournament)
+    champion_form = ChampionPredictionForm(instance=champion)
 
     return render(
         request, 'ega/home.html',

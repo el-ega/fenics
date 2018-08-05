@@ -1,10 +1,13 @@
 import pygal
 
+from datetime import timedelta
+
 from django import template
 from django.db.models import Count, Q
 from django.utils.timezone import now
 from pygal.style import LightGreenStyle
 
+from ega.constants import NEXT_MATCHES_DAYS
 from ega.models import ChampionPrediction, Prediction
 
 
@@ -51,11 +54,12 @@ def get_user_stats(user, tournament):
 @register.simple_tag
 def get_pending_predictions(user, tournament):
     tz_now = now()
-    total = tournament.match_set.filter(when__gt=tz_now).count()
+    until = tz_now + timedelta(days=NEXT_MATCHES_DAYS)
+    total = tournament.match_set.filter(when__range=(tz_now, until)).count()
     predicted = Prediction.objects.filter(
         home_goals__isnull=False, away_goals__isnull=False,
         user=user, match__tournament=tournament,
-        match__when__gt=tz_now).count()
+        match__when__range=(tz_now, until)).count()
     return total - predicted
 
 
