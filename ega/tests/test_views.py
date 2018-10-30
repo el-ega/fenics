@@ -66,7 +66,7 @@ class SignUpTestCase(BaseTestCase):
     bad_email = (
         'Un usuario ya fue registrado con esta dirección de correo '
         'electrónico.')
-    good_pw = '1234567U'
+    good_pw = 'Pl3aseLe7Me1n'
 
     def setUp(self):
         super(SignUpTestCase, self).setUp()
@@ -77,7 +77,7 @@ class SignUpTestCase(BaseTestCase):
         data = {
             'username': username, 'email': email, 'password1': password,
             'password2': password, 'g-recaptcha-response': 'PASSED'}
-        response = self.client.post(self.url, data=data, **kwargs)
+        response = self.client.post(self.url, data=data, follow=True, **kwargs)
         return response
 
     def test_existing_username(self):
@@ -96,8 +96,7 @@ class SignUpTestCase(BaseTestCase):
         self.addCleanup(os.environ.pop, 'NORECAPTCHA_TESTING')
 
         new = 'foobar'
-        response = self.signup(
-            new, 'foo@example.com', self.good_pw, follow=True)
+        response = self.signup(new, 'foo@example.com', self.good_pw)
         self.assertRedirects(response, reverse('meta-home'))
         self.assertEqual(
             sorted(m.message for m in response.context['messages']),

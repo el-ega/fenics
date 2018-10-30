@@ -360,8 +360,7 @@ class ChampionPrediction(models.Model):
     tournament = models.ForeignKey('Tournament', on_delete=models.CASCADE)
     team = models.ForeignKey(
         'Team', blank=True, null=True, on_delete=models.CASCADE)
-
-    score = models.PositiveIntegerField(default=0) 
+    score = models.PositiveIntegerField(default=0)
     last_updated = models.DateTimeField(auto_now=True)
     log = models.TextField(blank=True)
 

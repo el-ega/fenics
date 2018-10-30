@@ -1,9 +1,11 @@
-Django==2.0.9
-Pillow==5.0.0
-TwitterAPI==2.4.8
+Django==2.1.2
+Pillow==5.3.0
+TwitterAPI==2.5.4
 demiurge==0.2
-django-allauth==0.35.0
+django-allauth==0.38.0
 django-nocaptcha-recaptcha==0.0.20
 feedparser==5.2.1
-psycopg2==2.7.4
+flake8==3.6.0
+pip==18.1
+psycopg2-binary==2.7.5
 pygal==2.4.0

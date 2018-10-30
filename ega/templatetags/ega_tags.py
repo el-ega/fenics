@@ -3,7 +3,7 @@ import pygal
 from datetime import timedelta
 
 from django import template
-from django.db.models import Count, Q
+from django.db.models import Count
 from django.utils.timezone import now
 from pygal.style import LightGreenStyle
 
