@@ -1,4 +1,4 @@
-Django==2.0.2
+Django==2.0.9
 Pillow==5.0.0
 TwitterAPI==2.4.8
 demiurge==0.2
