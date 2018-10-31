@@ -76,7 +76,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         try:
             matches = MatchData.all()
-        except:
+        except Exception:
             # skip if couldn't get data
             return
 
