@@ -1,5 +1,5 @@
 demiurge==0.2
-Django==2.2.18
+Django==2.2.21
 django-allauth==0.40.0
 django-nocaptcha-recaptcha==0.0.20
 feedparser==5.2.1
