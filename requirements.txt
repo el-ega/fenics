@@ -4,7 +4,7 @@ django-allauth==0.40.0
 django-nocaptcha-recaptcha==0.0.20
 feedparser==5.2.1
 flake8==3.7.8
-Pillow==6.2.1
+Pillow==8.3.2
 psycopg2-binary==2.8.4
 pygal==2.4.0
 TwitterAPI==2.5.9
