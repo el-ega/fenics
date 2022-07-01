@@ -187,6 +187,9 @@ MIGRATION_MODULES = {
     'account': 'other_migrations.account',
 }
 
+RECAPTCHA_PRIVATE_KEY = ''
+RECAPTCHA_PUBLIC_KEY = ''
+
 try:
     from .local_settings import *  # noqa
 except ImportError:
