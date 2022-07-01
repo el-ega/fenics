@@ -7,6 +7,8 @@ import os
 from django.contrib.sites.models import Site
 from django.test import TestCase
 from django.urls import reverse
+from django.urls.exceptions import NoReverseMatch
+from django.utils import translation
 from allauth.socialaccount.models import SocialApp
 
 from ega.constants import DEFAULT_TOURNAMENT
@@ -25,6 +27,7 @@ class BaseTestCase(TestCase):
         app.sites.add(Site.objects.get_current())
         Tournament.objects.create(slug=DEFAULT_TOURNAMENT, published=True)
         Tournament.objects.create(slug='other', published=True)
+        EgaUser.objects.create_user(username='user', password='password')
 
 
 class LoginTestCase(BaseTestCase):
@@ -63,6 +66,21 @@ class LoginTestCase(BaseTestCase):
             [m.message for m in response.context['messages']],
             ['Ha iniciado sesión exitosamente como %s.' % self.user.username],
         )
+
+
+class SwitchLanguageTestCase(BaseTestCase):
+    def test_switch_language(self):
+        url = reverse('switch-language', args=['en'])
+        self.client.login(username='user', password='password')
+        response = self.client.get(url, follow=True)
+
+        self.assertRedirects(response, reverse('meta-home'))
+        cur_language = translation.get_language()
+        self.assertEqual(cur_language, 'en')
+
+    def test_switch_unsupported_language(self):
+        with self.assertRaises(NoReverseMatch):
+            reverse('switch-language', args=['fr'])
 
 
 class SignUpTestCase(BaseTestCase):
