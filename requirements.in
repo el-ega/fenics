@@ -1,0 +1,11 @@
+black
+demiurge
+Django<3
+django-allauth
+django-nocaptcha-recaptcha
+feedparser
+flake8
+Pillow
+psycopg2-binary
+pygal
+TwitterAPI
