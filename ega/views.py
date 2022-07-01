@@ -6,12 +6,14 @@ from datetime import timedelta
 from allauth.account.models import EmailAddress
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.forms.models import modelformset_factory
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils.timezone import now
+from django.utils import translation
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_GET, require_http_methods
 
@@ -66,7 +68,10 @@ def logout(request):
 def switch_language(request, lang):
     if lang in ('es', 'en'):
         request.session[LANGUAGE_SESSION_KEY] = lang
-    return HttpResponseRedirect(reverse('meta-home'))
+    translation.activate(lang)
+    response = HttpResponseRedirect(reverse('meta-home'))
+    response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang)
+    return response
 
 
 def _next_matches(user):
