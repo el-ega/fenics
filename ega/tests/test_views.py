@@ -1,8 +1,4 @@
-# -*- coding: utf-8 -*-
-
-from __future__ import unicode_literals
-
-import os
+from unittest import mock
 
 from django.contrib.sites.models import Site
 from django.test import TestCase
@@ -91,6 +87,7 @@ class SignUpTestCase(BaseTestCase):
         'Un usuario ya ha sido registrado con esta dirección de correo '
         'electrónico.'
     )
+    bad_captcha = 'Error verifying reCAPTCHA, please try again.'
     good_pw = 'Pl3aseLe7Me1n'
 
     def setUp(self):
@@ -99,20 +96,36 @@ class SignUpTestCase(BaseTestCase):
             username='test', email='test@example.com', password=self.good_pw
         )
 
-    def signup(self, username, email, password, **kwargs):
+    def signup(
+        self,
+        username,
+        email,
+        password,
+        captcha_valid=True,
+        captcha_score=0.91,
+        **kwargs
+    ):
         data = {
             'username': username,
             'email': email,
             'password1': password,
             'password2': password,
-            'g-recaptcha-response': 'PASSED',
+            'captcha': 'test',
         }
-        response = self.client.post(self.url, data=data, follow=True, **kwargs)
+        check_captcha = mock.Mock(
+            is_valid=captcha_valid, extra_data={'score': captcha_score}
+        )
+        with mock.patch('captcha.client.submit', return_value=check_captcha):
+            response = self.client.post(
+                self.url, data=data, follow=True, **kwargs
+            )
         return response
 
     def test_existing_username(self):
         response = self.signup(
-            self.user.username, 'foo@example.com', self.good_pw
+            self.user.username,
+            'foo@example.com',
+            self.good_pw,
         )
         self.assertFormError(response, 'form', 'username', self.bad_username)
         self.assertContains(response, self.bad_username)
@@ -123,9 +136,6 @@ class SignUpTestCase(BaseTestCase):
         self.assertContains(response, self.bad_email)
 
     def test_success(self):
-        os.environ['NORECAPTCHA_TESTING'] = 'True'
-        self.addCleanup(os.environ.pop, 'NORECAPTCHA_TESTING')
-
         new = 'foobar'
         response = self.signup(new, 'foo@example.com', self.good_pw)
         self.assertRedirects(response, reverse('meta-home'))
@@ -137,3 +147,23 @@ class SignUpTestCase(BaseTestCase):
             ],
         )
         self.assertEqual(EgaUser.objects.filter(username=new).count(), 1)
+
+    def test_invalid_captcha(self):
+        response = self.signup(
+            'foo', 'foo@example.com', self.good_pw, captcha_valid=False
+        )
+
+        self.assertFormError(response, 'form', 'captcha', self.bad_captcha)
+        self.assertContains(response, self.bad_captcha)
+
+    def test_low_score_captcha(self):
+        response = self.signup(
+            'foo',
+            'foo@example.com',
+            self.good_pw,
+            captcha_valid=True,
+            captcha_score=0.89,
+        )
+
+        self.assertFormError(response, 'form', 'captcha', self.bad_captcha)
+        self.assertContains(response, self.bad_captcha)

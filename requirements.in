@@ -3,7 +3,7 @@ backports-zoneinfo; python_version < "3.10"
 demiurge
 Django
 django-allauth
-django-nocaptcha-recaptcha
+django-recaptcha
 feedparser
 flake8
 Pillow

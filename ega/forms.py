@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
-
+from captcha.fields import ReCaptchaField
+from captcha.widgets import ReCaptchaV3
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.utils.translation import gettext_lazy as _
-
-# from nocaptcha_recaptcha.fields import NoReCaptchaField
 
 from ega.constants import EMAILS_PLACEHOLDER
 from ega.models import ChampionPrediction, EgaUser, League, Prediction, Team
@@ -171,8 +169,9 @@ class EgaUserForm(forms.ModelForm):
 
 class CustomSignupForm(forms.Form):
 
-    # captcha = NoReCaptchaField(label='')
+    captcha = ReCaptchaField(
+        label='', widget=ReCaptchaV3(attrs={'required_score': 0.9})
+    )
 
     def signup(self, request, user):
         """Required, or else it throws deprecation warnings."""
-        pass
