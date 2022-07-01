@@ -6,8 +6,10 @@
 #
 asgiref==3.5.2
     # via django
-backports-zoneinfo==0.2.1
-    # via django
+backports-zoneinfo==0.2.1 ; python_version < "3.10"
+    # via
+    #   -r requirements.in
+    #   django
 black==22.6.0
     # via -r requirements.in
 certifi==2022.6.15
