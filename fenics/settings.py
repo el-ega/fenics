@@ -46,12 +46,12 @@ INSTALLED_APPS = [
     'ega',
     'news',
     'allauth',
-    # 'nocaptcha_recaptcha',
     'allauth.account',
     'allauth.socialaccount',
     # 'allauth.socialaccount.providers.facebook',
     # 'allauth.socialaccount.providers.google',
     # 'allauth.socialaccount.providers.twitter',
+    'captcha',
 ]
 
 MIDDLEWARE = [
@@ -187,9 +187,8 @@ MIGRATION_MODULES = {
     'account': 'other_migrations.account',
 }
 
-NORECAPTCHA_SITE_KEY = ''
-NORECAPTCHA_SECRET_KEY = ''
-
+RECAPTCHA_PRIVATE_KEY = ''
+RECAPTCHA_PUBLIC_KEY = ''
 
 try:
     from .local_settings import *  # noqa

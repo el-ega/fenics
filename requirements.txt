@@ -32,9 +32,10 @@ django==4.0.5
     # via
     #   -r requirements.in
     #   django-allauth
+    #   django-recaptcha
 django-allauth==0.51.0
     # via -r requirements.in
-django-nocaptcha-recaptcha==0.0.20
+django-recaptcha==3.0.0
     # via -r requirements.in
 feedparser==6.0.10
     # via -r requirements.in
