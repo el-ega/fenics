@@ -31,7 +31,7 @@ class LoginTestCase(BaseTestCase):
 
     url = reverse('account_login')
     bad_login = (
-        'El usuario y/o la contraseña que especificaste no son correctos.'
+        'El usuario y/o la contraseña que se especificaron no son correctos.'
     )
 
     def setUp(self):
@@ -61,7 +61,7 @@ class LoginTestCase(BaseTestCase):
         self.assertRedirects(response, reverse('meta-home'))
         self.assertEqual(
             [m.message for m in response.context['messages']],
-            ['Has iniciado sesión exitosamente como %s.' % self.user.username],
+            ['Ha iniciado sesión exitosamente como %s.' % self.user.username],
         )
 
 
@@ -70,7 +70,7 @@ class SignUpTestCase(BaseTestCase):
     url = reverse('account_signup')
     bad_username = 'Ya existe un usuario con este nombre.'
     bad_email = (
-        'Un usuario ya fue registrado con esta dirección de correo '
+        'Un usuario ya ha sido registrado con esta dirección de correo '
         'electrónico.'
     )
     good_pw = 'Pl3aseLe7Me1n'
@@ -115,7 +115,7 @@ class SignUpTestCase(BaseTestCase):
             sorted(m.message for m in response.context['messages']),
             [
                 'Correo electrónico enviado a foo@example.com.',
-                'Has iniciado sesión exitosamente como %s.' % new,
+                'Ha iniciado sesión exitosamente como %s.' % new,
             ],
         )
         self.assertEqual(EgaUser.objects.filter(username=new).count(), 1)
