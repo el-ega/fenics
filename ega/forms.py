@@ -14,14 +14,20 @@ class PredictionForm(forms.ModelForm):
     GOAL_CHOICES = [('', '-')] + [(i, i) for i in range(20)]
 
     home_goals = forms.ChoiceField(
-        choices=GOAL_CHOICES, required=False,
-        widget=forms.Select(attrs={'class': 'form-control input-lg'}))
+        choices=GOAL_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={'class': 'form-control input-lg'}),
+    )
     away_goals = forms.ChoiceField(
-        choices=GOAL_CHOICES, required=False,
-        widget=forms.Select(attrs={'class': 'form-control input-lg'}))
+        choices=GOAL_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={'class': 'form-control input-lg'}),
+    )
     penalties = forms.ChoiceField(
-        choices=[('L', _('Local')), ('V', _('Visitante'))], required=False,
-        widget=forms.RadioSelect())
+        choices=[('L', _('Local')), ('V', _('Visitante'))],
+        required=False,
+        widget=forms.RadioSelect(),
+    )
 
     def __init__(self, *args, **kwargs):
         super(PredictionForm, self).__init__(*args, **kwargs)
@@ -50,9 +56,9 @@ class PredictionForm(forms.ModelForm):
         away_goals = cleaned_data.get("away_goals")
 
         msg = "Pronóstico incompleto."
-        if (home_goals and not away_goals):
+        if home_goals and not away_goals:
             raise forms.ValidationError(msg)
-        if (not home_goals and away_goals):
+        if not home_goals and away_goals:
             raise forms.ValidationError(msg)
 
         penalties = cleaned_data.get('penalties')
@@ -82,7 +88,8 @@ class PredictionForm(forms.ModelForm):
 class ChampionPredictionForm(forms.ModelForm):
     team = forms.ModelChoiceField(
         queryset=Team.objects.none(),
-        widget=forms.Select(attrs={'class': 'form-control'}))
+        widget=forms.Select(attrs={'class': 'form-control'}),
+    )
 
     def __init__(self, *args, **kwargs):
         super(ChampionPredictionForm, self).__init__(*args, **kwargs)
@@ -98,13 +105,18 @@ class InviteFriendsForm(forms.Form):
 
     emails = forms.CharField(
         widget=forms.Textarea(
-            attrs={'rows': 1, 'class': 'form-control',
-                   'placeholder': EMAILS_PLACEHOLDER}))
+            attrs={
+                'rows': 1,
+                'class': 'form-control',
+                'placeholder': EMAILS_PLACEHOLDER,
+            }
+        )
+    )
     subject = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        widget=forms.TextInput(attrs={'class': 'form-control'})
     )
     body = forms.CharField(
-        widget=forms.Textarea(attrs={'rows': 10, 'class': 'form-control'}),
+        widget=forms.Textarea(attrs={'rows': 10, 'class': 'form-control'})
     )
 
     def clean_emails(self):
@@ -121,11 +133,13 @@ class InviteFriendsForm(forms.Form):
 
         if len(errors) == 1:
             raise ValidationError(
-                'El email "%s" no es una dirección válida.' % errors[0])
+                'El email "%s" no es una dirección válida.' % errors[0]
+            )
         elif len(errors) > 1:
             raise ValidationError(
-                'Los emails "%s" no son direcciones válidas' % ', '.join(
-                    errors))
+                'Los emails "%s" no son direcciones válidas'
+                % ', '.join(errors)
+            )
 
         return list(set(emails))
 
@@ -149,7 +163,6 @@ class LeagueForm(forms.ModelForm):
 
 
 class EgaUserForm(forms.ModelForm):
-
     class Meta:
         model = EgaUser
         fields = ('username', 'first_name', 'last_name', 'avatar')
@@ -160,5 +173,5 @@ class CustomSignupForm(forms.Form):
     captcha = NoReCaptchaField(label='')
 
     def signup(self, request, user):
-        """ Required, or else it throws deprecation warnings """
+        """Required, or else it throws deprecation warnings."""
         pass

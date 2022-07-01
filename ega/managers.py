@@ -10,9 +10,9 @@ class PredictionManager(models.Manager):
     """
 
     def get_queryset(self):
-        return super(
-            PredictionManager, self).get_queryset().select_related(
-                'match__home', 'match__away')
+        return (
+            super().get_queryset().select_related('match__home', 'match__away')
+        )
 
 
 class LeagueManager(models.Manager):
@@ -27,5 +27,4 @@ class TeamStatsManager(models.Manager):
     """TeamStat manager."""
 
     def get_queryset(self):
-        return super(
-            TeamStatsManager, self).get_queryset().select_related('team')
+        return super().get_queryset().select_related('team')

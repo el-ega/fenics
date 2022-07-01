@@ -11,7 +11,6 @@ ADMINS = ['natalia@gmail.com', 'matias@gmail.com']
 
 
 class EgaUserTestCase(TestCase):
-
     def setUp(self):
         super(EgaUserTestCase, self).setUp()
         self.user = EgaUser.objects.create()

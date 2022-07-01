@@ -81,20 +81,22 @@ def dictfetchall(cursor):
     """Returns all rows from a cursor as a dict."""
     desc = cursor.description
     return [
-        dict(zip([col[0] for col in desc], row))
-        for row in cursor.fetchall()
+        dict(zip([col[0] for col in desc], row)) for row in cursor.fetchall()
     ]
 
 
 class EgaUser(AbstractUser):
 
     avatar = models.ImageField(
-        upload_to='avatars', null=True, blank=True,
-        help_text='Se recomienda subir una imagen de (al menos) 100x100')
-    invite_key = models.CharField(
-        max_length=20, unique=True, default=rand_str)
+        upload_to='avatars',
+        null=True,
+        blank=True,
+        help_text='Se recomienda subir una imagen de (al menos) 100x100',
+    )
+    invite_key = models.CharField(max_length=20, unique=True, default=rand_str)
     referred_by = models.ForeignKey(
-        'self', null=True, related_name='referrals', on_delete=models.CASCADE)
+        'self', null=True, related_name='referrals', on_delete=models.CASCADE
+    )
     referred_on = models.DateTimeField(null=True)
 
     def record_referral(self, other):
@@ -113,10 +115,13 @@ class EgaUser(AbstractUser):
             body = INVITE_BODY
         if emails:
             EmailMessage(
-                subject, body, from_email=settings.EL_EGA_NO_REPLY,
+                subject,
+                body,
+                from_email=settings.EL_EGA_NO_REPLY,
                 to=[settings.EL_EGA_ADMIN],
                 bcc=emails + [e for _, e in settings.ADMINS],
-                headers={'Reply-To': self.email}).send()
+                headers={'Reply-To': self.email},
+            ).send()
         return len(emails)
 
     def visible_name(self):
@@ -129,7 +134,8 @@ class EgaUser(AbstractUser):
         """Return matches predictions for given tournament."""
         tz_now = now() + timedelta(hours=HOURS_TO_DEADLINE)
         predictions = Prediction.objects.filter(
-            match__tournament=tournament, user=self, match__when__lte=tz_now)
+            match__tournament=tournament, user=self, match__when__lte=tz_now
+        )
         predictions = predictions.order_by('-match__when')
         return predictions
 
@@ -137,21 +143,26 @@ class EgaUser(AbstractUser):
         """User stats for given tournament."""
         stats = {}
         ranking = Prediction.objects.filter(
-            match__tournament=tournament, user=self, score__gte=0,
-            match__finished=True)
+            match__tournament=tournament,
+            user=self,
+            score__gte=0,
+            match__finished=True,
+        )
         if round is not None:
             ranking = ranking.filter(match__round=round)
 
         stats['count'] = len(ranking)
         stats['score'] = sum(r.score for r in ranking)
         stats['winners'] = sum(1 for r in ranking if r.score > 0)
-        stats['exacts'] = sum(1 for r in ranking
-                              if r.score == EXACTLY_MATCH_POINTS)
+        stats['exacts'] = sum(
+            1 for r in ranking if r.score == EXACTLY_MATCH_POINTS
+        )
         return stats
 
 
 class Tournament(models.Model):
     """Tournament metadata."""
+
     name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, unique=True)
     teams = models.ManyToManyField('Team')
@@ -165,8 +176,7 @@ class Tournament(models.Model):
     def current_round(self):
         current = None
         try:
-            last_played = self.match_set.filter(
-                finished=True).latest('when')
+            last_played = self.match_set.filter(finished=True).latest('when')
             current = last_played.round
         except Match.DoesNotExist:
             pass
@@ -194,15 +204,20 @@ class Tournament(models.Model):
 
     def team_ranking(self):
         """Return tournament teams ranking."""
-        ranking = self.teamstats_set.all().annotate(
-            played=F('won')+F('tie')+F('lost'), dg=F('gf')-F('gc')
-            ).order_by('zone', '-points', '-dg', '-gf', 'tie_breaker')
+        ranking = (
+            self.teamstats_set.all()
+            .annotate(
+                played=F('won') + F('tie') + F('lost'), dg=F('gf') - F('gc')
+            )
+            .order_by('zone', '-points', '-dg', '-gf', 'tie_breaker')
+        )
         return ranking
 
     def most_common_results(self, n):
         """Return the most common results."""
         results = self.match_set.filter(
-            home_goals__isnull=False, away_goals__isnull=False)
+            home_goals__isnull=False, away_goals__isnull=False
+        )
         results = results.values_list('home_goals', 'away_goals')
         counter = collections.Counter(results)
         return counter.most_common(n)
@@ -210,10 +225,12 @@ class Tournament(models.Model):
     def most_common_predictions(self, n):
         """Return the most common predictions."""
         predictions = Prediction.objects.filter(match__tournament=self)
-        predictions = predictions.filter(match__home_goals__isnull=False,
-                                         match__away_goals__isnull=False,
-                                         home_goals__isnull=False,
-                                         away_goals__isnull=False)
+        predictions = predictions.filter(
+            match__home_goals__isnull=False,
+            match__away_goals__isnull=False,
+            home_goals__isnull=False,
+            away_goals__isnull=False,
+        )
         predictions = predictions.values_list('home_goals', 'away_goals')
         counter = collections.Counter(predictions)
         return counter.most_common(n)
@@ -221,6 +238,7 @@ class Tournament(models.Model):
 
 class Team(models.Model):
     """Team metadata."""
+
     name = models.CharField(max_length=200)
     code = models.CharField(max_length=8, blank=True)
     slug = models.SlugField(max_length=200, unique=True)
@@ -234,21 +252,32 @@ class Team(models.Model):
         tz_now = now()
         matches = Match.objects.filter(
             Q(away=self) | Q(home=self),
-            tournament=tournament, finished=True,
-            when__lte=tz_now)
+            tournament=tournament,
+            finished=True,
+            when__lte=tz_now,
+        )
         matches = matches.order_by('-when')
         return matches
 
 
 class Match(models.Model):
     """Match metadata."""
+
     home = models.ForeignKey(
-        Team, blank=True, null=True, related_name='home_games',
-        on_delete=models.CASCADE)
+        Team,
+        blank=True,
+        null=True,
+        related_name='home_games',
+        on_delete=models.CASCADE,
+    )
     home_placeholder = models.CharField(max_length=200, blank=True)
     away = models.ForeignKey(
-        Team, blank=True, null=True, related_name='away_games',
-        on_delete=models.CASCADE)
+        Team,
+        blank=True,
+        null=True,
+        related_name='away_games',
+        on_delete=models.CASCADE,
+    )
     away_placeholder = models.CharField(max_length=200, blank=True)
     home_goals = models.IntegerField(null=True, blank=True)
     away_goals = models.IntegerField(null=True, blank=True)
@@ -291,10 +320,12 @@ class Match(models.Model):
 
 class Prediction(models.Model):
     """User prediction for a match."""
+
     TRENDS = ('L', 'E', 'V')
 
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
+    )
     last_updated = models.DateTimeField(auto_now=True, null=True)
     match = models.ForeignKey('Match', on_delete=models.CASCADE)
 
@@ -322,7 +353,8 @@ class Prediction(models.Model):
         if self.match.home is None:
             return None
         stats, _ = self.match.home.teamstats_set.get_or_create(
-            tournament=self.match.tournament)
+            tournament=self.match.tournament
+        )
         return stats
 
     @property
@@ -330,7 +362,8 @@ class Prediction(models.Model):
         if self.match.away is None:
             return None
         stats, _ = self.match.away.teamstats_set.get_or_create(
-            tournament=self.match.tournament)
+            tournament=self.match.tournament
+        )
         return stats
 
     @property
@@ -355,11 +388,14 @@ class Prediction(models.Model):
 
 class ChampionPrediction(models.Model):
     """User prediction for tournament champion."""
+
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
+    )
     tournament = models.ForeignKey('Tournament', on_delete=models.CASCADE)
     team = models.ForeignKey(
-        'Team', blank=True, null=True, on_delete=models.CASCADE)
+        'Team', blank=True, null=True, on_delete=models.CASCADE
+    )
     score = models.PositiveIntegerField(default=0)
     last_updated = models.DateTimeField(auto_now=True)
     log = models.TextField(blank=True)
@@ -374,8 +410,12 @@ class ChampionPrediction(models.Model):
         # update log before saving
         if self.last_updated:
             log = json.loads(self.log) if self.log else []
-            log.append(dict(timestamp=self.last_updated.isoformat(),
-                            team=self.team.name if self.team else None))
+            log.append(
+                dict(
+                    timestamp=self.last_updated.isoformat(),
+                    team=self.team.name if self.team else None,
+                )
+            )
             self.log = json.dumps(log)
         super(ChampionPrediction, self).save(*args, **kwargs)
 
@@ -410,27 +450,38 @@ class TeamStats(models.Model):
     def sync(self):
         """Update team stats for tournament."""
         home = Match.objects.filter(
-            tournament=self.tournament, home=self.team, knockout=False,
-            finished=True)
+            tournament=self.tournament,
+            home=self.team,
+            knockout=False,
+            finished=True,
+        )
         away = Match.objects.filter(
-            tournament=self.tournament, away=self.team, knockout=False,
-            finished=True)
+            tournament=self.tournament,
+            away=self.team,
+            knockout=False,
+            finished=True,
+        )
 
         self.won = (
-            home.filter(home_goals__gt=F('away_goals')).count() +
-            away.filter(away_goals__gt=F('home_goals')).count())
+            home.filter(home_goals__gt=F('away_goals')).count()
+            + away.filter(away_goals__gt=F('home_goals')).count()
+        )
         self.tie = (
-            home.filter(home_goals=F('away_goals')).count() +
-            away.filter(away_goals=F('home_goals')).count())
+            home.filter(home_goals=F('away_goals')).count()
+            + away.filter(away_goals=F('home_goals')).count()
+        )
         self.lost = (
-            home.filter(home_goals__lt=F('away_goals')).count() +
-            away.filter(away_goals__lt=F('home_goals')).count())
+            home.filter(home_goals__lt=F('away_goals')).count()
+            + away.filter(away_goals__lt=F('home_goals')).count()
+        )
 
         # goals stats
-        home_goals = home.aggregate(home_gf=Sum('home_goals'),
-                                    home_gc=Sum('away_goals'))
-        away_goals = away.aggregate(away_gf=Sum('away_goals'),
-                                    away_gc=Sum('home_goals'))
+        home_goals = home.aggregate(
+            home_gf=Sum('home_goals'), home_gc=Sum('away_goals')
+        )
+        away_goals = away.aggregate(
+            away_gf=Sum('away_goals'), away_gc=Sum('home_goals')
+        )
         self.gf = 0
         if home_goals['home_gf'] is not None:
             self.gf += home_goals['home_gf']
@@ -447,9 +498,11 @@ class TeamStats(models.Model):
         self.save()
 
     def _points(self):
-        return (self.won * MATCH_WON_POINTS +
-                self.tie * MATCH_TIE_POINTS +
-                self.lost * MATCH_LOST_POINTS)
+        return (
+            self.won * MATCH_WON_POINTS
+            + self.tie * MATCH_TIE_POINTS
+            + self.lost * MATCH_LOST_POINTS
+        )
 
 
 class League(models.Model):
@@ -460,7 +513,8 @@ class League(models.Model):
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
     created = models.DateTimeField(default=now)
     members = models.ManyToManyField(
-        settings.AUTH_USER_MODEL, through='LeagueMember')
+        settings.AUTH_USER_MODEL, through='LeagueMember'
+    )
 
     objects = LeagueManager()
 
@@ -500,7 +554,8 @@ class LeagueMember(models.Model):
     """A league member."""
 
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
+    )
     league = models.ForeignKey(League, on_delete=models.CASCADE)
     is_owner = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=now)
@@ -529,31 +584,37 @@ def update_related_predictions(sender, instance, **kwargs):
 
     # update exact predictions
     predictions.filter(home_goals=home_goals, away_goals=away_goals).update(
-        score=EXACTLY_MATCH_POINTS)
+        score=EXACTLY_MATCH_POINTS
+    )
 
     # update winner predictions
     if home_goals > away_goals:
         predictions.exclude(
-            home_goals=home_goals, away_goals=away_goals).filter(
-                home_goals__gt=F('away_goals')).update(
-                    score=WINNER_MATCH_POINTS)
+            home_goals=home_goals, away_goals=away_goals
+        ).filter(home_goals__gt=F('away_goals')).update(
+            score=WINNER_MATCH_POINTS
+        )
     elif home_goals < away_goals:
         predictions.exclude(
-            home_goals=home_goals, away_goals=away_goals).filter(
-                home_goals__lt=F('away_goals')).update(
-                    score=WINNER_MATCH_POINTS)
+            home_goals=home_goals, away_goals=away_goals
+        ).filter(home_goals__lt=F('away_goals')).update(
+            score=WINNER_MATCH_POINTS
+        )
     else:
         predictions.exclude(
-            home_goals=home_goals, away_goals=away_goals).filter(
-                home_goals=F('away_goals'), home_goals__isnull=False).update(
-                    score=WINNER_MATCH_POINTS)
+            home_goals=home_goals, away_goals=away_goals
+        ).filter(home_goals=F('away_goals'), home_goals__isnull=False).update(
+            score=WINNER_MATCH_POINTS
+        )
 
     # update starred predictions
     predictions.filter(score__gt=0, starred=True).update(score=F('score') + 1)
 
     # update penalties predictions
-    penalties = (instance.pk_home_goals is not None and
-                 instance.pk_away_goals is not None)
+    penalties = (
+        instance.pk_home_goals is not None
+        and instance.pk_away_goals is not None
+    )
     if penalties:
         ties = predictions.filter(score__gt=0, home_goals=F('away_goals'))
         if instance.pk_home_goals > instance.pk_away_goals:
@@ -568,5 +629,6 @@ def update_related_stats(sender, instance, **kwargs):
     if instance.home and instance.away:
         for team in (instance.home, instance.away):
             stats, created = TeamStats.objects.get_or_create(
-                team=team, tournament=instance.tournament)
+                team=team, tournament=instance.tournament
+            )
             stats.sync()

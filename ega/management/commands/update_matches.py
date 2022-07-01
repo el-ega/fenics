@@ -39,9 +39,11 @@ class MatchData(demiurge.Item):
     class Meta:
         selector = 'div.mc-matchContainer'
         encoding = 'utf-8'
-        base_url = ('http://staticmd1.lavozdelinterior.com.ar/sites/default/'
-                    'files/Datafactory/html/v3/htmlCenter/data/deportes/'
-                    'futbol/primeraa/pages/es/fixture.html')
+        base_url = (
+            'http://staticmd1.lavozdelinterior.com.ar/sites/default/'
+            'files/Datafactory/html/v3/htmlCenter/data/deportes/'
+            'futbol/primeraa/pages/es/fixture.html'
+        )
 
     @property
     def is_finished(self):
@@ -89,13 +91,12 @@ class Command(BaseCommand):
             home = TEAM_MAPPING.get(entry.home, entry.home)
             away = TEAM_MAPPING.get(entry.away, entry.away)
 
-            home_team = Team.objects.get(
-                name=home, tournament=tournament)
-            away_team = Team.objects.get(
-                name=away, tournament=tournament)
+            home_team = Team.objects.get(name=home, tournament=tournament)
+            away_team = Team.objects.get(name=away, tournament=tournament)
 
             match, created = Match.objects.get_or_create(
-                tournament=tournament, home=home_team, away=away_team)
+                tournament=tournament, home=home_team, away=away_team
+            )
 
             if created:
                 self.stdout.write(u'Match created: %s\n' % str(match))
@@ -105,21 +106,26 @@ class Command(BaseCommand):
                 changed = True
 
             if when != match.when and not match.suspended and when.hour != 0:
-                round = (i // 13 + 1)
+                round = i // 13 + 1
                 match.when = when
                 match.description = 'Fecha %d' % round
                 match.round = str(round)
                 changed = True
 
-            if (not match.finished and entry.home_goals != '' and
-                    entry.away_goals != ''):
+            if (
+                not match.finished
+                and entry.home_goals != ''
+                and entry.away_goals != ''
+            ):
                 changed = True
                 match.home_goals = entry.home_goals
                 match.away_goals = entry.away_goals
                 match.finished = entry.is_finished
                 if match.finished:
-                    self.stdout.write(u'Updated result: %s: %s - %s\n' % (
-                        match, entry.home_goals, entry.away_goals))
+                    self.stdout.write(
+                        u'Updated result: %s: %s - %s\n'
+                        % (match, entry.home_goals, entry.away_goals)
+                    )
 
             if changed:
                 match.save()
