@@ -18,25 +18,30 @@ class Command(BaseCommand):
             feed = feedparser.parse(feed_url)
 
             for entry in feed['entries']:
-                news_date = make_aware(datetime.datetime(
-                    year=entry.updated_parsed.tm_year,
-                    month=entry.updated_parsed.tm_mon,
-                    day=entry.updated_parsed.tm_mday,
-                    hour=entry.updated_parsed.tm_hour,
-                    minute=entry.updated_parsed.tm_min))
+                news_date = make_aware(
+                    datetime.datetime(
+                        year=entry.updated_parsed.tm_year,
+                        month=entry.updated_parsed.tm_mon,
+                        day=entry.updated_parsed.tm_mday,
+                        hour=entry.updated_parsed.tm_hour,
+                        minute=entry.updated_parsed.tm_min,
+                    )
+                )
 
                 if len(entry['link']) > 200:
                     continue
 
-                if not News.objects.filter(title=entry['title'],
-                                           source=source,
-                                           published=news_date):
+                if not News.objects.filter(
+                    title=entry['title'], source=source, published=news_date
+                ):
                     try:
-                        news = News.objects.create(title=entry['title'],
-                                                   source=source,
-                                                   published=news_date,
-                                                   summary=entry['summary'],
-                                                   link=entry['link'])
+                        news = News.objects.create(
+                            title=entry['title'],
+                            source=source,
+                            published=news_date,
+                            summary=entry['summary'],
+                            link=entry['link'],
+                        )
                     except:
                         # ignore for now
                         pass

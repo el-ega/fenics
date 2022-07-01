@@ -1,3 +1,4 @@
+black==22.6.0
 demiurge==0.2
 Django==2.2.28
 django-allauth==0.40.0

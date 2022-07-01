@@ -71,9 +71,7 @@ ROOT_URLCONF = 'fenics.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            os.path.join(BASE_DIR, 'templates'),
-        ],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -88,9 +86,9 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'fenics.context_processors.available_tournaments',
                 'fenics.context_processors.disqus_shortname',
-            ],
+            ]
         },
-    },
+    }
 ]
 
 WSGI_APPLICATION = 'fenics.wsgi.application'
@@ -134,9 +132,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-LOCALE_PATHS = [
-    os.path.join(BASE_DIR, 'locale'),
-]
+LOCALE_PATHS = [os.path.join(BASE_DIR, 'locale')]
 
 
 # Static files (CSS, JavaScript, Images)
@@ -144,9 +140,7 @@ LOCALE_PATHS = [
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -157,10 +151,7 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-ADMINS = [
-    ('Natalia', 'natalia@gmail.com'),
-    ('Matias', 'matias@gmail.com'),
-]
+ADMINS = [('Natalia', 'natalia@gmail.com'), ('Matias', 'matias@gmail.com')]
 AUTH_USER_MODEL = 'ega.EgaUser'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_SESSION_REMEMBER = True

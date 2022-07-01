@@ -14,12 +14,14 @@ from ega.models import EgaUser, Tournament
 
 
 class BaseTestCase(TestCase):
-
     def setUp(self):
         super(BaseTestCase, self).setUp()
         app = SocialApp.objects.create(
-            name='facebook', provider='facebook',
-            client_id='lorem', secret='ipsum')
+            name='facebook',
+            provider='facebook',
+            client_id='lorem',
+            secret='ipsum',
+        )
         app.sites.add(Site.objects.get_current())
         Tournament.objects.create(slug=DEFAULT_TOURNAMENT, published=True)
         Tournament.objects.create(slug='other', published=True)
@@ -29,16 +31,19 @@ class LoginTestCase(BaseTestCase):
 
     url = reverse('account_login')
     bad_login = (
-        'El usuario y/o la contraseña que especificaste no son correctos.')
+        'El usuario y/o la contraseña que especificaste no son correctos.'
+    )
 
     def setUp(self):
         super(LoginTestCase, self).setUp()
         self.user = EgaUser.objects.create_user(
-            username='test', password='12345678')
+            username='test', password='12345678'
+        )
 
     def login(self, username, password, **kwargs):
         response = self.client.post(
-            self.url, data=dict(login=username, password=password), **kwargs)
+            self.url, data=dict(login=username, password=password), **kwargs
+        )
         return response
 
     def test_non_existing_user(self):
@@ -56,7 +61,8 @@ class LoginTestCase(BaseTestCase):
         self.assertRedirects(response, reverse('meta-home'))
         self.assertEqual(
             [m.message for m in response.context['messages']],
-            ['Has iniciado sesión exitosamente como %s.' % self.user.username])
+            ['Has iniciado sesión exitosamente como %s.' % self.user.username],
+        )
 
 
 class SignUpTestCase(BaseTestCase):
@@ -65,24 +71,31 @@ class SignUpTestCase(BaseTestCase):
     bad_username = 'Ya existe un usuario con este nombre.'
     bad_email = (
         'Un usuario ya fue registrado con esta dirección de correo '
-        'electrónico.')
+        'electrónico.'
+    )
     good_pw = 'Pl3aseLe7Me1n'
 
     def setUp(self):
         super(SignUpTestCase, self).setUp()
         self.user = EgaUser.objects.create_user(
-            username='test', email='test@example.com', password=self.good_pw)
+            username='test', email='test@example.com', password=self.good_pw
+        )
 
     def signup(self, username, email, password, **kwargs):
         data = {
-            'username': username, 'email': email, 'password1': password,
-            'password2': password, 'g-recaptcha-response': 'PASSED'}
+            'username': username,
+            'email': email,
+            'password1': password,
+            'password2': password,
+            'g-recaptcha-response': 'PASSED',
+        }
         response = self.client.post(self.url, data=data, follow=True, **kwargs)
         return response
 
     def test_existing_username(self):
         response = self.signup(
-            self.user.username, 'foo@example.com', self.good_pw)
+            self.user.username, 'foo@example.com', self.good_pw
+        )
         self.assertFormError(response, 'form', 'username', self.bad_username)
         self.assertContains(response, self.bad_username)
 
@@ -100,6 +113,9 @@ class SignUpTestCase(BaseTestCase):
         self.assertRedirects(response, reverse('meta-home'))
         self.assertEqual(
             sorted(m.message for m in response.context['messages']),
-            ['Correo electrónico enviado a foo@example.com.',
-             'Has iniciado sesión exitosamente como %s.' % new])
+            [
+                'Correo electrónico enviado a foo@example.com.',
+                'Has iniciado sesión exitosamente como %s.' % new,
+            ],
+        )
         self.assertEqual(EgaUser.objects.filter(username=new).count(), 1)

@@ -69,11 +69,18 @@ def switch_language(request, lang):
 def _next_matches(user):
     tz_now = now() + timedelta(hours=HOURS_TO_DEADLINE)
     until = tz_now + timedelta(days=NEXT_MATCHES_DAYS)
-    matches = Match.objects.select_related('tournament').filter(
-        tournament__published=True, tournament__finished=False,
-        when__range=(tz_now, until)).order_by('tournament', 'when')
+    matches = (
+        Match.objects.select_related('tournament')
+        .filter(
+            tournament__published=True,
+            tournament__finished=False,
+            when__range=(tz_now, until),
+        )
+        .order_by('tournament', 'when')
+    )
     predictions = user.prediction_set.filter(
-        match__in=matches, home_goals__isnull=False, away_goals__isnull=False)
+        match__in=matches, home_goals__isnull=False, away_goals__isnull=False
+    )
     next_matches = []
     for m in matches:
         pred = None
@@ -95,11 +102,14 @@ def meta_home(request):
         pass
 
     past_tournaments = Tournament.objects.filter(
-        published=True, finished=True).order_by('-id')
+        published=True, finished=True
+    ).order_by('-id')
     next_matches = _next_matches(request.user)
-    return render(request, 'ega/meta_home.html',
-                  {'next_matches': next_matches,
-                   'past_tournaments': past_tournaments})
+    return render(
+        request,
+        'ega/meta_home.html',
+        {'next_matches': next_matches, 'past_tournaments': past_tournaments},
+    )
 
 
 @login_required
@@ -107,8 +117,11 @@ def home(request, slug):
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
     matches = tournament.next_matches()
     played = Prediction.objects.filter(
-        user=request.user, match__in=matches,
-        home_goals__isnull=False, away_goals__isnull=False)
+        user=request.user,
+        match__in=matches,
+        home_goals__isnull=False,
+        away_goals__isnull=False,
+    )
 
     current_round = tournament.current_round()
     matches = matches[:3]
@@ -123,15 +136,23 @@ def home(request, slug):
     stats = request.user.stats(tournament)
 
     champion, created = ChampionPrediction.objects.get_or_create(
-        user=request.user, tournament=tournament)
+        user=request.user, tournament=tournament
+    )
     champion_form = ChampionPredictionForm(instance=champion)
 
     return render(
-        request, 'ega/home.html',
-        {'top_ranking': top_ranking,
-         'tournament': tournament, 'current_round': current_round,
-         'matches': matches, 'history': history,
-         'stats': stats, 'champion_form': champion_form})
+        request,
+        'ega/home.html',
+        {
+            'top_ranking': top_ranking,
+            'tournament': tournament,
+            'current_round': current_round,
+            'matches': matches,
+            'history': history,
+            'stats': stats,
+            'champion_form': champion_form,
+        },
+    )
 
 
 @require_http_methods(('POST',))
@@ -140,7 +161,8 @@ def update_champion_prediction(request, slug):
     """Update user prediction for a tournament champion."""
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
     prediction, created = ChampionPrediction.objects.get_or_create(
-        user=request.user, tournament=tournament)
+        user=request.user, tournament=tournament
+    )
 
     form = ChampionPredictionForm(instance=prediction, data=request.POST)
     if form.is_valid():
@@ -148,7 +170,8 @@ def update_champion_prediction(request, slug):
         team = form.cleaned_data['team']
         team_name = team.name if team is not None else '-'
         messages.success(
-            request, _('Pronóstico de campeón actualizado: %s.') % team_name)
+            request, _('Pronóstico de campeón actualizado: %s.') % team_name
+        )
         return HttpResponseRedirect(reverse('ega-home', args=[slug]))
 
     messages.error(request, _('Equipo no válido'))
@@ -160,7 +183,8 @@ def update_champion_prediction(request, slug):
 def profile(request):
     if request.method == 'POST':
         form = EgaUserForm(
-            instance=request.user, data=request.POST, files=request.FILES)
+            instance=request.user, data=request.POST, files=request.FILES
+        )
         if form.is_valid():
             form.save()
             messages.success(request, _('Perfil actualizado.'))
@@ -178,11 +202,13 @@ def invite_friends(request, slug, league_slug=None):
     league = None
     if league_slug:
         league = get_object_or_404(
-            League, tournament=tournament, slug=league_slug)
+            League, tournament=tournament, slug=league_slug
+        )
         if league.owner != request.user:
             raise Http404
     invite_url = build_invite_url(
-        request, slug=tournament.slug, league_slug=league_slug)
+        request, slug=tournament.slug, league_slug=league_slug
+    )
 
     if request.method == 'POST':
         form = InviteFriendsForm(request.POST)
@@ -203,15 +229,25 @@ def invite_friends(request, slug, league_slug=None):
 
         initial = dict(
             subject=subject,
-            body=_(INVITE_BODY) % dict(
-                extra_text=extra_text, url=invite_url,
-                inviter=request.user.visible_name()),
+            body=_(INVITE_BODY)
+            % dict(
+                extra_text=extra_text,
+                url=invite_url,
+                inviter=request.user.visible_name(),
+            ),
         )
         form = InviteFriendsForm(initial=initial)
 
-    return render(request, 'ega/invite.html',
-                  dict(tournament=tournament, form=form,
-                       league=league, invite_url=invite_url))
+    return render(
+        request,
+        'ega/invite.html',
+        dict(
+            tournament=tournament,
+            form=form,
+            league=league,
+            invite_url=invite_url,
+        ),
+    )
 
 
 @require_GET
@@ -220,7 +256,8 @@ def friend_join(request, key, slug, league_slug=None):
     inviting_user = get_object_or_404(EgaUser, invite_key=key)
     if inviting_user == request.user:
         invite_url = build_invite_url(
-            request, slug=slug, league_slug=league_slug)
+            request, slug=slug, league_slug=league_slug
+        )
         msg1 = _('Vos sos el dueño del link %s!') % invite_url
         msg2 = _('No podés unirte con un link de referencia propio.')
         messages.info(request, msg1)
@@ -235,9 +272,11 @@ def friend_join(request, key, slug, league_slug=None):
 
     if league_slug:
         league = get_object_or_404(
-            League, tournament__slug=slug, slug=league_slug)
+            League, tournament__slug=slug, slug=league_slug
+        )
         member, created = LeagueMember.objects.get_or_create(
-            user=request.user, league=league)
+            user=request.user, league=league
+        )
         if created:
             msg += _('Bienvenido a la liga %s.') % league
         else:
@@ -260,18 +299,25 @@ def leagues(request, slug):
             league.tournament = tournament
             league.save()
             LeagueMember.objects.create(
-                user=request.user, league=league, is_owner=True)
+                user=request.user, league=league, is_owner=True
+            )
             return HttpResponseRedirect(
-                reverse('ega-invite-league',
-                        kwargs=dict(slug=slug, league_slug=league.slug)))
+                reverse(
+                    'ega-invite-league',
+                    kwargs=dict(slug=slug, league_slug=league.slug),
+                )
+            )
     else:
         form = LeagueForm()
 
     user_leagues = League.objects.filter(
-        tournament=tournament, members=request.user)
+        tournament=tournament, members=request.user
+    )
     return render(
-        request, 'ega/leagues.html',
-        dict(tournament=tournament, leagues=user_leagues, form=form))
+        request,
+        'ega/leagues.html',
+        dict(tournament=tournament, leagues=user_leagues, form=form),
+    )
 
 
 @require_GET
@@ -279,16 +325,26 @@ def leagues(request, slug):
 def league_home(request, slug, league_slug):
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
     league = get_object_or_404(
-        League, slug=league_slug, members=request.user,
-        tournament=tournament, tournament__published=True)
+        League,
+        slug=league_slug,
+        members=request.user,
+        tournament=tournament,
+        tournament__published=True,
+    )
 
     top_ranking = league.ranking()[:5]
     stats = request.user.stats(tournament)
 
     return render(
-        request, 'ega/league_home.html',
-        {'tournament': tournament, 'league': league,
-         'top_ranking': top_ranking, 'stats': stats})
+        request,
+        'ega/league_home.html',
+        {
+            'tournament': tournament,
+            'league': league,
+            'top_ranking': top_ranking,
+            'stats': stats,
+        },
+    )
 
 
 @login_required
@@ -296,21 +352,25 @@ def next_matches(request, slug):
     """Return coming matches for the specified tournament."""
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
     # create empty predictions if needed
-    missing = Match.objects.filter(
-        tournament=tournament).exclude(prediction__user=request.user)
-    Prediction.objects.bulk_create([
-        Prediction(user=request.user, match=m) for m in missing
-    ])
+    missing = Match.objects.filter(tournament=tournament).exclude(
+        prediction__user=request.user
+    )
+    Prediction.objects.bulk_create(
+        [Prediction(user=request.user, match=m) for m in missing]
+    )
 
     # predictions for the next matches
     tz_now = now() + timedelta(hours=HOURS_TO_DEADLINE)
     until = tz_now + timedelta(days=NEXT_MATCHES_DAYS)
     predictions = Prediction.objects.filter(
-        user=request.user, match__tournament=tournament,
-        match__when__range=(tz_now, until))
+        user=request.user,
+        match__tournament=tournament,
+        match__when__range=(tz_now, until),
+    )
 
     PredictionFormSet = modelformset_factory(
-        Prediction, form=PredictionForm, extra=0)
+        Prediction, form=PredictionForm, extra=0
+    )
     if request.method == 'POST':
         formset = PredictionFormSet(request.POST, queryset=predictions)
         if formset.is_valid():
@@ -319,11 +379,14 @@ def next_matches(request, slug):
 
             if request.is_ajax():
                 return HttpResponse(
-                    json.dumps({'ok': True, 'expired': expired_matches}))
+                    json.dumps({'ok': True, 'expired': expired_matches})
+                )
 
             if expired_matches:
-                msg = _("Los pronósticos de partidos en juego o "
-                        "finalizados no se actualizaron.")
+                msg = _(
+                    "Los pronósticos de partidos en juego o "
+                    "finalizados no se actualizaron."
+                )
                 messages.error(request, msg)
             messages.success(request, _('Pronósticos actualizados.'))
 
@@ -336,8 +399,11 @@ def next_matches(request, slug):
     else:
         formset = PredictionFormSet(queryset=predictions)
 
-    return render(request, 'ega/next_matches.html',
-                  {'tournament': tournament, 'formset': formset})
+    return render(
+        request,
+        'ega/next_matches.html',
+        {'tournament': tournament, 'formset': formset},
+    )
 
 
 @login_required
@@ -345,21 +411,29 @@ def match_details(request, slug, match_id):
     """Return specified match stats."""
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
     match = get_object_or_404(
-        Match, id=match_id, tournament=tournament, tournament__published=True)
+        Match, id=match_id, tournament=tournament, tournament__published=True
+    )
 
     exacts = Prediction.objects.none()
     winners = Prediction.objects.none()
     if match.finished:
         winners = Prediction.objects.filter(
-            match=match, score__gt=0, score__lt=EXACTLY_MATCH_POINTS)
+            match=match, score__gt=0, score__lt=EXACTLY_MATCH_POINTS
+        )
         exacts = Prediction.objects.filter(
             match=match, score__gte=EXACTLY_MATCH_POINTS
         ).select_related('user')
 
     return render(
-        request, 'ega/match_details.html',
-        {'tournament': tournament, 'match': match,
-         'exacts': exacts, 'winners': winners})
+        request,
+        'ega/match_details.html',
+        {
+            'tournament': tournament,
+            'match': match,
+            'exacts': exacts,
+            'winners': winners,
+        },
+    )
 
 
 @login_required
@@ -370,15 +444,22 @@ def ranking(request, slug, league_slug=None, round=None):
 
     base_url = reverse('ega-ranking', args=[slug])
     if league_slug is not None:
-        base_url = reverse('ega-league-ranking',
-                           args=[tournament.slug, league_slug])
+        base_url = reverse(
+            'ega-league-ranking', args=[tournament.slug, league_slug]
+        )
         league = get_object_or_404(
-            League, tournament=tournament, tournament__published=True,
-            slug=league_slug)
+            League,
+            tournament=tournament,
+            tournament__published=True,
+            slug=league_slug,
+        )
 
     user = request.user
-    scores = (league.ranking(round=round)
-              if league else tournament.ranking(round=round))
+    scores = (
+        league.ranking(round=round)
+        if league
+        else tournament.ranking(round=round)
+    )
     try:
         position = ([r['username'] for r in scores]).index(user.username)
         position += 1
@@ -395,17 +476,33 @@ def ranking(request, slug, league_slug=None, round=None):
         ranking = paginator.page(paginator.num_pages)
 
     stats = user.stats(tournament, round=round)
-    round_choices = tournament.match_set.filter(
-        home_goals__isnull=False, away_goals__isnull=False).values_list(
-        'round', flat=True).order_by('round').distinct()
+    round_choices = (
+        tournament.match_set.filter(
+            home_goals__isnull=False, away_goals__isnull=False
+        )
+        .values_list('round', flat=True)
+        .order_by('round')
+        .distinct()
+    )
     user_leagues = League.objects.filter(
-        tournament=tournament, members=request.user)
+        tournament=tournament, members=request.user
+    )
 
     return render(
-        request, 'ega/ranking.html',
-        {'tournament': tournament, 'league': league, 'leagues': user_leagues,
-         'base_url': base_url, 'round': round, 'choices': round_choices,
-         'ranking': ranking, 'user_position': position, 'stats': stats})
+        request,
+        'ega/ranking.html',
+        {
+            'tournament': tournament,
+            'league': league,
+            'leagues': user_leagues,
+            'base_url': base_url,
+            'round': round,
+            'choices': round_choices,
+            'ranking': ranking,
+            'user_position': position,
+            'stats': stats,
+        },
+    )
 
 
 @login_required
@@ -426,8 +523,10 @@ def history(request, slug):
     stats = request.user.stats(tournament)
 
     return render(
-        request, 'ega/history.html',
-        {'tournament': tournament, 'predictions': predictions, 'stats': stats})
+        request,
+        'ega/history.html',
+        {'tournament': tournament, 'predictions': predictions, 'stats': stats},
+    )
 
 
 def stats(request, slug):
@@ -443,16 +542,24 @@ def stats(request, slug):
     no_loses = [r.team for r in ranking if r.lost == 0]
 
     return render(
-        request, 'ega/stats.html',
-        {'tournament': tournament, 'ranking': ranking,
-         'top_5': zip(results, predictions),
-         'no_wins': no_wins, 'no_ties': no_ties, 'no_loses': no_loses})
+        request,
+        'ega/stats.html',
+        {
+            'tournament': tournament,
+            'ranking': ranking,
+            'top_5': zip(results, predictions),
+            'no_wins': no_wins,
+            'no_ties': no_ties,
+            'no_loses': no_loses,
+        },
+    )
 
 
 @login_required
 def verify_email(request, email):
     email_address = get_object_or_404(
-        EmailAddress, user=request.user, email=email)
+        EmailAddress, user=request.user, email=email
+    )
     email_address.send_confirmation(request)
     messages.success(request, _('Email de verificación enviado a %s') % email)
     return HttpResponseRedirect(reverse('profile'))
