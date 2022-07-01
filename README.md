@@ -1,22 +1,24 @@
-[![Stories in Ready](https://badge.waffle.io/el-ega/fenics.svg?label=ready&title=ToDo)](http://waffle.io/el-ega/fenics) 
+![tests](https://github.com/el-ega/fenics/actions/workflows/tests.yml/badge.svg)
+
 
 fenics
 ======
 
-fenics es el proyecto detrás de https://el-ega.com.ar,
+fenics es el proyecto detrás de https://el-e.ga,
 el sitio de pronósticos deportivos.
 
-Seguí el desarrollo en https://waffle.io/el-ega/fenics.
+Seguí el desarrollo en https://github.com/el-ega/fenics/issues.
 
-Cómo levantar un entorno de desarrollo
---------------------------------------
+
+Cómo configurar un entorno de desarrollo
+----------------------------------------
 
 ### Algunas dependencias previas
 
     $ sudo apt-get install python-virtualenv python3-dev libxml2-dev libxslt-dev libjpeg-dev zlib1g-dev
 
 
-### Levantando el proyecto
+### Configuración el proyecto
 
     $ git clone git@github.com:el-ega/fenics
     $ cd fenics
