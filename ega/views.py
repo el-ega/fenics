@@ -12,7 +12,7 @@ from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils.timezone import now
-from django.utils.translation import LANGUAGE_SESSION_KEY, gettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_GET, require_http_methods
 
 from ega.constants import (
@@ -41,6 +41,9 @@ from ega.models import (
     Prediction,
     Tournament,
 )
+
+
+LANGUAGE_SESSION_KEY = '_language'
 
 
 def build_invite_url(request, slug, key=None, league_slug=None):
