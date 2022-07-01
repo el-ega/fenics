@@ -1,6 +1,6 @@
 black
 demiurge
-Django<3
+Django
 django-allauth
 django-nocaptcha-recaptcha
 feedparser

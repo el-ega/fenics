@@ -3,7 +3,7 @@
 {% load i18n %}
 {% load account %}
 {% load socialaccount %}
-{% load staticfiles %}
+{% load static %}
 
 {% block navbar-brand-logo %}
     <a class="navbar-brand visible-xs" href="{% if tournament %}{% url 'ega-home' tournament.slug %}{% else %}{% url 'meta-home' %}{% endif %}">
