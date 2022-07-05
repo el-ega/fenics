@@ -7,9 +7,7 @@
 asgiref==3.5.2
     # via django
 backports-zoneinfo==0.2.1 ; python_version < "3.10"
-    # via
-    #   -r requirements.in
-    #   django
+    # via -r requirements.in
 black==22.6.0
     # via -r requirements.in
 certifi==2022.6.15
@@ -28,7 +26,7 @@ defusedxml==0.7.1
     # via python3-openid
 demiurge==0.2
     # via -r requirements.in
-django==4.0.5
+django==4.0.6
     # via
     #   -r requirements.in
     #   django-allauth
