@@ -27,7 +27,7 @@
             <option value="{{ base_url }}">{% trans 'Total' %}</option>
             {% for f in choices %}
                 <option value="{{ base_url }}f/{{ f }}"
-                        {% ifequal round f %}selected="selected"{% endifequal %}>
+                        {% if round == f %}selected="selected"{% endif %}>
                     {% blocktrans %}Fecha {{ f }}{% endblocktrans %}</option>
             {% endfor %}
         </select>
