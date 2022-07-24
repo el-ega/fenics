@@ -121,29 +121,19 @@
             {% block footer %}
             <div class="text-center footer-links">
                 <small><strong>
-                <a href="http://blog.el-ega.com.ar">{% trans "Blog" %}</a> |
+                <a href="http://blog.el-e.ga">{% trans "Blog" %}</a> |
                 <a href="/rules/">{% trans "Reglas" %}</a> |
                 <a href="/faq/">{% trans "FAQ" %}</a> |
+                {% comment %}
                 {% get_current_language as LANGUAGE_CODE %}
                 {% if LANGUAGE_CODE == 'es' %}<a href="{% url 'switch-language' 'en' %}">In English</a> |
                 {% else %}<a href="{% url 'switch-language' 'es' %}">En Español</a> |{% endif %}
+                {% endcomment %}
                 &copy 2004-{% now "Y" %} el Ega </strong></small>
             </div>
             {% endblock %}
         </footer>
 
-        {% block analytics %}
-        <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-        ga('create', 'UA-99589-1', 'auto');
-        ga('send', 'pageview');
-
-        </script>
-        {% endblock %}
     </body>
 
 </html>

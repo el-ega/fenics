@@ -1,6 +1,6 @@
 {% for item in news_items %}
     <p class="news-item">
     <strong>{{ item.title|striptags|safe }}</strong><br/>
-    <small>{{ item.summary|striptags|truncatewords:50|safe }}
+    <small>{{ item.summary|striptags|truncatewords:30|safe }}
     <br/><a href="{{ item.link }}" target="new">Leer más</a></small></p>
 {% endfor %}
