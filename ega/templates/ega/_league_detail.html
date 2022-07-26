@@ -19,7 +19,7 @@
         {% for m in league.leaguemember_set.all %}
         <li class="list-group-item">
             {{ m.user.visible_name }}
-            {% ifequal m.user user %}<span class="badge">{% trans 'vos' %}</span>{% endifequal %}
+            {% if m.user == user %}<span class="badge">{% trans 'vos' %}</span>{% endif %}
             {% if m.is_owner %}<span class="badge">{% trans 'creador' %}</span>{% endif %}
         </li>
         {% endfor %}
