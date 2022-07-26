@@ -124,11 +124,9 @@
                 <a href="http://blog.el-e.ga">{% trans "Blog" %}</a> |
                 <a href="/rules/">{% trans "Reglas" %}</a> |
                 <a href="/faq/">{% trans "FAQ" %}</a> |
-                {% comment %}
                 {% get_current_language as LANGUAGE_CODE %}
                 {% if LANGUAGE_CODE == 'es' %}<a href="{% url 'switch-language' 'en' %}">In English</a> |
                 {% else %}<a href="{% url 'switch-language' 'es' %}">En Español</a> |{% endif %}
-                {% endcomment %}
                 &copy 2004-{% now "Y" %} el Ega </strong></small>
             </div>
             {% endblock %}

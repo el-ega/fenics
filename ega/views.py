@@ -381,7 +381,7 @@ def next_matches(request, slug):
             formset.save()
             expired_matches = any(f.expired for f in formset)
 
-            if request.is_ajax():
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return HttpResponse(
                     json.dumps({'ok': True, 'expired': expired_matches})
                 )
