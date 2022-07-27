@@ -4,75 +4,6 @@
 {% load static %}
 
 
-{% block extra-head %}
-
-<script type="text/javascript">
-
-function process_data(data){
-    for (var i = 0; i < data.length; i++){
-        match = data[i];
-        if (match.home_team.code == '{{ match.home.code }}' && match.away_team.code == '{{ match.away.code }}'){
-            break;
-        }
-    }
-
-    if (i == data.length){
-        return;
-    }
-
-    var home_team = match.home_team;
-    var away_team = match.away_team;
-
-    var home_events = match.home_team_events;
-    var away_events = match.away_team_events;
-
-    {% if not match.finished %}
-    $('#' + home_team.code + '-goals').text(home_team.goals);
-    $('#' + away_team.code + '-goals').text(away_team.goals);
-    $('#' + away_team.code + '-goals-responsive').text(away_team.goals);
-    {% endif %}
-
-    $('#' + home_team.code + '-stats').text('');
-    $.each(home_events, function(key, value){
-        $('#' + home_team.code + '-stats').append(
-            '<p title="' + value.type_of_event + '" class="home-event home-' + value.type_of_event + '">' + value.time + '\' ' + value.player + '</p>');
-    });
-
-    $('#' + away_team.code + '-stats').text('');
-    $.each(away_events, function(key, value){
-        $('#' + away_team.code + '-stats').append(
-            '<p title="' + value.type_of_event + '" class="away-event away-' + value.type_of_event + '">' + value.time + '\' ' + value.player + '</p>');
-    });
-
-    if (match.status == 'in progress') {
-        setTimeout(function() { update_match(); }, 30000);
-        $('#match-status').text('En juego');
-    }else if (match.status == 'future') {
-        setTimeout(function() { update_match(); }, 30000);
-        $('#match-status').text('Por jugarse');
-    }else{
-        $('#match-status').text('Finalizado');
-    }
-}
-
-
-function update_match(){
-    {% if match.finished %}
-    var url = 'https://world-cup-json.herokuapp.com/matches/country?fifa_code={{ match.home.code }}';
-    {% else %}
-    var url = 'https://world-cup-json.herokuapp.com/matches/today/';
-    {% endif %}
-    $.get(url, {}, process_data);
-}
-
-$(document).ready(function () {
-    update_match();
-});
-</script>
-
-{% endblock %}
-
-
 {% block content-title %}{% endblock %}
 
 {% block content %}
@@ -166,20 +97,5 @@ $(document).ready(function () {
         </div>
     </div>
     {% endif %}
-
-
-    <div id="disqus_thread"></div>
-    <script type="text/javascript">
-        var disqus_shortname = '{{ DISQUS_SHORTNAME }}';
-        var disqus_title = '{{ tournament.slug }}-{{ match.id }}-{{ match.home.code }}-{{ match.away.code }}';
-
-        /* * * DON'T EDIT BELOW THIS LINE * * */
-        (function() {
-            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-
 
 {% endblock %}
