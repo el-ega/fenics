@@ -122,8 +122,8 @@
             <div class="text-center footer-links">
                 <small><strong>
                 <a href="http://blog.el-e.ga">{% trans "Blog" %}</a> |
-                <a href="/rules/">{% trans "Reglas" %}</a> |
-                <a href="/faq/">{% trans "FAQ" %}</a> |
+                <a href="/p/rules/">{% trans "Reglas" %}</a> |
+                <a href="/p/faq/">{% trans "FAQ" %}</a> |
                 {% get_current_language as LANGUAGE_CODE %}
                 {% if LANGUAGE_CODE == 'es' %}<a href="{% url 'switch-language' 'en' %}">In English</a> |
                 {% else %}<a href="{% url 'switch-language' 'es' %}">En Español</a> |{% endif %}
