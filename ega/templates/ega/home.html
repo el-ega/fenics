@@ -8,6 +8,10 @@
 
 {% block content %}
 
+    {% if not user.preferences.default_prediction %}
+        {% include 'ega/_default_prediction_notice.html' %}
+    {% endif %}
+
     <div class="row">
         <div class="col-md-4">
 

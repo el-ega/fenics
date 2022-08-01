@@ -22,20 +22,52 @@
             {% include 'ega/_form_errors_all_snippet.html' %}
 
             {% for field in form %}
+                {% if 'goal' not in field.name %}
                 {% include 'ega/_field_snippet.html' %}
+                {% endif %}
             {% endfor %}
 
-            <label>{% trans 'Emails' %}</label>
-            <ul class="list-unstyled">
-            {% for email in request.user.emailaddress_set.all %}
-                <li>
-                    {{ email.email }}
-                    {% if not email.verified %}<a href="{% url 'verify-email' email.email %}">{% trans 'verificar' %}</a>
-                    {% else %}<span class="badge">{% trans 'verificada' %}</span>{% endif %}
-                    {% if email.primary %}<span class="badge">{% trans 'principal' %}</span>{% endif %}
-                </li>
-            {% endfor%}
-            </ul>
+            <div class="form-group">
+                <label>{% trans 'Pronóstico por defecto' %} <span class="label label-info">{% trans 'Nuevo' %}</span></label>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h6 class="panel-title">
+                            <small>Este pronóstico es el que vamos a considerar si se te pasa o se te olvida
+                            pronosticar un partido.</small>
+                        </h6>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-4 text-right">
+                            {% include "ega/_team_details.html" with condition="home" team=None placeholder="Local" %}
+                            </div>
+                            <div class="col-xs-12 col-md-4 text-center">
+                                <div class="row">
+                                    <div class="col-xs-6"><p class="goals-input">{{ form.home_goals }}</p></div>
+                                    <div class="col-xs-6"><p class="goals-input">{{ form.away_goals }}</p></div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-4">
+                            {% include "ega/_team_details.html" with condition="away" team=None placeholder="Visitante" %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>{% trans 'Emails' %}</label>
+                <ul class="list-unstyled">
+                {% for email in request.user.emailaddress_set.all %}
+                    <li>
+                        {{ email.email }}
+                        {% if not email.verified %}<a href="{% url 'verify-email' email.email %}">{% trans 'verificar' %}</a>
+                        {% else %}<span class="badge">{% trans 'verificada' %}</span>{% endif %}
+                        {% if email.primary %}<span class="badge">{% trans 'principal' %}</span>{% endif %}
+                    </li>
+                {% endfor%}
+                </ul>
+            </div>
 
             <div>
                 <button name="update" type="submit" class="btn btn-primary">{% trans 'Actualizar perfil' %}</button>

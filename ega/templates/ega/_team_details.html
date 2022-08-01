@@ -1,11 +1,15 @@
 {% load i18n %}
+{% load static %}
 {% load ega_tags %}
+
 <div class="panel panel-info">
     <div class="panel-heading">
         <h6 class="panel-title {{ condition }}-stats">
         <strong class="{% if form.instance.starred %}starred-font{% endif %}">{{ team|default_if_none:placeholder }}</strong>
         {% if team.image %}
         <img class="team-image-small {{ condition }}-image" src="{{ team.image.url }}" />
+        {% else %}
+        <img class="team-image-small {{ condition }}-image" src="{% static 'images/ball_icon.png' %}" />
         {% endif %}</h6>
     </div>
     <div class="panel-body {{ condition }}-stats">

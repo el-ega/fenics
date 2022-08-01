@@ -9,8 +9,35 @@ from ega.constants import EMAILS_PLACEHOLDER
 from ega.models import ChampionPrediction, EgaUser, League, Prediction, Team
 
 
-class PredictionForm(forms.ModelForm):
-    GOAL_CHOICES = [('', '-')] + [(i, i) for i in range(20)]
+GOAL_CHOICES = [('', '-')] + [(i, i) for i in range(20)]
+
+
+class PredictionFormMixin(object):
+
+    def _clean_goals(self, field_name):
+        goals = self.cleaned_data.get(field_name)
+        if not goals:
+            goals = None
+        return goals
+
+    def clean_home_goals(self):
+        return self._clean_goals('home_goals')
+
+    def clean_away_goals(self):
+        return self._clean_goals('away_goals')
+
+    def validate_goals_together(self, cleaned_data):
+        home_goals = cleaned_data.get("home_goals")
+        away_goals = cleaned_data.get("away_goals")
+
+        msg = "Pronóstico incompleto."
+        if home_goals and not away_goals:
+            raise forms.ValidationError(msg)
+        if not home_goals and away_goals:
+            raise forms.ValidationError(msg)
+
+
+class PredictionForm(PredictionFormMixin, forms.ModelForm):
 
     home_goals = forms.ChoiceField(
         choices=GOAL_CHOICES,
@@ -37,28 +64,9 @@ class PredictionForm(forms.ModelForm):
             away = match.away.name if match.away else match.away_placeholder
             self.fields['penalties'].choices = [('L', home), ('V', away)]
 
-    def _clean_goals(self, field_name):
-        goals = self.cleaned_data.get(field_name)
-        if not goals:
-            goals = None
-        return goals
-
-    def clean_home_goals(self):
-        return self._clean_goals('home_goals')
-
-    def clean_away_goals(self):
-        return self._clean_goals('away_goals')
-
     def clean(self):
         cleaned_data = super(PredictionForm, self).clean()
-        home_goals = cleaned_data.get("home_goals")
-        away_goals = cleaned_data.get("away_goals")
-
-        msg = "Pronóstico incompleto."
-        if home_goals and not away_goals:
-            raise forms.ValidationError(msg)
-        if not home_goals and away_goals:
-            raise forms.ValidationError(msg)
+        self.validate_goals_together(cleaned_data)
 
         penalties = cleaned_data.get('penalties')
         if penalties and home_goals != away_goals:
@@ -161,11 +169,50 @@ class LeagueForm(forms.ModelForm):
         fields = ('name',)
 
 
-class EgaUserForm(forms.ModelForm):
+class EgaUserForm(PredictionFormMixin, forms.ModelForm):
+
+    home_goals = forms.ChoiceField(
+        choices=GOAL_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={'class': 'form-control'}),
+    )
+    away_goals = forms.ChoiceField(
+        choices=GOAL_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={'class': 'form-control'}),
+    )
+
+    def __init__(self, *args, instance=None, initial=None, **kwargs):
+        if instance and instance.default_prediction:
+            initial = initial or {}
+            initial['home_goals'] = instance.default_prediction['home_goals']
+            initial['away_goals'] = instance.default_prediction['away_goals']
+        super(EgaUserForm, self).__init__(
+            *args, instance=instance, initial=initial, **kwargs)
+
+    def clean(self):
+        cleaned_data = super(EgaUserForm, self).clean()
+        self.validate_goals_together(cleaned_data)
+        return cleaned_data
+
+    def save(self, *args, **kwargs):
+        if self.cleaned_data['home_goals'] and self.cleaned_data['away_goals']:
+            self.instance.default_prediction = (
+                self.cleaned_data['home_goals'],
+                self.cleaned_data['away_goals'],
+            )
+        return super(EgaUserForm, self).save(*args, **kwargs)
+
     class Meta:
         model = EgaUser
-        fields = ('username', 'first_name', 'last_name', 'avatar')
-
+        fields = (
+            'username', 'first_name', 'last_name', 'avatar',
+            'home_goals', 'away_goals')
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+        }
 
 class CustomSignupForm(forms.Form):
 
