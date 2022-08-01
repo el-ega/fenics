@@ -123,9 +123,7 @@ class SignUpTestCase(BaseTestCase):
 
     def test_existing_username(self):
         response = self.signup(
-            self.user.username,
-            'foo@example.com',
-            self.good_pw,
+            self.user.username, 'foo@example.com', self.good_pw
         )
         self.assertFormError(response, 'form', 'username', self.bad_username)
         self.assertContains(response, self.bad_username)

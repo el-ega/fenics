@@ -31,4 +31,5 @@ pip-log.txt
 
 fenics/local_settings.py
 env/
+media/avatars/
 db.sqlite3

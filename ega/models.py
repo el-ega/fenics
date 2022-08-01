@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import collections
 import json
 import random
@@ -10,7 +9,8 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.mail.message import EmailMessage
 from django.db import IntegrityError, connection, models
-from django.db.models import F, Q, Sum
+from django.db.models import F, OuterRef, Q, Subquery, Sum
+from django.db.models.functions import Cast
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
@@ -98,6 +98,19 @@ class EgaUser(AbstractUser):
         'self', null=True, related_name='referrals', on_delete=models.CASCADE
     )
     referred_on = models.DateTimeField(null=True)
+    preferences = models.JSONField(default=dict)
+
+    @property
+    def default_prediction(self):
+        return self.preferences.get('default_prediction')
+
+    @default_prediction.setter
+    def default_prediction(self, prediction):
+        (home_goals, away_goals) = prediction
+        self.preferences['default_prediction'] = {
+            'home_goals': home_goals,
+            'away_goals': away_goals,
+        }
 
     def record_referral(self, other):
         created = False
@@ -321,6 +334,7 @@ class Match(models.Model):
 class Prediction(models.Model):
     """User prediction for a match."""
 
+    SOURCES = ('preferences', 'web')
     TRENDS = ('L', 'E', 'V')
 
     user = models.ForeignKey(
@@ -338,6 +352,9 @@ class Prediction(models.Model):
     starred = models.BooleanField(default=False)
 
     score = models.PositiveIntegerField(default=0)
+    source = models.CharField(
+        max_length=256, default='web', choices=((s, s) for s in SOURCES)
+    )
 
     objects = PredictionManager()
 
@@ -581,6 +598,31 @@ def update_related_predictions(sender, instance, **kwargs):
 
     # reset predictions
     predictions.update(score=0)
+
+    # update unpredicted predictions with default values, taken from the
+    # user's preferences (if any)
+
+    def default_prediction_goals(side):
+        return (
+            EgaUser.objects.filter(pk=OuterRef('user_id'))
+            .annotate(
+                goals=Cast(
+                    'preferences__default_prediction__%s_goals' % side,
+                    models.PositiveIntegerField(),
+                )
+            )
+            .values('goals')
+        )
+
+    Prediction.objects.filter(
+        home_goals__isnull=True,
+        away_goals__isnull=True,
+        user__preferences__default_prediction__isnull=False,
+    ).update(
+        source='preferences',
+        home_goals=Subquery(default_prediction_goals('home')),
+        away_goals=Subquery(default_prediction_goals('away')),
+    )
 
     # update exact predictions
     predictions.filter(home_goals=home_goals, away_goals=away_goals).update(
