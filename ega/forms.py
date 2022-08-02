@@ -13,7 +13,6 @@ GOAL_CHOICES = [('', '-')] + [(i, i) for i in range(20)]
 
 
 class PredictionFormMixin(object):
-
     def _clean_goals(self, field_name):
         goals = self.cleaned_data.get(field_name)
         if not goals:
@@ -188,7 +187,8 @@ class EgaUserForm(PredictionFormMixin, forms.ModelForm):
             initial['home_goals'] = instance.default_prediction['home_goals']
             initial['away_goals'] = instance.default_prediction['away_goals']
         super(EgaUserForm, self).__init__(
-            *args, instance=instance, initial=initial, **kwargs)
+            *args, instance=instance, initial=initial, **kwargs
+        )
 
     def clean(self):
         cleaned_data = super(EgaUserForm, self).clean()
@@ -206,13 +206,19 @@ class EgaUserForm(PredictionFormMixin, forms.ModelForm):
     class Meta:
         model = EgaUser
         fields = (
-            'username', 'first_name', 'last_name', 'avatar',
-            'home_goals', 'away_goals')
+            'username',
+            'first_name',
+            'last_name',
+            'avatar',
+            'home_goals',
+            'away_goals',
+        )
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control'}),
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
         }
+
 
 class CustomSignupForm(forms.Form):
 
