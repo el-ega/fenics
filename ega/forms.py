@@ -40,7 +40,8 @@ class PredictionFormMixin(object):
         if penalties and home_goals != away_goals:
             msg = _(
                 "El ganador de los penales se puede pronosticar sólo con "
-                "pronóstico de empate.")
+                "pronóstico de empate."
+            )
             raise forms.ValidationError(msg)
 
         return cleaned_data
