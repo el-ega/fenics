@@ -1,0 +1,15 @@
+{% load i18n %}
+
+    <div class="row">
+        <div class="col-md-12 penalties-input">
+        <strong id="{{ form.prefix }}-help" class="small">{% trans 'En los penales gana' %}</strong><br/>
+        <div class="btn-group btn-group-xs" data-toggle="buttons">
+            <label id="{{ penalties.0.id_for_label }}" class="btn btn-success {% if penalties.0.data.selected %}active{% endif %}">
+                <input type="radio" value="{{ penalties.0.data.value }}" name="{{ penalties.0.data.name }}" {% if penalties.0.data.selected %}checked{% endif %}>{{ penalties.0.choice_label }}
+            </label>
+            <label id="{{ penalties.1.id_for_label }}" class="btn btn-success {% if penalties.1.data.selected %}active{% endif %}">
+                <input type="radio" value="{{ penalties.1.data.value }}" name="{{ penalties.1.data.name }}" {% if penalties.1.data.selected %}checked{% endif %}>{{ penalties.1.choice_label }}
+            </label>
+        </div>
+        </div>
+    </div>
