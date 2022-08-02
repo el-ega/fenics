@@ -35,6 +35,8 @@ class PredictionFormMixin(object):
         if not home_goals and away_goals:
             raise forms.ValidationError(msg)
 
+        return (home_goals, away_goals)
+
 
 class PredictionForm(PredictionFormMixin, forms.ModelForm):
 
@@ -65,7 +67,7 @@ class PredictionForm(PredictionFormMixin, forms.ModelForm):
 
     def clean(self):
         cleaned_data = super(PredictionForm, self).clean()
-        self.validate_score(cleaned_data)
+        (home_goals, away_goals) = self.validate_score(cleaned_data)
 
         penalties = cleaned_data.get('penalties')
         if penalties and home_goals != away_goals:
