@@ -10,6 +10,7 @@ from ega.models import ChampionPrediction, EgaUser, League, Prediction, Team
 
 
 GOAL_CHOICES = [('', '-')] + [(i, i) for i in range(20)]
+PENALTY_CHOICES = [('L', _('Local')), ('V', _('Visitante'))]
 
 
 class PredictionFormMixin(object):
@@ -25,7 +26,7 @@ class PredictionFormMixin(object):
     def clean_away_goals(self):
         return self._clean_goals('away_goals')
 
-    def validate_score(self, cleaned_data):
+    def validate_prediction(self, cleaned_data):
         home_goals = cleaned_data.get("home_goals")
         away_goals = cleaned_data.get("away_goals")
 
@@ -35,7 +36,15 @@ class PredictionFormMixin(object):
         if not home_goals and away_goals:
             raise forms.ValidationError(msg)
 
-        return (home_goals, away_goals)
+        penalties = cleaned_data.get('penalties')
+        if penalties and home_goals != away_goals:
+            msg = _(
+                "El ganador de los penales se puede pronosticar sólo con "
+                "pronóstico de empate."
+            )
+            raise forms.ValidationError(msg)
+
+        return cleaned_data
 
 
 class PredictionForm(PredictionFormMixin, forms.ModelForm):
@@ -51,9 +60,7 @@ class PredictionForm(PredictionFormMixin, forms.ModelForm):
         widget=forms.Select(attrs={'class': 'form-control input-lg'}),
     )
     penalties = forms.ChoiceField(
-        choices=[('L', _('Local')), ('V', _('Visitante'))],
-        required=False,
-        widget=forms.RadioSelect(),
+        choices=PENALTY_CHOICES, required=False, widget=forms.RadioSelect()
     )
 
     def __init__(self, *args, **kwargs):
@@ -67,13 +74,7 @@ class PredictionForm(PredictionFormMixin, forms.ModelForm):
 
     def clean(self):
         cleaned_data = super(PredictionForm, self).clean()
-        (home_goals, away_goals) = self.validate_score(cleaned_data)
-
-        penalties = cleaned_data.get('penalties')
-        if penalties and home_goals != away_goals:
-            msg = "Penales se puede pronosticar sólo en caso de empate."
-            raise forms.ValidationError(msg)
-
+        self.validate_prediction(cleaned_data)
         return cleaned_data
 
     def save(self, *args, **kwargs):
@@ -182,27 +183,41 @@ class EgaUserForm(PredictionFormMixin, forms.ModelForm):
         required=False,
         widget=forms.Select(attrs={'class': 'form-control'}),
     )
+    penalties = forms.ChoiceField(
+        choices=PENALTY_CHOICES, required=False, widget=forms.RadioSelect()
+    )
 
     def __init__(self, *args, instance=None, initial=None, **kwargs):
-        if instance and instance.default_prediction:
+        default_prediction = instance and instance.default_prediction
+        if default_prediction:
             initial = initial or {}
-            initial['home_goals'] = instance.default_prediction['home_goals']
-            initial['away_goals'] = instance.default_prediction['away_goals']
+            initial['home_goals'] = default_prediction['home_goals']
+            initial['away_goals'] = default_prediction['away_goals']
+            initial['penalties'] = default_prediction.get('penalties', '')
         super(EgaUserForm, self).__init__(
             *args, instance=instance, initial=initial, **kwargs
         )
 
     def clean(self):
         cleaned_data = super(EgaUserForm, self).clean()
-        self.validate_score(cleaned_data)
+        self.validate_prediction(cleaned_data)
+        home_goals = cleaned_data['home_goals']
+        away_goals = cleaned_data['away_goals']
+        penalties = cleaned_data.get('penalties', '')
+        if home_goals and away_goals:
+            cleaned_data['default_prediction'] = (
+                int(home_goals),
+                int(away_goals),
+                penalties,
+            )
+        else:
+            cleaned_data['default_prediction'] = None
         return cleaned_data
 
     def save(self, *args, **kwargs):
-        if self.cleaned_data['home_goals'] and self.cleaned_data['away_goals']:
-            self.instance.default_prediction = (
-                self.cleaned_data['home_goals'],
-                self.cleaned_data['away_goals'],
-            )
+        self.instance.default_prediction = self.cleaned_data[
+            'default_prediction'
+        ]
         return super(EgaUserForm, self).save(*args, **kwargs)
 
     class Meta:

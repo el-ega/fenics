@@ -8,8 +8,9 @@ from datetime import timedelta
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.mail.message import EmailMessage
+from django.core.serializers.json import DjangoJSONEncoder
 from django.db import IntegrityError, connection, models
-from django.db.models import F, OuterRef, Q, Subquery, Sum
+from django.db.models import Case, F, OuterRef, Q, Subquery, Sum, Value, When
 from django.db.models.functions import Cast
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -98,7 +99,7 @@ class EgaUser(AbstractUser):
         'self', null=True, related_name='referrals', on_delete=models.CASCADE
     )
     referred_on = models.DateTimeField(null=True)
-    preferences = models.JSONField(default=dict)
+    preferences = models.JSONField(encoder=DjangoJSONEncoder, default=dict)
 
     @property
     def default_prediction(self):
@@ -106,11 +107,16 @@ class EgaUser(AbstractUser):
 
     @default_prediction.setter
     def default_prediction(self, prediction):
-        (home_goals, away_goals) = prediction
-        self.preferences['default_prediction'] = {
-            'home_goals': home_goals,
-            'away_goals': away_goals,
-        }
+        if prediction is None:
+            self.preferences.pop('default_prediction', None)
+        else:
+            (home_goals, away_goals, penalties) = prediction
+            self.preferences['default_prediction'] = {
+                'home_goals': home_goals,
+                'away_goals': away_goals,
+                'penalties': penalties,
+                'last_updated': now(),
+            }
 
     def record_referral(self, other):
         created = False
@@ -611,7 +617,30 @@ def update_related_predictions(sender, instance, **kwargs):
                     models.PositiveIntegerField(),
                 )
             )
-            .values('goals')
+            .values('goals')[:1]
+        )
+
+    def default_prediction_penalties():
+        return (
+            EgaUser.objects.filter(pk=OuterRef('user_id'))
+            .annotate(
+                penalties=Case(
+                    When(
+                        preferences__default_prediction__penalties='L',
+                        then=Value('L'),
+                    ),
+                    When(
+                        preferences__default_prediction__penalties='V',
+                        then=Value('V'),
+                    ),
+                    When(
+                        preferences__default_prediction__penalties='',
+                        then=Value(''),
+                    ),
+                    default=Value(''),
+                )
+            )
+            .values('penalties')[:1]
         )
 
     Prediction.objects.filter(
@@ -622,6 +651,7 @@ def update_related_predictions(sender, instance, **kwargs):
         source='preferences',
         home_goals=Subquery(default_prediction_goals('home')),
         away_goals=Subquery(default_prediction_goals('away')),
+        penalties=Subquery(default_prediction_penalties()),
     )
 
     # update exact predictions

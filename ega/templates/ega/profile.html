@@ -2,6 +2,31 @@
 {% load i18n %}
 {% load static %}
 
+{% block extra-head %}
+<script type="text/javascript">
+
+    function check_tie() {
+        if ($('select[name=home_goals]').val() == $('select[name=away_goals]').val()){
+            $('input[name=penalties]').prop( "disabled", false);
+            $('[id^=id_penalties]').removeAttr("disabled");
+            $('#None-help').css("color", "#333");
+        }else{
+            $('[id^=id_penalties]').attr({"disabled": "disabled"}).removeClass('active');
+            $('input[name=penalties]').prop({"disabled": true, "checked": false});
+            $('#None-help').css("color", "#bbb");
+        }
+    }
+
+    $(document).ready(function () {
+            $('select[name=home_goals]').change(function() {check_tie()});
+            $('select[name=away_goals]').change(function() {check_tie()});
+
+            check_tie();
+        });
+
+</script>
+{% endblock %}
+
 {% block content-title %}{% endblock %}
 
 {% block content %}
@@ -21,38 +46,9 @@
 
             {% include 'ega/_form_errors_all_snippet.html' %}
 
-            {% for field in form %}
-                {% if 'goal' not in field.name %}
-                {% include 'ega/_field_snippet.html' %}
-                {% endif %}
-            {% endfor %}
-
-            <div class="form-group">
-                <label>{% trans 'Pronóstico por defecto' %} <span class="label label-info">{% trans 'Nuevo' %}</span></label>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h6 class="panel-title">
-                            <small>{% trans 'Este pronóstico es el que vamos a considerar si se te pasa o se te olvida pronosticar un partido.' %}</small>
-                        </h6>
-                    </div>
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-xs-12 col-md-4 text-right">
-                            {% include "ega/_team_details.html" with condition="home" team=None placeholder="Local" %}
-                            </div>
-                            <div class="col-xs-12 col-md-4 text-center">
-                                <div class="row">
-                                    <div class="col-xs-6"><p class="goals-input">{{ form.home_goals }}</p></div>
-                                    <div class="col-xs-6"><p class="goals-input">{{ form.away_goals }}</p></div>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-md-4">
-                            {% include "ega/_team_details.html" with condition="away" team=None placeholder="Visitante" %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% include 'ega/_field_snippet.html' with field=form.username %}
+            {% include 'ega/_field_snippet.html' with field=form.first_name %}
+            {% include 'ega/_field_snippet.html' with field=form.last_name %}
 
             <div class="form-group">
                 <label>{% trans 'Emails' %}</label>
@@ -66,6 +62,38 @@
                     </li>
                 {% endfor%}
                 </ul>
+            </div>
+
+            {% include 'ega/_field_snippet.html' with field=form.avatar %}
+
+            <div class="form-group">
+                <label>{% trans 'Pronóstico por defecto' %} <span class="label label-info">{% trans 'Nuevo' %}</span></label>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h6 class="panel-title">
+                            <small>{% trans 'Este pronóstico es el que vamos a considerar si se te pasa o se te olvida pronosticar un partido.' %}</small>
+                        </h6>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-4 text-right">
+                            {% include "ega/_team_details.html" with condition="home" team=None placeholder=_("Local") %}
+                            </div>
+                            <div class="col-xs-12 col-md-4 text-center{% if form.home_goals.errors or form.away_goals.errors %} has-error{% endif %}">
+                                <div class="row">
+                                    <div class="col-xs-6"><p class="goals-input">{{ form.home_goals }}</p></div>
+                                    <div class="col-xs-6"><p class="goals-input">{{ form.away_goals }}</p></div>
+                                </div>
+                                {% with penalties=form.penalties %}
+                                {% include 'ega/_prediction_penalties.html'%}
+                                {% endwith %}
+                            </div>
+                            <div class="col-xs-12 col-md-4">
+                            {% include "ega/_team_details.html" with condition="away" team=None placeholder=_("Visitante") %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div>
