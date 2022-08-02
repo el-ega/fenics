@@ -26,7 +26,7 @@ class PredictionFormMixin(object):
     def clean_away_goals(self):
         return self._clean_goals('away_goals')
 
-    def validate_goals_together(self, cleaned_data):
+    def validate_score(self, cleaned_data):
         home_goals = cleaned_data.get("home_goals")
         away_goals = cleaned_data.get("away_goals")
 
@@ -66,7 +66,7 @@ class PredictionForm(PredictionFormMixin, forms.ModelForm):
 
     def clean(self):
         cleaned_data = super(PredictionForm, self).clean()
-        self.validate_goals_together(cleaned_data)
+        self.validate_score(cleaned_data)
 
         penalties = cleaned_data.get('penalties')
         if penalties and home_goals != away_goals:
@@ -192,7 +192,7 @@ class EgaUserForm(PredictionFormMixin, forms.ModelForm):
 
     def clean(self):
         cleaned_data = super(EgaUserForm, self).clean()
-        self.validate_goals_together(cleaned_data)
+        self.validate_score(cleaned_data)
         return cleaned_data
 
     def save(self, *args, **kwargs):

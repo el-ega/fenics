@@ -9,7 +9,7 @@
         {% if team.image %}
         <img class="team-image-small {{ condition }}-image" src="{{ team.image.url }}" />
         {% else %}
-        <img class="team-image-small {{ condition }}-image" src="{% static 'images/ball_icon.png' %}" />
+        <img class="team-image-small {{ condition }}-image" width="30px" src="{% static 'images/logo.png' %}" />
         {% endif %}</h6>
     </div>
     <div class="panel-body {{ condition }}-stats">
