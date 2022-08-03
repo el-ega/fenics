@@ -324,7 +324,7 @@ msgid ""
 msgstr ""
 "\n"
 "  You can now define a default score prediction!\n"
-"  No more missing points, you can configure it <a href=\"%(profile_url)s\" "
+"  No more lost points, you can configure it <a href=\"%(profile_url)s\" "
 "class=\"alert-link\">in your profile page</a>\n"
 "  "
 
@@ -346,7 +346,7 @@ msgstr ""
 
 #: templates/ega/_prediction_penalties.html:5
 msgid "En los penales gana"
-msgstr "In the penalties wins"
+msgstr "Knockout winner"
 
 #: templates/ega/_predictions.html:44
 msgid "En juego"
@@ -403,7 +403,7 @@ msgstr[1] "%(lost)s losts"
 
 #: templates/ega/_team_details.html:27 templates/ega/home.html:65
 msgid "Últimos resultados"
-msgstr "Latest matches"
+msgstr "Latest results"
 
 #: templates/ega/_trends.html:8
 msgid "Empate"
@@ -455,7 +455,7 @@ msgstr ""
 
 #: templates/ega/home.html:24
 msgid "Pronosticá el campeón"
-msgstr "Predict the champion"
+msgstr "Guess the champion"
 
 #: templates/ega/home.html:30
 msgid "Actualizar"
@@ -486,7 +486,7 @@ msgstr "News"
 #: templates/ega/home.html:57 templates/ega/meta_home.html:20
 #: templates/ega/next_matches.html:91
 msgid "Próximos partidos"
-msgstr "Next matches"
+msgstr "Coming soon"
 
 #: templates/ega/home.html:60
 msgid "mis pronósticos"
@@ -891,28 +891,28 @@ msgstr "Verification email sent to %s"
 #~ msgid "Tus ligas en %(tournament.name)s"
 #~ msgstr "Your leagues for %(tournament.name)s"
 
-#~ msgid "Tiraste la pelota afuera... acá no está lo que estás buscando."
-#~ msgstr "Ball out... it isn't here what you are looking for."
+msgid "Tiraste la pelota afuera... acá no está lo que estás buscando."
+msgstr "Ball out... it isn't here what you are looking for."
 
-#~ msgid "Volvé a sacar del medio"
-#~ msgstr "Back to kick-off"
+msgid "Volvé a sacar del medio"
+msgstr "Back to kick-off"
 
-#~ msgid ""
-#~ "Ooops... Quedamos en offside. Culpa nuestra, estamos revisando el "
-#~ "problema."
-#~ msgstr "Ooops... We are in offside. Our fault, we are looking at the issue."
+msgid ""
+ "Ooops... Quedamos en offside. Culpa nuestra, estamos revisando el "
+ "problema."
+msgstr "Ooops... We are in offside. Our fault, we are looking at the issue."
 
-#~ msgid "Partidos"
-#~ msgstr "Matches"
+msgid "Partidos"
+msgstr "Matches"
 
-#~ msgid "Ver y crear ligas"
-#~ msgstr "Manage your leagues"
+msgid "Ver y crear ligas"
+msgstr "Manage your leagues"
 
-#~ msgid "Perfil"
-#~ msgstr "Profile"
+msgid "Perfil"
+msgstr "Profile"
 
-#~ msgid "Reglas"
-#~ msgstr "Rules"
+msgid "Reglas"
+msgstr "Rules"
 
-#~ msgid "%s - %s: el partido expiró, pronóstico NO actualizado."
-#~ msgstr "%s - %s: match expired, prediction was NOT updated."
+msgid "%s - %s: el partido expiró, pronóstico NO actualizado."
+msgstr "%s - %s: match expired, prediction was not updated."

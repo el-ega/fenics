@@ -149,8 +149,7 @@
                             {% include 'ega/_prediction_penalties.html'%}
                             {% endwith %}
                         {% endif %}
-                        {{ form.source }}
-                        {% if form.source.value == 'preferences' %}
+                        {% if form.source == 'preferences' %}
                         <div class="row" id="{{ form.prefix }}-default-prediction-msg">
                             <div class="col-xs-12"><p class="help-block">
                                 <small><i>{% trans '(Pronóstico por defecto configurado en tu perfil)' %}</i></small>

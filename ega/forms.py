@@ -74,7 +74,7 @@ class PredictionForm(PredictionFormMixin, forms.ModelForm):
             initial.setdefault('home_goals', default_prediction['home_goals'])
             initial.setdefault('away_goals', default_prediction['away_goals'])
             initial.setdefault('penalties', default_prediction['penalties'])
-            initial['source'] = 'preferences'
+            self.source = 'preferences'
         super(PredictionForm, self).__init__(
             *args, instance=instance, initial=initial, **kwargs
         )
@@ -107,8 +107,7 @@ class PredictionForm(PredictionFormMixin, forms.ModelForm):
 
     class Meta:
         model = Prediction
-        fields = ('home_goals', 'away_goals', 'penalties', 'source')
-        widgets = {'source': forms.HiddenInput()}
+        fields = ('home_goals', 'away_goals', 'penalties')
 
 
 class ChampionPredictionForm(forms.ModelForm):
