@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-26 14:07-0300\n"
+"POT-Creation-Date: 2022-08-03 15:43-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,15 +18,20 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: forms.py:26 templates/ega/_trends.html:5
+#: forms.py:13 templates/ega/_trends.html:5 templates/ega/profile.html:80
 msgid "Local"
 msgstr "Home"
 
-#: forms.py:26 templates/ega/_trends.html:11
+#: forms.py:13 templates/ega/_trends.html:11 templates/ega/profile.html:92
 msgid "Visitante"
 msgstr "Away"
 
-#: forms.py:156
+#: forms.py:42
+msgid ""
+"El ganador de los penales se puede pronosticar sólo con pronóstico de empate."
+msgstr "The penalty winner can only be set when the predicted score is a tie."
+
+#: forms.py:183
 msgid "Nombre"
 msgstr "Name"
 
@@ -136,8 +141,7 @@ msgstr "Predict"
 msgid ""
 "Intentá acertar los resultados de los partidos y ganá puntos de acuerdo a la "
 "precisión de tus pronósticos."
-msgstr ""
-"Try to predict the matches' scores and get points depending on your precision"
+msgstr "Predict the matches' scores and get points depending on your precision"
 
 #: templates/account/login.html:32
 msgid "Competí"
@@ -148,8 +152,8 @@ msgid ""
 "No sólo con todos los usuarios del sitio, también podés armar una liga "
 "propia entre amigos y/o compañeros de trabajo."
 msgstr ""
-"Besides competing against all users, you can create your own leagues with "
-"frieds or colleagues."
+"Besides competing against all registered users, you can also create your own "
+"leagues with friends and/or colleagues."
 
 #: templates/account/login.html:35
 msgid "Jugá!"
@@ -309,6 +313,21 @@ msgid ""
 "mail address</a>."
 msgstr ""
 
+#: templates/ega/_default_prediction_notice.html:5
+#, python-format
+msgid ""
+"\n"
+"  Ahora podés definir un pronóstico por defecto!\n"
+"  No pierdas más puntos, configuralo <a href=\"%(profile_url)s\" class="
+"\"alert-link\">en tu perfil</a>\n"
+"  "
+msgstr ""
+"\n"
+"  You can now define a default score prediction!\n"
+"  No more missing points, you can configure it <a href=\"%(profile_url)s\" "
+"class=\"alert-link\">in your profile page</a>\n"
+"  "
+
 #: templates/ega/_league_detail.html:9
 msgid "Invitá más amigos a esta liga"
 msgstr "Invite more friends to this league"
@@ -324,6 +343,10 @@ msgstr "owner"
 #: templates/ega/_next_matches.html:17 templates/ega/_next_matches.html:21
 msgid "[P]"
 msgstr ""
+
+#: templates/ega/_prediction_penalties.html:5
+msgid "En los penales gana"
+msgstr "In the penalties wins"
 
 #: templates/ega/_predictions.html:44
 msgid "En juego"
@@ -357,28 +380,28 @@ msgstr ""
 msgid "Puntos"
 msgstr "Points"
 
-#: templates/ega/_team_details.html:14
+#: templates/ega/_team_details.html:18
 #, python-format
 msgid "%(won)s ganado,"
 msgid_plural "%(won)s ganados,"
 msgstr[0] "%(won)s win,"
 msgstr[1] "%(won)s wins,"
 
-#: templates/ega/_team_details.html:15
+#: templates/ega/_team_details.html:19
 #, python-format
 msgid "%(tie)s empatado,"
 msgid_plural "%(tie)s empatados,"
 msgstr[0] "%(tie)s draw,"
 msgstr[1] "%(tie)s draws,"
 
-#: templates/ega/_team_details.html:16
+#: templates/ega/_team_details.html:20
 #, python-format
 msgid "%(lost)s perdido"
 msgid_plural "%(lost)s perdidos"
 msgstr[0] "%(lost)s lost"
 msgstr[1] "%(lost)s losts"
 
-#: templates/ega/_team_details.html:23 templates/ega/home.html:61
+#: templates/ega/_team_details.html:27 templates/ega/home.html:65
 msgid "Últimos resultados"
 msgstr "Latest matches"
 
@@ -426,31 +449,27 @@ msgstr[1] "%(exacts)s exact guesses"
 msgid "Historial"
 msgstr "see history"
 
-#: templates/ega/home.html:17 templates/ega/meta_home.html:14
+#: templates/ega/home.html:21 templates/ega/meta_home.html:14
 msgid "Blog"
 msgstr ""
 
-#: templates/ega/home.html:20
+#: templates/ega/home.html:24
 msgid "Pronosticá el campeón"
 msgstr "Predict the champion"
 
-#: templates/ega/home.html:26
+#: templates/ega/home.html:30
 msgid "Actualizar"
 msgstr "Update"
 
-#: templates/ega/home.html:28
+#: templates/ega/home.html:32
 msgid "Tu candidato actual es"
 msgstr "Your current candidate is"
 
-#: templates/ega/home.html:30
+#: templates/ega/home.html:34
 msgid "Última actualizacion:"
 msgstr "Last update:"
 
-#: templates/ega/home.html:31
-#| msgid ""
-#| "Acertando sin modificar tu pronóstico antes del comienzo del campeonato, "
-#| "8 puntos; cambiándolo durante la primera fase, 5 puntos; antes de la "
-#| "semifinal, 2 puntos."
+#: templates/ega/home.html:35
 msgid ""
 "Al final del torneo sumás puntos de acuerdo a la antigüedad del pronóstico: "
 "antes del comienzo, 8 puntos; durante la fase de grupos, 5 puntos; durante "
@@ -460,33 +479,33 @@ msgstr ""
 "update it during qualification round, 5 points; during final round but "
 "before semifinal, 2 points."
 
-#: templates/ega/home.html:41 templates/ega/home.html:44
+#: templates/ega/home.html:45 templates/ega/home.html:48
 msgid "Noticias"
 msgstr "News"
 
-#: templates/ega/home.html:53 templates/ega/meta_home.html:20
-#: templates/ega/next_matches.html:77
+#: templates/ega/home.html:57 templates/ega/meta_home.html:20
+#: templates/ega/next_matches.html:91
 msgid "Próximos partidos"
 msgstr "Next matches"
 
-#: templates/ega/home.html:56
+#: templates/ega/home.html:60
 msgid "mis pronósticos"
 msgstr "my predictions"
 
-#: templates/ega/home.html:64
+#: templates/ega/home.html:68
 msgid "ver historial"
 msgstr "see history"
 
-#: templates/ega/home.html:71 templates/ega/league_home.html:15
+#: templates/ega/home.html:75 templates/ega/league_home.html:15
 #: templates/ega/ranking.html:14
 msgid "Posiciones"
 msgstr "Ranking"
 
-#: templates/ega/home.html:74 templates/ega/league_home.html:20
+#: templates/ega/home.html:78 templates/ega/league_home.html:20
 msgid "ver tabla completa"
 msgstr "see full ranking"
 
-#: templates/ega/home.html:76
+#: templates/ega/home.html:80
 #, python-format
 msgid "ver fecha %(current_round)s"
 msgstr "see %(current_round)s"
@@ -594,39 +613,59 @@ msgstr "'Invalid or incomplete predictions'"
 msgid "'Tenés pronósticos sin guardar'"
 msgstr "'You have unsaved predictions'"
 
-#: templates/ega/next_matches.html:81
+#: templates/ega/next_matches.html:95
 msgid "El horario de los partidos está en GMT-3."
 msgstr "Match times are displayed in GMT-3."
 
-#: templates/ega/next_matches.html:137
-msgid "En los penales gana"
-msgstr "In the penalties wins"
+#: templates/ega/next_matches.html:156
+msgid "(Pronóstico por defecto configurado en tu perfil)"
+msgstr "(Default score prediction taken from your profile)"
 
-#: templates/ega/next_matches.html:163
+#: templates/ega/next_matches.html:173
 msgid "Guardar"
 msgstr "Save"
 
-#: templates/ega/next_matches.html:169
+#: templates/ega/next_matches.html:179
 msgid "No hay partidos para jugar."
 msgstr "No matches to play."
 
-#: templates/ega/profile.html:28
+#: templates/ega/profile.html:54
 msgid "Emails"
 msgstr ""
 
-#: templates/ega/profile.html:33
+#: templates/ega/profile.html:59
 msgid "verificar"
 msgstr "verify"
 
-#: templates/ega/profile.html:34
+#: templates/ega/profile.html:60
 msgid "verificada"
 msgstr "verified"
 
-#: templates/ega/profile.html:35
+#: templates/ega/profile.html:61
 msgid "principal"
 msgstr "main"
 
-#: templates/ega/profile.html:41
+#: templates/ega/profile.html:70
+msgid "Pronóstico por defecto"
+msgstr "Default score prediction"
+
+#: templates/ega/profile.html:70
+msgid "Nuevo"
+msgstr "New"
+
+#: templates/ega/profile.html:74
+#, fuzzy
+#| msgid ""
+#| "Este pronóstico es el que vamos a considerar si se te olvida pronosticar "
+#| "un partido."
+msgid ""
+"Este pronóstico es el que vamos a considerar si se te pasa o se te olvida "
+"pronosticar un partido."
+msgstr ""
+"If you forget to predict a match, we are going to consider this score when "
+"assigning points."
+
+#: templates/ega/profile.html:100
 msgid "Actualizar perfil"
 msgstr "Update profile"
 
@@ -818,20 +857,19 @@ msgstr "Welcome to the %s league."
 msgid "Ya sos miembro de la liga %s."
 msgstr "You are already member of %s league."
 
-#: views.py:391
+#: views.py:392
 msgid "Los pronósticos de partidos en juego o finalizados no se actualizaron."
 msgstr "Predictions for matches in progress or finished were not updated."
 
-#: views.py:395
+#: views.py:396
 msgid "Pronósticos actualizados."
 msgstr "Predictions updated."
 
-#: views.py:568
+#: views.py:571
 #, python-format
 msgid "Email de verificación enviado a %s"
 msgstr "Verification email sent to %s"
 
-#, python-format
 #~ msgid ""
 #~ "Si hiciste al menos un pronóstico en una edición anterior, tu usuario "
 #~ "todavía es válido!\n"
@@ -850,32 +888,31 @@ msgstr "Verification email sent to %s"
 #~ msgstr ""
 #~ "Choose your team and make sure to save your prediction by clicking Update"
 
-#, python-format
 #~ msgid "Tus ligas en %(tournament.name)s"
 #~ msgstr "Your leagues for %(tournament.name)s"
 
-msgid "Tiraste la pelota afuera... acá no está lo que estás buscando."
-msgstr "Ball out... it isn't here what you are looking for."
+#~ msgid "Tiraste la pelota afuera... acá no está lo que estás buscando."
+#~ msgstr "Ball out... it isn't here what you are looking for."
 
-msgid "Volvé a sacar del medio"
-msgstr "Back to kick-off"
+#~ msgid "Volvé a sacar del medio"
+#~ msgstr "Back to kick-off"
 
-msgid ""
- "Ooops... Quedamos en offside. Culpa nuestra, estamos revisando el "
- "problema."
-msgstr "Ooops... We are in offside. Our fault, we are looking at the issue."
+#~ msgid ""
+#~ "Ooops... Quedamos en offside. Culpa nuestra, estamos revisando el "
+#~ "problema."
+#~ msgstr "Ooops... We are in offside. Our fault, we are looking at the issue."
 
-msgid "Partidos"
-msgstr "Matches"
+#~ msgid "Partidos"
+#~ msgstr "Matches"
 
-msgid "Ver y crear ligas"
-msgstr "Manage your leagues"
+#~ msgid "Ver y crear ligas"
+#~ msgstr "Manage your leagues"
 
-msgid "Perfil"
-msgstr "Profile"
+#~ msgid "Perfil"
+#~ msgstr "Profile"
 
-msgid "Reglas"
-msgstr "Rules"
+#~ msgid "Reglas"
+#~ msgstr "Rules"
 
-msgid "%s - %s: el partido expiró, pronóstico NO actualizado."
-msgstr "%s - %s: match expired, prediction was not updated."
+#~ msgid "%s - %s: el partido expiró, pronóstico NO actualizado."
+#~ msgstr "%s - %s: match expired, prediction was NOT updated."

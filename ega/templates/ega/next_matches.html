@@ -45,13 +45,27 @@
         $('#changes-update').removeClass('text-success text-danger').addClass('text-warning');
     }
 
+    function remove_default_prediction_msg(prefix) {
+        $('#' + prefix + '-default-prediction-msg').remove();
+    }
+
     $(document).ready(function () {
         var prefixes = [{% for form in formset.forms %}'{{ form.prefix }}'{% if not forloop.last %},{% endif %}{% endfor %}];
         $.each(prefixes, function(index, prefix) {
-            $('select[name=' + prefix + '-home_goals]').change(function() {pending_changes(); check_tie(prefix)});
-            $('select[name=' + prefix + '-away_goals]').change(function() {pending_changes(); check_tie(prefix)});
-            $('input[name=' + prefix + '-penalties]').change(function() {pending_changes()});
-
+            $('select[name=' + prefix + '-home_goals]').change(function() {
+                pending_changes();
+                check_tie(prefix);
+                remove_default_prediction_msg(prefix);
+            });
+            $('select[name=' + prefix + '-away_goals]').change(function() {
+                pending_changes();
+                check_tie(prefix);
+                remove_default_prediction_msg(prefix);
+            });
+            $('input[name=' + prefix + '-penalties]').change(function() {
+                pending_changes();
+                remove_default_prediction_msg(prefix);
+            });
             check_tie(prefix);
         });
 
@@ -134,6 +148,14 @@
                             {% with penalties=form.penalties %}
                             {% include 'ega/_prediction_penalties.html'%}
                             {% endwith %}
+                        {% endif %}
+                        {{ form.source }}
+                        {% if form.source.value == 'preferences' %}
+                        <div class="row" id="{{ form.prefix }}-default-prediction-msg">
+                            <div class="col-xs-12"><p class="help-block">
+                                <small><i>{% trans '(Pronóstico por defecto configurado en tu perfil)' %}</i></small>
+                            </p></div>
+                        </div>
                         {% endif %}
                     </div>
                     <div class="col-xs-12 col-md-4">

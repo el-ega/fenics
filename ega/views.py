@@ -399,7 +399,9 @@ def next_matches(request, slug):
 
         # invalid form
         if is_ajax:
-            return HttpResponse(json.dumps({'ok': False}))
+            return HttpResponse(
+                json.dumps({'ok': False, 'errors': formset.errors})
+            )
 
     else:
         formset = PredictionFormSet(queryset=predictions)
