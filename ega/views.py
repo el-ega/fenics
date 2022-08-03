@@ -376,12 +376,13 @@ def next_matches(request, slug):
         Prediction, form=PredictionForm, extra=0
     )
     if request.method == 'POST':
+        is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest'
         formset = PredictionFormSet(request.POST, queryset=predictions)
         if formset.is_valid():
             formset.save()
             expired_matches = any(f.expired for f in formset)
 
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            if is_ajax:
                 return HttpResponse(
                     json.dumps({'ok': True, 'expired': expired_matches})
                 )
@@ -397,7 +398,7 @@ def next_matches(request, slug):
             return HttpResponseRedirect(reverse('ega-home', args=[slug]))
 
         # invalid form
-        if request.is_ajax():
+        if is_ajax:
             return HttpResponse(json.dumps({'ok': False}))
 
     else:
