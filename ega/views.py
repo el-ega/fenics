@@ -120,13 +120,13 @@ def meta_home(request):
 def _predicted_round16(tournament, user):
     predicted_ranking = user.predicted_ranking(tournament)
     teams = {t.id: t for t in tournament.teams.all()}
-    round16 = []
-    for home, away in ROUND16_MATCHES:
-        home_team = teams.get(predicted_ranking.get(home), home)
-        away_team = teams.get(predicted_ranking.get(away), away)
-        round16.append((home_team, away_team))
-
-    return round16
+    return [
+        (
+            teams.get(predicted_ranking.get(home), home),
+            teams.get(predicted_ranking.get(away), away),
+        )
+        for home, away in ROUND16_MATCHES
+    ]
 
 
 @login_required

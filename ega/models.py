@@ -123,49 +123,33 @@ class EgaUser(AbstractUser):
         return self.preferences.get('predicted_ranking', {})
 
     def update_predicted_ranking(self, tournament):
-        preds = Prediction.objects.filter(
-            user=self,
+        preds = self.prediction_set.filter(
             match__tournament=tournament,
             match__knockout=False,
             home_goals__isnull=False,
             away_goals__isnull=False,
         )
 
+        # track (points, goal diff, goals) per team
         stats = defaultdict(lambda: (0, 0, 0))
         for p in preds:
+            home_points = away_points = MATCH_TIE_POINTS
             if p.home_goals > p.away_goals:
-                home_update = (
-                    MATCH_WON_POINTS,
-                    p.home_goals - p.away_goals,
-                    p.home_goals,
-                )
-                away_update = (
-                    MATCH_LOST_POINTS,
-                    p.away_goals - p.home_goals,
-                    p.away_goals,
-                )
+                home_points = MATCH_WON_POINTS
+                away_points = MATCH_LOST_POINTS
             elif p.home_goals < p.away_goals:
-                home_update = (
-                    MATCH_LOST_POINTS,
-                    p.home_goals - p.away_goals,
-                    p.home_goals,
-                )
-                away_update = (
-                    MATCH_WON_POINTS,
-                    p.away_goals - p.home_goals,
-                    p.away_goals,
-                )
-            else:
-                home_update = (
-                    MATCH_TIE_POINTS,
-                    p.home_goals - p.away_goals,
-                    p.home_goals,
-                )
-                away_update = (
-                    MATCH_TIE_POINTS,
-                    p.away_goals - p.home_goals,
-                    p.away_goals,
-                )
+                home_points = MATCH_LOST_POINTS
+                away_points = MATCH_WON_POINTS
+            home_update = (
+                home_points,
+                p.home_goals - p.away_goals,
+                p.home_goals,
+            )
+            away_update = (
+                away_points,
+                p.away_goals - p.home_goals,
+                p.away_goals,
+            )
             stats[p.match.home_id] = tuple(
                 map(sum, zip(stats[p.match.home_id], home_update))
             )
@@ -178,7 +162,7 @@ class EgaUser(AbstractUser):
         zones = {s.team_id: s.zone for s in stats}
         counters = defaultdict(lambda: 1)
         rankings = {}
-        for team_id, points in standings:
+        for team_id, _ in standings:
             zone = zones[team_id]
             pos = counters[zone]
             counters[zone] += 1

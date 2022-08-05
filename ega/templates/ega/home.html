@@ -76,7 +76,7 @@
                     <span class="pull-right"><button onclick="copyText()" class="btn btn-link">{% trans 'Copiar' %}</button></span>
                 </h3>
                 <div id="round16">
-                <p>{% trans 'De acuerdo a mis pronósticos, estos serían los cruces de octavos de final:' %}</p>
+                <p>{% trans 'Estos serían los cruces de octavos de final según mis pronósticos:' %}</p>
                 <p style="margin-left: 20px">
                     {% for h, a in round16 %}
                     {{ h.emoji }} {% firstof h.code h %} - {% firstof a.code a %} {{ a.emoji }}
