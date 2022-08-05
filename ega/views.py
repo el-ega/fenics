@@ -26,6 +26,7 @@ from ega.constants import (
     INVITE_SUBJECT,
     NEXT_MATCHES_DAYS,
     RANKING_TEAMS_PER_PAGE,
+    ROUND16_MATCHES,
 )
 from ega.forms import (
     ChampionPredictionForm,
@@ -116,6 +117,18 @@ def meta_home(request):
     )
 
 
+def _predicted_round16(tournament, user):
+    predicted_ranking = user.predicted_ranking(tournament)
+    teams = {t.id: t for t in tournament.teams.all()}
+    return [
+        (
+            teams.get(predicted_ranking.get(home), home),
+            teams.get(predicted_ranking.get(away), away),
+        )
+        for home, away in ROUND16_MATCHES
+    ]
+
+
 @login_required
 def home(request, slug):
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
@@ -144,6 +157,8 @@ def home(request, slug):
     )
     champion_form = ChampionPredictionForm(instance=champion)
 
+    round16 = _predicted_round16(tournament, request.user)
+
     return render(
         request,
         'ega/home.html',
@@ -155,6 +170,7 @@ def home(request, slug):
             'history': history,
             'stats': stats,
             'champion_form': champion_form,
+            'round16': round16,
         },
     )
 
@@ -380,6 +396,7 @@ def next_matches(request, slug):
         formset = PredictionFormSet(request.POST, queryset=predictions)
         if formset.is_valid():
             formset.save()
+            request.user.update_predicted_ranking(tournament)
             expired_matches = any(f.expired for f in formset)
 
             if is_ajax:

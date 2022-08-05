@@ -70,6 +70,28 @@
         </div>
 
         <div class="col-md-4">
+            {% if round16 %}
+                <h3 class="title">
+                    {% trans 'Compartí' %}
+                    <span class="pull-right"><button onclick="copyText()" class="btn btn-link">{% trans 'Copiar' %}</button></span>
+                </h3>
+                <div id="round16">
+                <p>{% trans 'Estos serían los cruces de octavos de final según mis pronósticos:' %}</p>
+                <p style="margin-left: 20px">
+                    {% for h, a in round16 %}
+                    {{ h.emoji }} {% firstof h.code h %} - {% firstof a.code a %} {{ a.emoji }}
+                    {% if not forloop.last %}<br/>{% endif %}
+                    {% endfor %}
+                </p>
+                <p>#Qatar2022 #elEga🌵⚽<br/><a href="https://el-e.ga">https://el-e.ga</a></p>
+                </div>
+                <script>
+                    function copyText() {
+                        navigator.clipboard.writeText(document.getElementById("round16").innerText);
+                    }
+                </script>
+            {% endif %}
+
             {% if top_ranking %}
                 <h3 class="title">
                     {% trans 'Posiciones' %}
