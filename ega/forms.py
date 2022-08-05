@@ -36,7 +36,7 @@ class PredictionFormMixin(object):
         if not home_goals and away_goals:
             raise forms.ValidationError(msg)
 
-        penalties = cleaned_data.get('penalties')
+        penalties = cleaned_data.get('penalties', '')
         if penalties and home_goals != away_goals:
             msg = _(
                 "El ganador de los penales se puede pronosticar sólo con "
@@ -44,7 +44,7 @@ class PredictionFormMixin(object):
             )
             raise forms.ValidationError(msg)
 
-        return cleaned_data
+        return (home_goals, away_goals, penalties)
 
 
 class PredictionForm(PredictionFormMixin, forms.ModelForm):
@@ -63,8 +63,21 @@ class PredictionForm(PredictionFormMixin, forms.ModelForm):
         choices=PENALTY_CHOICES, required=False, widget=forms.RadioSelect()
     )
 
-    def __init__(self, *args, **kwargs):
-        super(PredictionForm, self).__init__(*args, **kwargs)
+    def __init__(self, *args, instance=None, initial=None, **kwargs):
+        default_prediction = instance and instance.user.default_prediction
+        if (
+            default_prediction
+            and instance.home_goals is None
+            and instance.away_goals is None
+        ):
+            initial = initial or {}
+            initial.setdefault('home_goals', default_prediction['home_goals'])
+            initial.setdefault('away_goals', default_prediction['away_goals'])
+            initial.setdefault('penalties', default_prediction['penalties'])
+            self.source = 'preferences'
+        super(PredictionForm, self).__init__(
+            *args, instance=instance, initial=initial, **kwargs
+        )
         self.expired = self.instance.match_id is None
         if not self.expired and self.instance.match.knockout:
             match = self.instance.match
@@ -74,7 +87,10 @@ class PredictionForm(PredictionFormMixin, forms.ModelForm):
 
     def clean(self):
         cleaned_data = super(PredictionForm, self).clean()
-        self.validate_prediction(cleaned_data)
+        (home_goals, away_goals, _) = self.validate_prediction(cleaned_data)
+        # set source to web if a valid prediction was made
+        if home_goals is not None and away_goals is not None:
+            cleaned_data['source'] = 'web'
         return cleaned_data
 
     def save(self, *args, **kwargs):
@@ -200,11 +216,10 @@ class EgaUserForm(PredictionFormMixin, forms.ModelForm):
 
     def clean(self):
         cleaned_data = super(EgaUserForm, self).clean()
-        self.validate_prediction(cleaned_data)
-        home_goals = cleaned_data['home_goals']
-        away_goals = cleaned_data['away_goals']
-        penalties = cleaned_data.get('penalties', '')
-        if home_goals and away_goals:
+        (home_goals, away_goals, penalties) = self.validate_prediction(
+            cleaned_data
+        )
+        if home_goals is not None and away_goals is not None:
             cleaned_data['default_prediction'] = (
                 int(home_goals),
                 int(away_goals),
