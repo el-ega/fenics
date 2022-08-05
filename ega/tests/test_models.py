@@ -436,3 +436,67 @@ class UpdateRelatedPredictions(TestCase):
             score=3,
             source='preferences',
         )
+
+
+class PredictedRankingTestCase(TestCase):
+    def test_empty(self):
+        tournament = self.factory.make_tournament()
+        user = self.factory.make_user()
+        self.assertEqual(user.predicted_ranking(tournament), {})
+
+    def test_update(self):
+        tournament = self.factory.make_tournament()
+        match1 = self.factory.make_match(tournament=tournament)
+        match2 = self.factory.make_match(tournament=tournament)
+        match3 = self.factory.make_match(tournament=tournament)
+        user = self.factory.make_user()
+        self.factory.make_prediction(
+            match=match1, user=user, home_goals=1, away_goals=0
+        )
+        self.factory.make_prediction(
+            match=match2, user=user, home_goals=2, away_goals=0
+        )
+        self.factory.make_prediction(
+            match=match3, user=user, home_goals=3, away_goals=2
+        )
+
+        user.update_predicted_ranking(tournament)
+
+        ranking = user.predicted_ranking(tournament)
+        expected = {
+            "1": match2.home.id,
+            "2": match3.home.id,
+            "3": match1.home.id,
+            "4": match3.away.id,
+            "5": match1.away.id,
+            "6": match2.away.id,
+        }
+        self.assertEqual(ranking, expected)
+
+    def test_update_use_zone_info(self):
+        tournament = self.factory.make_tournament()
+        match1 = self.factory.make_match(tournament=tournament)
+        match2 = self.factory.make_match(tournament=tournament)
+        for t in (match1.home, match1.away):
+            t.teamstats_set.filter(tournament=tournament).update(zone="A")
+        for t in (match2.home, match2.away):
+            t.teamstats_set.filter(tournament=tournament).update(zone="B")
+
+        user = self.factory.make_user()
+        self.factory.make_prediction(
+            match=match1, user=user, home_goals=1, away_goals=0
+        )
+        self.factory.make_prediction(
+            match=match2, user=user, home_goals=1, away_goals=0
+        )
+
+        user.update_predicted_ranking(tournament)
+
+        ranking = user.predicted_ranking(tournament)
+        expected = {
+            "1A": match1.home.id,
+            "1B": match2.home.id,
+            "2A": match1.away.id,
+            "2B": match2.away.id,
+        }
+        self.assertEqual(ranking, expected)

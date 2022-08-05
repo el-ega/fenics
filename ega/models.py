@@ -3,6 +3,7 @@ import json
 import random
 import string
 
+from collections import defaultdict
 from datetime import timedelta
 
 from django.conf import settings
@@ -117,6 +118,74 @@ class EgaUser(AbstractUser):
                 'penalties': penalties,
                 'last_updated': now(),
             }
+
+    def predicted_ranking(self, tournament):
+        return self.preferences.get('predicted_ranking', {})
+
+    def update_predicted_ranking(self, tournament):
+        preds = Prediction.objects.filter(
+            user=self,
+            match__tournament=tournament,
+            match__knockout=False,
+            home_goals__isnull=False,
+            away_goals__isnull=False,
+        )
+
+        stats = defaultdict(lambda: (0, 0, 0))
+        for p in preds:
+            if p.home_goals > p.away_goals:
+                home_update = (
+                    MATCH_WON_POINTS,
+                    p.home_goals - p.away_goals,
+                    p.home_goals,
+                )
+                away_update = (
+                    MATCH_LOST_POINTS,
+                    p.away_goals - p.home_goals,
+                    p.away_goals,
+                )
+            elif p.home_goals < p.away_goals:
+                home_update = (
+                    MATCH_LOST_POINTS,
+                    p.home_goals - p.away_goals,
+                    p.home_goals,
+                )
+                away_update = (
+                    MATCH_WON_POINTS,
+                    p.away_goals - p.home_goals,
+                    p.away_goals,
+                )
+            else:
+                home_update = (
+                    MATCH_TIE_POINTS,
+                    p.home_goals - p.away_goals,
+                    p.home_goals,
+                )
+                away_update = (
+                    MATCH_TIE_POINTS,
+                    p.away_goals - p.home_goals,
+                    p.away_goals,
+                )
+            stats[p.match.home_id] = tuple(
+                map(sum, zip(stats[p.match.home_id], home_update))
+            )
+            stats[p.match.away_id] = tuple(
+                map(sum, zip(stats[p.match.away_id], away_update))
+            )
+
+        standings = sorted(stats.items(), key=lambda i: i[1], reverse=True)
+        stats = TeamStats.objects.filter(tournament=tournament)
+        zones = {s.team_id: s.zone for s in stats}
+        counters = defaultdict(lambda: 1)
+        rankings = {}
+        for team_id, points in standings:
+            zone = zones[team_id]
+            pos = counters[zone]
+            counters[zone] += 1
+            label = '{}{}'.format(pos, zone)
+            rankings[label] = team_id
+        self.preferences['predicted_ranking'] = rankings
+        self.save(update_fields=['preferences'])
 
     def record_referral(self, other):
         created = False
@@ -262,6 +331,7 @@ class Team(models.Model):
     code = models.CharField(max_length=8, blank=True)
     slug = models.SlugField(max_length=200, unique=True)
     image = models.ImageField(upload_to='teams', null=True, blank=True)
+    emoji = models.CharField(max_length=8, blank=True)
 
     def __str__(self):
         return self.name

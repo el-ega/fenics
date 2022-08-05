@@ -44,3 +44,15 @@ MATCH_LOST_POINTS = 0
 
 HISTORY_MATCHES_PER_PAGE = 13
 RANKING_TEAMS_PER_PAGE = 10
+
+# TODO: use knockout match placeholders?
+ROUND16_MATCHES = (
+    ('1A', '2B'),
+    ('1C', '2D'),
+    ('1D', '2C'),
+    ('1B', '2A'),
+    ('1E', '2F'),
+    ('1G', '2H'),
+    ('1F', '2E'),
+    ('1H', '2G'),
+)

@@ -1,14 +1,17 @@
+import datetime
+import json
+
 from unittest import mock
 
 from django.contrib.sites.models import Site
-from django.test import TestCase
 from django.urls import reverse
 from django.urls.exceptions import NoReverseMatch
 from django.utils import translation
 from allauth.socialaccount.models import SocialApp
 
-from ega.constants import DEFAULT_TOURNAMENT
+from ega.constants import DEFAULT_TOURNAMENT, ROUND16_MATCHES
 from ega.models import EgaUser, Tournament
+from ega.tests.helpers import TestCase
 
 
 class BaseTestCase(TestCase):
@@ -21,9 +24,13 @@ class BaseTestCase(TestCase):
             secret='ipsum',
         )
         app.sites.add(Site.objects.get_current())
-        Tournament.objects.create(slug=DEFAULT_TOURNAMENT, published=True)
+        self.user = EgaUser.objects.create_user(
+            username='user', password='password'
+        )
+        self.tournament = Tournament.objects.create(
+            slug=DEFAULT_TOURNAMENT, published=True
+        )
         Tournament.objects.create(slug='other', published=True)
-        EgaUser.objects.create_user(username='user', password='password')
 
 
 class LoginTestCase(BaseTestCase):
@@ -165,3 +172,74 @@ class SignUpTestCase(BaseTestCase):
 
         self.assertFormError(response, 'form', 'captcha', self.bad_captcha)
         self.assertContains(response, self.bad_captcha)
+
+
+class NextMatchesTestCase(BaseTestCase):
+    def test_save_updates_predicted_ranking(self):
+        tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
+        m = self.factory.make_match(tournament=self.tournament, when=tomorrow)
+        p = self.factory.make_prediction(match=m, user=self.user)
+        assert self.user.predicted_ranking(self.tournament) == {}
+
+        url = reverse("ega-next-matches", kwargs={"slug": DEFAULT_TOURNAMENT})
+        headers = {'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'}
+        data = {
+            'form-INITIAL_FORMS': '1',
+            'form-TOTAL_FORMS': '1',
+            "form-MAX_NUM_FORMS": "1",
+            "form-0-home_goals": 1,
+            "form-0-away_goals": 0,
+            "form-0-id": p.id,
+        }
+        self.client.login(username='user', password='password')
+        response = self.client.post(url, data=data, **headers)
+        self.assertEqual(response.status_code, 200)
+        response_data = json.loads(response.content)
+        self.assertTrue(response_data["ok"])
+
+        self.user.refresh_from_db()
+        ranking = self.user.predicted_ranking(self.tournament)
+        self.assertEqual(ranking, {"1": m.home.id, "2": m.away.id})
+
+
+class HomeTestCase(BaseTestCase):
+    def test_round16_default(self):
+        self.client.login(username='user', password='password')
+
+        url = reverse("ega-home", kwargs={"slug": DEFAULT_TOURNAMENT})
+        response = self.client.get(url)
+
+        self.assertEqual(tuple(response.context["round16"]), ROUND16_MATCHES)
+
+    def test_round16_prediction_based(self):
+        match1 = self.factory.make_match(tournament=self.tournament)
+        match2 = self.factory.make_match(tournament=self.tournament)
+        for t in (match1.home, match1.away):
+            t.teamstats_set.filter(tournament=self.tournament).update(zone="A")
+            self.tournament.teams.add(t)
+        for t in (match2.home, match2.away):
+            t.teamstats_set.filter(tournament=self.tournament).update(zone="B")
+            self.tournament.teams.add(t)
+        self.factory.make_prediction(
+            user=self.user, match=match1, home_goals=1, away_goals=0
+        )
+        self.factory.make_prediction(
+            user=self.user, match=match2, home_goals=1, away_goals=0
+        )
+        self.user.update_predicted_ranking(self.tournament)
+        self.client.login(username='user', password='password')
+
+        url = reverse("ega-home", kwargs={"slug": DEFAULT_TOURNAMENT})
+        response = self.client.get(url)
+
+        ranking = {
+            "1A": match1.home,
+            "2A": match1.away,
+            "1B": match2.home,
+            "2B": match2.away,
+        }
+        expected = [
+            (ranking.get(home, home), ranking.get(away, away))
+            for home, away in ROUND16_MATCHES
+        ]
+        self.assertEqual(response.context["round16"], expected)
