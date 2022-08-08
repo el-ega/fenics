@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-03 15:43-0300\n"
+"POT-Creation-Date: 2022-08-08 10:52-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,7 +31,7 @@ msgid ""
 "El ganador de los penales se puede pronosticar sólo con pronóstico de empate."
 msgstr "The penalty winner can only be set when the predicted score is a tie."
 
-#: forms.py:183
+#: forms.py:182
 msgid "Nombre"
 msgstr "Name"
 
@@ -496,16 +496,29 @@ msgstr "my predictions"
 msgid "ver historial"
 msgstr "see history"
 
-#: templates/ega/home.html:75 templates/ega/league_home.html:15
+#: templates/ega/home.html:75
+#| msgid "Competí"
+msgid "Compartí"
+msgstr "Share"
+
+#: templates/ega/home.html:76
+msgid "Copiar"
+msgstr "Copy"
+
+#: templates/ega/home.html:79
+msgid "Estos serían los cruces de octavos de final según mis pronósticos:"
+msgstr "These would be the round 16 matches according to my predictions:"
+
+#: templates/ega/home.html:97 templates/ega/league_home.html:15
 #: templates/ega/ranking.html:14
 msgid "Posiciones"
 msgstr "Ranking"
 
-#: templates/ega/home.html:78 templates/ega/league_home.html:20
+#: templates/ega/home.html:100 templates/ega/league_home.html:20
 msgid "ver tabla completa"
 msgstr "see full ranking"
 
-#: templates/ega/home.html:80
+#: templates/ega/home.html:102
 #, python-format
 msgid "ver fecha %(current_round)s"
 msgstr "see %(current_round)s"
@@ -617,15 +630,15 @@ msgstr "'You have unsaved predictions'"
 msgid "El horario de los partidos está en GMT-3."
 msgstr "Match times are displayed in GMT-3."
 
-#: templates/ega/next_matches.html:156
+#: templates/ega/next_matches.html:155
 msgid "(Pronóstico por defecto configurado en tu perfil)"
 msgstr "(Default score prediction taken from your profile)"
 
-#: templates/ega/next_matches.html:173
+#: templates/ega/next_matches.html:172
 msgid "Guardar"
 msgstr "Save"
 
-#: templates/ega/next_matches.html:179
+#: templates/ega/next_matches.html:178
 msgid "No hay partidos para jugar."
 msgstr "No matches to play."
 
@@ -799,73 +812,73 @@ msgstr ""
 "%(provider_name)s account, but first we need the following\n"
 "information:"
 
-#: views.py:61
+#: views.py:62
 msgid "Cerraste sesión exitosamente!"
 msgstr "Succesfully signed out."
 
-#: views.py:177
+#: views.py:193
 #, python-format
 msgid "Pronóstico de campeón actualizado: %s."
 msgstr "Champion prediction was updated: %s."
 
-#: views.py:181
+#: views.py:197
 msgid "Equipo no válido"
 msgstr "Invalid team"
 
-#: views.py:194
+#: views.py:210
 msgid "Perfil actualizado."
 msgstr "Profile was updated."
 
-#: views.py:222
+#: views.py:238
 #, python-format
 msgid "%s amigos invitados!"
 msgstr "%s friends invited"
 
-#: views.py:224
+#: views.py:240
 msgid "1 amigo invitado!"
 msgstr "1 friend invited"
 
-#: views.py:231
+#: views.py:247
 #, python-format
 msgid ", jugando en mi liga de amigos %s"
 msgstr ", playing in my %s league"
 
-#: views.py:265
+#: views.py:281
 #, python-format
 msgid "Vos sos el dueño del link %s!"
 msgstr "You are the owner of the %s link!"
 
-#: views.py:266
+#: views.py:282
 msgid "No podés unirte con un link de referencia propio."
 msgstr "You cannot join with your own link."
 
-#: views.py:273
+#: views.py:289
 msgid "Te uniste a el Ega! "
 msgstr "You joined el Ega! "
 
-#: views.py:275
+#: views.py:291
 msgid "Hola de nuevo! "
 msgstr "Hi again!"
 
-#: views.py:285
+#: views.py:301
 #, python-format
 msgid "Bienvenido a la liga %s."
 msgstr "Welcome to the %s league."
 
-#: views.py:287
+#: views.py:303
 #, python-format
 msgid "Ya sos miembro de la liga %s."
 msgstr "You are already member of %s league."
 
-#: views.py:392
+#: views.py:409
 msgid "Los pronósticos de partidos en juego o finalizados no se actualizaron."
 msgstr "Predictions for matches in progress or finished were not updated."
 
-#: views.py:396
+#: views.py:413
 msgid "Pronósticos actualizados."
 msgstr "Predictions updated."
 
-#: views.py:571
+#: views.py:588
 #, python-format
 msgid "Email de verificación enviado a %s"
 msgstr "Verification email sent to %s"
@@ -882,14 +895,14 @@ msgstr "Verification email sent to %s"
 #~ msgid "Tu candidato a campeón?"
 #~ msgstr "Your candidate for champion?"
 
-#~ msgid ""
-#~ "Elegí tu equipo y asegurate de guardar el pronóstico haciendo click en "
-#~ "Actualizar."
-#~ msgstr ""
-#~ "Choose your team and make sure to save your prediction by clicking Update"
+msgid ""
+"Elegí tu equipo y asegurate de guardar el pronóstico haciendo click en "
+"Actualizar."
+msgstr ""
+"Choose your team and make sure to save your prediction by clicking Update"
 
-#~ msgid "Tus ligas en %(tournament.name)s"
-#~ msgstr "Your leagues for %(tournament.name)s"
+msgid "Tus ligas en %(tournament.name)s"
+msgstr "Your leagues for %(tournament.name)s"
 
 msgid "Tiraste la pelota afuera... acá no está lo que estás buscando."
 msgstr "Ball out... it isn't here what you are looking for."
@@ -898,8 +911,8 @@ msgid "Volvé a sacar del medio"
 msgstr "Back to kick-off"
 
 msgid ""
- "Ooops... Quedamos en offside. Culpa nuestra, estamos revisando el "
- "problema."
+"Ooops... Quedamos en offside. Culpa nuestra, estamos revisando el "
+"problema."
 msgstr "Ooops... We are in offside. Our fault, we are looking at the issue."
 
 msgid "Partidos"
