@@ -315,7 +315,7 @@ class Team(models.Model):
     code = models.CharField(max_length=8, blank=True)
     slug = models.SlugField(max_length=200, unique=True)
     image = models.ImageField(upload_to='teams', null=True, blank=True)
-    emoji = models.CharField(max_length=8, blank=True)
+    emoji = models.CharField(max_length=128, blank=True)
 
     def __str__(self):
         return self.name

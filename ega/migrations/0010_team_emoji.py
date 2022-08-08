@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='team',
             name='emoji',
-            field=models.CharField(blank=True, max_length=8),
+            field=models.CharField(blank=True, max_length=128),
         ),
     ]
