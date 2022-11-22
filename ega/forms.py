@@ -238,11 +238,14 @@ class EgaUserForm(PredictionFormMixin, forms.ModelForm):
 
         # The default_prediction cannot be changed if there is any in progress
         # match
-        existing_default_prediction = (
-            self.instance.default_prediction['home_goals'],
-            self.instance.default_prediction['away_goals'],
-            self.instance.default_prediction.get('penalties', ''),
-        )
+        if self.instance.default_prediction:
+            existing_default_prediction = (
+                self.instance.default_prediction['home_goals'],
+                self.instance.default_prediction['away_goals'],
+                self.instance.default_prediction.get('penalties', ''),
+            )
+        else:
+            existing_default_prediction = None
         if (
             default_prediction != existing_default_prediction
             and Match.objects.filter(when__lt=now(), finished=False).exists()
