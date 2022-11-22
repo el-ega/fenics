@@ -4,9 +4,17 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.utils.translation import gettext_lazy as _
+from django.utils.timezone import now
 
 from ega.constants import EMAILS_PLACEHOLDER
-from ega.models import ChampionPrediction, EgaUser, League, Prediction, Team
+from ega.models import (
+    ChampionPrediction,
+    EgaUser,
+    League,
+    Match,
+    Prediction,
+    Team,
+)
 
 
 GOAL_CHOICES = [('', '-')] + [(i, i) for i in range(20)]
@@ -220,13 +228,34 @@ class EgaUserForm(PredictionFormMixin, forms.ModelForm):
             cleaned_data
         )
         if home_goals is not None and away_goals is not None:
-            cleaned_data['default_prediction'] = (
+            default_prediction = (
                 int(home_goals),
                 int(away_goals),
                 penalties,
             )
         else:
-            cleaned_data['default_prediction'] = None
+            default_prediction = None
+
+        # The default_prediction cannot be changed if there is any in progress
+        # match
+        if self.instance.default_prediction:
+            existing_default_prediction = (
+                self.instance.default_prediction['home_goals'],
+                self.instance.default_prediction['away_goals'],
+                self.instance.default_prediction.get('penalties', ''),
+            )
+        else:
+            existing_default_prediction = None
+        if (
+            default_prediction != existing_default_prediction
+            and Match.objects.filter(when__lt=now(), finished=False).exists()
+        ):
+            raise ValidationError(
+                'La predicción por defecto no se puede cambiar si hay '
+                'partidos en progreso.'
+            )
+
+        cleaned_data['default_prediction'] = default_prediction
         return cleaned_data
 
     def save(self, *args, **kwargs):
