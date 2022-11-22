@@ -697,7 +697,7 @@ def update_related_predictions(sender, instance, **kwargs):
             .values('penalties')[:1]
         )
 
-    Prediction.objects.filter(
+    predictions.filter(
         home_goals__isnull=True,
         away_goals__isnull=True,
         user__preferences__default_prediction__isnull=False,

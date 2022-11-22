@@ -138,6 +138,39 @@ class UpdateRelatedPredictions(TestCase):
             source='preferences',
         )
 
+    def test_update_unpredicted_prediction_only_current_match(self):
+        default = {'home_goals': 1, 'away_goals': 0, 'penalties': ''}
+        user = self.factory.make_user(
+            preferences={'default_prediction': default}
+        )
+        assert user.default_prediction == default, user.default_prediction
+        match = self.factory.make_match()
+        other_match = self.factory.make_match()
+        prediction = self.factory.make_prediction(match=match, user=user)
+        other_prediction = self.factory.make_prediction(
+            match=other_match, user=user
+        )
+
+        self.finish_match(match, 1, 0)
+
+        # only the match-related prediction is updated using default values
+        self.assert_prediction_correct(
+            prediction,
+            home_goals=1,
+            away_goals=0,
+            penalties='',
+            score=3,
+            source='preferences',
+        )
+        self.assert_prediction_correct(
+            other_prediction,
+            home_goals=None,
+            away_goals=None,
+            penalties='',
+            score=0,
+            source='web',
+        )
+
     def test_update_unpredicted_prediction_with_penalties(self):
         default = {'home_goals': 1, 'away_goals': 1, 'penalties': 'L'}
         user = self.factory.make_user(
