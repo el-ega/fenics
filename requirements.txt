@@ -10,7 +10,7 @@ backports-zoneinfo==0.2.1 ; python_version < "3.10"
     # via -r requirements.in
 black==22.6.0
     # via -r requirements.in
-certifi==2022.6.15
+certifi==2022.12.7
     # via requests
 cffi==1.15.1
     # via cryptography
