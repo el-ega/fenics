@@ -34,7 +34,6 @@ class BaseTestCase(TestCase):
 
 
 class LoginTestCase(BaseTestCase):
-
     url = reverse('account_login')
     bad_login = (
         'El usuario y/o la contraseña que se especificaron no son correctos.'
@@ -87,7 +86,6 @@ class SwitchLanguageTestCase(BaseTestCase):
 
 
 class SignUpTestCase(BaseTestCase):
-
     url = reverse('account_signup')
     bad_username = 'Ya existe un usuario con este nombre.'
     bad_email = (

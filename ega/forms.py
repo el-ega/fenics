@@ -56,7 +56,6 @@ class PredictionFormMixin(object):
 
 
 class PredictionForm(PredictionFormMixin, forms.ModelForm):
-
     home_goals = forms.ChoiceField(
         choices=GOAL_CHOICES,
         required=False,
@@ -135,7 +134,6 @@ class ChampionPredictionForm(forms.ModelForm):
 
 
 class InviteFriendsForm(forms.Form):
-
     emails = forms.CharField(
         widget=forms.Textarea(
             attrs={
@@ -184,7 +182,6 @@ class InviteFriendsForm(forms.Form):
 
 
 class LeagueForm(forms.ModelForm):
-
     name = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         label=_('Nombre'),
@@ -196,7 +193,6 @@ class LeagueForm(forms.ModelForm):
 
 
 class EgaUserForm(PredictionFormMixin, forms.ModelForm):
-
     home_goals = forms.ChoiceField(
         choices=GOAL_CHOICES,
         required=False,
@@ -282,7 +278,6 @@ class EgaUserForm(PredictionFormMixin, forms.ModelForm):
 
 
 class CustomSignupForm(forms.Form):
-
     captcha = ReCaptchaField(
         label='', widget=ReCaptchaV3(attrs={'required_score': 0.9})
     )

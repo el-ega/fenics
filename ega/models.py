@@ -88,7 +88,6 @@ def dictfetchall(cursor):
 
 
 class EgaUser(AbstractUser):
-
     avatar = models.ImageField(
         upload_to='avatars',
         null=True,
