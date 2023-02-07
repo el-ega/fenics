@@ -37,5 +37,4 @@ class Factory(object):
 
 
 class TestCase(BaseTestCase):
-
     factory = Factory()

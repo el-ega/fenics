@@ -7,7 +7,6 @@ PACKAGES = ['ega', 'fenics']
 
 
 class Flake8ConformanceTestCase(TestCase):
-
     excludes = ['ega/migrations']
 
     def test_lint(self):
