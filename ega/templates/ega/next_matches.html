@@ -9,6 +9,7 @@
 <script type="text/javascript">
     var changed = false;
     var loading = '<img height="25" src="{% static 'images/loading.gif' %}" />';
+    var matchFilters = {team: '', group: '', phase: ''};
 
     function check_tie(prefix) {
         if ($('select[name=' + prefix + '-home_goals]').val() == $('select[name=' + prefix + '-away_goals]').val()){
@@ -71,11 +72,81 @@
             });
         }
 
-        wirePredictionForm(document);
+        function wireMatchFilters(container) {
+            var root = $(container);
+            root.find('#matches-team-filter').val(matchFilters.team);
+            root.find('#matches-group-filter').val(matchFilters.group);
+            root.find('#matches-phase-filter').val(matchFilters.phase);
+            root.find('.matches-filter').off('change').on('change', function() {
+                var team = root.find('#matches-team-filter').val();
+                var group = root.find('#matches-group-filter').val();
+                var phase = root.find('#matches-phase-filter').val();
+                var visible = 0;
 
-        document.body.addEventListener('htmx:afterSwap', function(event) {
-            if (event.detail.target.id == 'matches-form-container') {
-                wirePredictionForm(event.detail.target);
+                matchFilters = {team: team, group: group, phase: phase};
+                root.find('.match-entry').each(function() {
+                    var row = $(this);
+                    var teamCodes = row.data('team-codes') || '';
+                    var rowGroup = row.data('group') || '';
+                    var rowPhase = row.data('phase') || '';
+                    var show = true;
+
+                    if (team && teamCodes.split(' ').indexOf(team) === -1) {
+                        show = false;
+                    }
+                    if (group && rowGroup !== group) {
+                        show = false;
+                    }
+                    if (phase && rowPhase !== phase) {
+                        show = false;
+                    }
+
+                    row.toggle(show);
+                    if (show) {
+                        visible += 1;
+                    }
+                });
+
+                root.find('#matches-filter-empty').toggle(visible === 0);
+            });
+            root.find('.matches-filter').first().trigger('change');
+        }
+
+        function rememberMatchFilters() {
+            matchFilters = {
+                team: $('#matches-team-filter').val() || '',
+                group: $('#matches-group-filter').val() || '',
+                phase: $('#matches-phase-filter').val() || ''
+            };
+        }
+
+        function wireCurrentMatchesForm() {
+            var container = document.getElementById('matches-form-container');
+            if (container) {
+                wirePredictionForm(container);
+                wireMatchFilters(container);
+            }
+        }
+
+        wirePredictionForm(document);
+        wireMatchFilters(document);
+
+        $(document).on("submit", "#matches-form", function() {
+            rememberMatchFilters();
+        });
+
+        document.body.addEventListener('htmx:beforeRequest', function(event) {
+            if ($(event.detail.elt).closest('#matches-form').length) {
+                rememberMatchFilters();
+            }
+        });
+
+        document.body.addEventListener('htmx:afterSettle', function(event) {
+            if (
+                event.detail.target.id == 'matches-form-container' ||
+                document.getElementById('matches-form-container')
+            ) {
+                wireCurrentMatchesForm();
             }
         });
 

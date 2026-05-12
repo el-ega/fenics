@@ -163,6 +163,48 @@ table.ranking {
     display: none;
 }
 
+.matches-filter-panel label {
+    font-size: 12px;
+    font-weight: normal;
+    color: #777;
+}
+
+#matches-filter-empty {
+    display: none;
+    margin: 15px 0 0;
+}
+
+.match-heading {
+    cursor: pointer;
+}
+
+.match-summary {
+    line-height: 1.8;
+}
+
+.match-summary-teams,
+.match-summary-meta {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.match-toggle {
+    padding: 0;
+}
+
+.match-toggle .match-toggle-collapse {
+    display: none;
+}
+
+.match-heading[aria-expanded="true"] .match-toggle-expand {
+    display: none;
+}
+
+.match-heading[aria-expanded="true"] .match-toggle-collapse {
+    display: inline-block;
+}
+
 .team-image {
     max-width: 65px;
 }

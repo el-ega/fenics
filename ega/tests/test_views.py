@@ -173,6 +173,40 @@ class SignUpTestCase(BaseTestCase):
 
 
 class NextMatchesTestCase(BaseTestCase):
+    def test_predictions_page_filters_and_collapses_predicted_matches(self):
+        tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
+        predicted = self.factory.make_match(
+            tournament=self.tournament, when=tomorrow
+        )
+        unfilled = self.factory.make_match(
+            tournament=self.tournament,
+            when=tomorrow + datetime.timedelta(hours=1),
+        )
+        self.factory.make_prediction(
+            match=predicted, user=self.user, home_goals=1, away_goals=0
+        )
+        self.factory.make_prediction(match=unfilled, user=self.user)
+        url = reverse("ega-next-matches", kwargs={"slug": DEFAULT_TOURNAMENT})
+
+        self.client.login(username='user', password='password')
+        response = self.client.get(url)
+
+        self.assertContains(response, 'matches-team-filter')
+        self.assertContains(response, 'matches-group-filter')
+        self.assertContains(response, 'matches-phase-filter')
+        self.assertContains(
+            response,
+            'id="match-%s-details"\n                 class="panel-collapse collapse "'
+            % predicted.id,
+            html=False,
+        )
+        self.assertContains(
+            response,
+            'id="match-%s-details"\n                 class="panel-collapse collapse in"'
+            % unfilled.id,
+            html=False,
+        )
+
     def test_save_updates_predicted_ranking(self):
         tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
         m = self.factory.make_match(tournament=self.tournament, when=tomorrow)

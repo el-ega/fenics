@@ -422,15 +422,13 @@ def next_matches(request, slug):
                 return render(
                     request,
                     'ega/_matches_form.html',
-                    {
-                        'tournament': tournament,
-                        'formset': formset,
-                        'projected_bracket': projected_bracket(
-                            tournament, request.user
-                        ),
-                        'changes_status': changes_status,
-                        'changes_message': changes_message,
-                    },
+                    _next_matches_context(
+                        tournament,
+                        request.user,
+                        formset,
+                        changes_status,
+                        changes_message,
+                    ),
                 )
 
             if is_ajax:
@@ -453,17 +451,13 @@ def next_matches(request, slug):
             return render(
                 request,
                 'ega/_matches_form.html',
-                {
-                    'tournament': tournament,
-                    'formset': formset,
-                    'projected_bracket': projected_bracket(
-                        tournament, request.user
-                    ),
-                    'changes_status': 'error',
-                    'changes_message': _(
-                        'Pronósticos inválidos o incompletos'
-                    ),
-                },
+                _next_matches_context(
+                    tournament,
+                    request.user,
+                    formset,
+                    'error',
+                    _('Pronósticos inválidos o incompletos'),
+                ),
             )
         if is_ajax:
             return HttpResponse(
@@ -476,14 +470,53 @@ def next_matches(request, slug):
     return render(
         request,
         'ega/next_matches.html',
-        {
-            'tournament': tournament,
-            'formset': formset,
-            'projected_bracket': projected_bracket(tournament, request.user),
-            'changes_status': changes_status,
-            'changes_message': changes_message,
-        },
+        _next_matches_context(
+            tournament,
+            request.user,
+            formset,
+            changes_status,
+            changes_message,
+        ),
     )
+
+
+def _next_matches_context(
+    tournament, user, formset, changes_status='', changes_message=''
+):
+    return {
+        'tournament': tournament,
+        'formset': formset,
+        'projected_bracket': projected_bracket(tournament, user),
+        'changes_status': changes_status,
+        'changes_message': changes_message,
+        **_prediction_filter_options(formset),
+    }
+
+
+def _prediction_filter_options(formset):
+    teams = {}
+    groups = set()
+    phases = set()
+    for form in formset.forms:
+        match = form.instance.match
+        if match.knockout:
+            phases.add('knockout')
+        else:
+            phases.add('group')
+            if match.round:
+                groups.add(match.round)
+
+        for team in (match.home, match.away):
+            if team is not None:
+                teams[team.code or str(team.id)] = team
+
+    return {
+        'team_filter_options': sorted(
+            teams.values(), key=lambda team: team.name
+        ),
+        'group_filter_options': sorted(groups),
+        'phase_filter_options': sorted(phases),
+    }
 
 
 @login_required

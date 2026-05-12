@@ -13,17 +13,87 @@
         {% csrf_token %}
         {{ formset.management_form }}
 
+        <div class="panel panel-default matches-filter-panel">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label for="matches-team-filter">{% trans 'Equipo' %}</label>
+                        <select id="matches-team-filter" class="form-control matches-filter">
+                            <option value="">{% trans 'Todos' %}</option>
+                            {% for team in team_filter_options %}
+                            <option value="{{ team.code|default:team.id }}">{{ team }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="matches-group-filter">{% trans 'Grupo' %}</label>
+                        <select id="matches-group-filter" class="form-control matches-filter">
+                            <option value="">{% trans 'Todos' %}</option>
+                            {% for group in group_filter_options %}
+                            <option value="{{ group }}">{{ group }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="matches-phase-filter">{% trans 'Fase' %}</label>
+                        <select id="matches-phase-filter" class="form-control matches-filter">
+                            <option value="">{% trans 'Todas' %}</option>
+                            <option value="group">{% trans 'Grupos' %}</option>
+                            <option value="knockout">{% trans 'Eliminatorias' %}</option>
+                        </select>
+                    </div>
+                </div>
+                <p id="matches-filter-empty" class="text-muted text-center">
+                    {% trans 'No hay partidos para los filtros seleccionados.' %}
+                </p>
+            </div>
+        </div>
+
         {% for form in formset.forms %}
 
-        <div class="panel panel-default">
-            {% with match=form.instance.match %}
-            <div class="panel-heading">
-                <h6 class="panel-title">
-                <small>{{ match.when|date:"F j, H:i" }} |
-                       {{ match.description }}
-                       {% if match.location %}<span class="hidden-xs">| {{ match.location }}</span>{% endif %}
-                       {% if match.is_expired %}| {% trans 'Cerrado' %}{% endif %}
-                       </small></h6>
+        {% with match=form.instance.match %}
+        <div class="panel panel-default match-entry"
+             data-team-codes="{% if match.home %}{{ match.home.code|default:match.home_id }}{% endif %} {% if match.away %}{{ match.away.code|default:match.away_id }}{% endif %}"
+             data-group="{% if not match.knockout %}{{ match.round }}{% endif %}"
+             data-phase="{% if match.knockout %}knockout{% else %}group{% endif %}">
+            <div class="panel-heading match-heading"
+                 data-toggle="collapse"
+                 data-target="#match-{{ form.instance.match_id }}-details"
+                 aria-expanded="{% if form.instance.home_goals == None or form.instance.away_goals == None %}true{% else %}false{% endif %}">
+                <div class="row match-summary">
+                    <div class="col-xs-5 col-sm-4 match-summary-teams">
+                        <strong>{% if match.home %}{{ match.home.emoji }} {% endif %}{% firstof match.home.code match.home match.home_placeholder %}</strong>
+                        <span class="text-muted">vs</span>
+                        <strong>{% firstof match.away.code match.away match.away_placeholder %}{% if match.away %} {{ match.away.emoji }}{% endif %}</strong>
+                    </div>
+                    <div class="col-xs-2 col-sm-2 text-center">
+                        {% if form.instance.home_goals != None and form.instance.away_goals != None %}
+                        <strong class="predicted-score">
+                            {{ form.instance.home_goals }} - {{ form.instance.away_goals }}
+                            {% if form.instance.penalties %}<small>{% trans '[P]' %}</small>{% endif %}
+                        </strong>
+                        {% else %}
+                        <span class="text-muted">-</span>
+                        {% endif %}
+                    </div>
+                    <div class="col-xs-4 col-sm-5 match-summary-meta text-muted text-right">
+                        <small>
+                            {{ match.description }}
+                            | {{ match.when|date:"F j, H:i" }}
+                            {% if match.location %}| {{ match.location }}{% endif %}
+                            {% if match.is_expired %}| {% trans 'Cerrado' %}{% endif %}
+                        </small>
+                    </div>
+                    <div class="col-xs-1 col-sm-1 text-right">
+                        <button class="btn btn-link btn-xs match-toggle"
+                                type="button"
+                                tabindex="-1"
+                                title="{% trans 'Expandir o contraer' %}">
+                            <span class="glyphicon glyphicon-chevron-down match-toggle-expand"></span>
+                            <span class="glyphicon glyphicon-chevron-up match-toggle-collapse"></span>
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <a name="{{ form.instance.match_id }}"></a>
@@ -31,6 +101,8 @@
             {{ form.match }}
 
             {% with home=match.home home_placeholder=match.home_placeholder away=match.away away_placeholder=match.away_placeholder %}
+            <div id="match-{{ form.instance.match_id }}-details"
+                 class="panel-collapse collapse {% if form.instance.home_goals == None or form.instance.away_goals == None %}in{% endif %}">
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-12 text-center">
@@ -76,9 +148,10 @@
                     </div>
                 </div>
             </div>
-            {% endwith %}
+            </div>
             {% endwith %}
         </div>
+        {% endwith %}
         {% endfor %}
 
         <div class="navbar-matches">
