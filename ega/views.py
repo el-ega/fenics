@@ -28,6 +28,7 @@ from ega.constants import (
     RANKING_TEAMS_PER_PAGE,
     ROUND16_MATCHES,
 )
+from ega.bracket import projected_bracket
 from ega.forms import (
     ChampionPredictionForm,
     EgaUserForm,
@@ -118,6 +119,10 @@ def meta_home(request):
 
 
 def _predicted_round16(tournament, user):
+    bracket = projected_bracket(tournament, user)
+    if bracket:
+        return [(row['home'], row['away']) for row in bracket]
+
     predicted_ranking = user.predicted_ranking(tournament)
     teams = {t.id: t for t in tournament.teams.all()}
     return [
@@ -171,6 +176,7 @@ def home(request, slug):
             'stats': stats,
             'champion_form': champion_form,
             'round16': round16,
+            'projected_bracket': projected_bracket(tournament, request.user),
         },
     )
 
@@ -391,13 +397,41 @@ def next_matches(request, slug):
     PredictionFormSet = modelformset_factory(
         Prediction, form=PredictionForm, extra=0
     )
+    changes_status = ''
+    changes_message = ''
     if request.method == 'POST':
         is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest'
+        is_htmx = request.headers.get('HX-Request') == 'true'
         formset = PredictionFormSet(request.POST, queryset=predictions)
         if formset.is_valid():
             formset.save()
             request.user.update_predicted_ranking(tournament)
             expired_matches = any(f.expired for f in formset)
+
+            if is_htmx:
+                changes_status = 'success'
+                changes_message = _('Pronósticos actualizados!')
+                if expired_matches:
+                    changes_message = '%s %s' % (
+                        changes_message,
+                        _(
+                            'Se ignoraron los partidos en juego y/o '
+                            'finalizados.'
+                        ),
+                    )
+                return render(
+                    request,
+                    'ega/_matches_form.html',
+                    {
+                        'tournament': tournament,
+                        'formset': formset,
+                        'projected_bracket': projected_bracket(
+                            tournament, request.user
+                        ),
+                        'changes_status': changes_status,
+                        'changes_message': changes_message,
+                    },
+                )
 
             if is_ajax:
                 return HttpResponse(
@@ -415,6 +449,22 @@ def next_matches(request, slug):
             return HttpResponseRedirect(reverse('ega-home', args=[slug]))
 
         # invalid form
+        if is_htmx:
+            return render(
+                request,
+                'ega/_matches_form.html',
+                {
+                    'tournament': tournament,
+                    'formset': formset,
+                    'projected_bracket': projected_bracket(
+                        tournament, request.user
+                    ),
+                    'changes_status': 'error',
+                    'changes_message': _(
+                        'Pronósticos inválidos o incompletos'
+                    ),
+                },
+            )
         if is_ajax:
             return HttpResponse(
                 json.dumps({'ok': False, 'errors': formset.errors})
@@ -426,7 +476,13 @@ def next_matches(request, slug):
     return render(
         request,
         'ega/next_matches.html',
-        {'tournament': tournament, 'formset': formset},
+        {
+            'tournament': tournament,
+            'formset': formset,
+            'projected_bracket': projected_bracket(tournament, request.user),
+            'changes_status': changes_status,
+            'changes_message': changes_message,
+        },
     )
 
 

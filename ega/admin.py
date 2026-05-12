@@ -34,6 +34,7 @@ class LeagueAdmin(admin.ModelAdmin):
 
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('name', 'code')
+    search_fields = ('name', 'code')
     prepopulated_fields = dict(slug=('name',))
 
 
@@ -43,8 +44,24 @@ class TeamStatsAdmin(admin.ModelAdmin):
 
 
 class MatchAdmin(admin.ModelAdmin):
-    list_display = ('tournament', 'home', 'home_goals', 'away_goals', 'away')
-    list_filter = ('tournament', 'when', 'finished')
+    list_display = (
+        'tournament',
+        'round',
+        'when',
+        'home',
+        'home_goals',
+        'away_goals',
+        'away',
+        'finished',
+    )
+    list_filter = ('tournament', 'round', 'when', 'finished', 'knockout')
+    search_fields = (
+        'home__name',
+        'away__name',
+        'home_placeholder',
+        'away_placeholder',
+        'location',
+    )
 
 
 class PredictionAdmin(admin.ModelAdmin):
@@ -59,7 +76,8 @@ class ChampionPredictionAdmin(admin.ModelAdmin):
 
 class TournamentAdmin(admin.ModelAdmin):
     filter_horizontal = ('teams',)
-    list_display = ('name', 'published', 'finished')
+    list_display = ('name', 'slug', 'published', 'finished')
+    search_fields = ('name', 'slug')
     prepopulated_fields = dict(slug=('name',))
 
 

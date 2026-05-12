@@ -199,17 +199,41 @@ class NextMatchesTestCase(BaseTestCase):
         ranking = self.user.predicted_ranking(self.tournament)
         self.assertEqual(ranking, {"1": m.home.id, "2": m.away.id})
 
+    def test_htmx_save_returns_partial(self):
+        tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
+        m = self.factory.make_match(tournament=self.tournament, when=tomorrow)
+        p = self.factory.make_prediction(match=m, user=self.user)
+        url = reverse("ega-next-matches", kwargs={"slug": DEFAULT_TOURNAMENT})
+        data = {
+            'form-INITIAL_FORMS': '1',
+            'form-TOTAL_FORMS': '1',
+            "form-MAX_NUM_FORMS": "1",
+            "form-0-home_goals": 1,
+            "form-0-away_goals": 0,
+            "form-0-id": p.id,
+        }
+
+        self.client.login(username='user', password='password')
+        response = self.client.post(url, data=data, HTTP_HX_REQUEST='true')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'matches-form-container')
+        self.assertContains(response, 'Pronósticos actualizados')
+
 
 class HomeTestCase(BaseTestCase):
-    def test_round16_default(self):
+    def test_projected_bracket_default(self):
         self.client.login(username='user', password='password')
 
         url = reverse("ega-home", kwargs={"slug": DEFAULT_TOURNAMENT})
         response = self.client.get(url)
 
-        self.assertEqual(tuple(response.context["round16"]), ROUND16_MATCHES)
+        self.assertEqual(len(response.context["projected_bracket"]), 16)
+        self.assertEqual(response.context["round16"][0], ('2A', '2B'))
 
-    def test_round16_prediction_based(self):
+    def test_legacy_round16_prediction_based(self):
+        self.tournament.slug = 'qatar-2022'
+        self.tournament.save(update_fields=['slug'])
         match1 = self.factory.make_match(tournament=self.tournament)
         match2 = self.factory.make_match(tournament=self.tournament)
         for t in (match1.home, match1.away):
@@ -227,7 +251,7 @@ class HomeTestCase(BaseTestCase):
         self.user.update_predicted_ranking(self.tournament)
         self.client.login(username='user', password='password')
 
-        url = reverse("ega-home", kwargs={"slug": DEFAULT_TOURNAMENT})
+        url = reverse("ega-home", kwargs={"slug": "qatar-2022"})
         response = self.client.get(url)
 
         ranking = {

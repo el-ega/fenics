@@ -138,9 +138,6 @@ table.ranking {
     border: 0;
     text-align: center;
     padding: 5px;
-}
-
-.navbar-matches.affix-top {
     position: fixed;
     bottom: 25px;
     right: 0px;
@@ -148,12 +145,9 @@ table.ranking {
     z-index: 9999 !important;
 }
 
+.navbar-matches.affix-top,
 .navbar-matches.affix {
     position: fixed;
-    bottom: 25px;
-    right: 0px;
-    width: 100%;
-    z-index: 9999 !important;
 }
 
 .team-image {

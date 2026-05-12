@@ -50,8 +50,9 @@
     }
 
     $(document).ready(function () {
-        var prefixes = [{% for form in formset.forms %}'{{ form.prefix }}'{% if not forloop.last %},{% endif %}{% endfor %}];
-        $.each(prefixes, function(index, prefix) {
+        function wirePredictionForm(container) {
+            var prefixes = [{% for form in formset.forms %}'{{ form.prefix }}'{% if not forloop.last %},{% endif %}{% endfor %}];
+            $.each(prefixes, function(index, prefix) {
             $('select[name=' + prefix + '-home_goals]').change(function() {
                 pending_changes();
                 check_tie(prefix);
@@ -67,9 +68,21 @@
                 remove_default_prediction_msg(prefix);
             });
             check_tie(prefix);
+            });
+        }
+
+        wirePredictionForm(document);
+
+        document.body.addEventListener('htmx:afterSwap', function(event) {
+            if (event.detail.target.id == 'matches-form-container') {
+                wirePredictionForm(event.detail.target);
+            }
         });
 
-        $("#matches-form").submit(function(event){
+        $(document).on("submit", "#matches-form", function(event){
+            if (window.htmx) {
+                return;
+            }
             event.preventDefault();
             var post_url = $(this).attr("action");
             var form_data = $(this).serialize();
@@ -94,88 +107,6 @@
 
 <p class="small">{% trans 'El horario de los partidos está en GMT-3.' %}</p>
 
-{% if formset.forms %}
-
-    <form id="matches-form" method="POST" action="">
-        {% csrf_token %}
-        {{ formset.management_form }}
-
-        {% for form in formset.forms %}
-
-        <div class="panel panel-default">
-            {% with match=form.instance.match %}
-            <div class="panel-heading">
-                <h6 class="panel-title">
-                <small>{{ match.when|date:"F j, H:i" }} |
-                       {{ match.description }}
-                       {% if match.location %}<span class="hidden-xs">| {{ match.location }}</span>{% endif %}
-                       </small></h6>
-            </div>
-
-            <a name="{{ form.instance.match_id }}"></a>
-            {{ form.id }}
-            {{ form.match }}
-
-            {% with home=match.home home_placeholder=match.home_placeholder away=match.away away_placeholder=match.away_placeholder %}
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-md-12 text-center">
-                        {% show_prediction_trends match %}
-                    </div>
-                </div>
-                {% if form.instance.starred %}
-                <div class="text-center visible-xs" class="starred-xs">
-                    <img src="{% static 'images/star.jpg' %}" style="max-width:25px"/>
-                </div>
-                {% endif %}
-                <div class="row {% if form.instance.starred %}starred{% endif %}">
-                    <div class="col-xs-12 col-md-4">
-                        {% include "ega/_team_details.html" with condition="home" team=home placeholder=home_placeholder stats=form.instance.home_team_stats %}
-                    </div>
-                    <div class="col-xs-12 col-md-4 text-center{% if form.home_goals.errors or form.away_goals.errors %} has-error{% endif %}">
-                        {% if form.non_field_errors %}
-                        <div class="row">
-                            <div class="col-md-12 text-center bg-danger">
-                                {{ form.non_field_errors|join:", " }}
-                            </div>
-                        </div>
-                        {% endif %}
-                        <div class="row">
-                            <div class="col-xs-6"><p class="goals-input">{{ form.home_goals }}</p></div>
-                            <div class="col-xs-6"><p class="goals-input">{{ form.away_goals }}</p></div>
-                        </div>
-                        {% if match.knockout %}
-                            {% with penalties=form.penalties %}
-                            {% include 'ega/_prediction_penalties.html'%}
-                            {% endwith %}
-                        {% endif %}
-                        {% if form.source == 'preferences' %}
-                        <div class="row" id="{{ form.prefix }}-default-prediction-msg">
-                            <div class="col-xs-12"><p class="help-block">
-                                <small><i>{% trans '(Pronóstico por defecto configurado en tu perfil)' %}</i></small>
-                            </p></div>
-                        </div>
-                        {% endif %}
-                    </div>
-                    <div class="col-xs-12 col-md-4">
-                        {% include "ega/_team_details.html" with condition="away" team=away placeholder=away_placeholder stats=form.instance.away_team_stats %}
-                    </div>
-                </div>
-            </div>
-            {% endwith %}
-            {% endwith %}
-        </div>
-        {% endfor %}
-
-        <div class="navbar-matches" data-spy="affix" data-offset-top="197">
-            <strong id="changes-update"></strong><br/>
-            <button name="save" type="submit" class="btn btn-primary">{% trans 'Guardar' %}</button>
-        </div>
-
-    </form>
-
-{% else %}
-    <p>{% trans 'No hay partidos para jugar.' %}</p>
-{% endif %}
+{% include 'ega/_matches_form.html' %}
 
 {% endblock %}

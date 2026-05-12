@@ -1,0 +1,1089 @@
+{
+  "tournament": {
+    "name": "World Cup 2026",
+    "slug": "worldcup-2026",
+    "published": true,
+    "finished": false,
+    "preferences": {
+      "format": {
+        "groups": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F",
+          "G",
+          "H",
+          "I",
+          "J",
+          "K",
+          "L"
+        ]
+      }
+    }
+  },
+  "generate_group_matches": true,
+  "group_match_schedule": [
+    {
+      "home": "MEX",
+      "away": "RSA",
+      "when": "2026-06-11T16:00:00-03:00",
+      "location": "Mexico City Stadium"
+    },
+    {
+      "home": "KOR",
+      "away": "CZE",
+      "when": "2026-06-11T23:00:00-03:00",
+      "location": "Estadio Guadalajara"
+    },
+    {
+      "home": "CAN",
+      "away": "BIH",
+      "when": "2026-06-12T16:00:00-03:00",
+      "location": "Toronto Stadium"
+    },
+    {
+      "home": "USA",
+      "away": "PAR",
+      "when": "2026-06-12T22:00:00-03:00",
+      "location": "Los Angeles Stadium"
+    },
+    {
+      "home": "HAI",
+      "away": "SCO",
+      "when": "2026-06-13T22:00:00-03:00",
+      "location": "Boston Stadium"
+    },
+    {
+      "home": "AUS",
+      "away": "TUR",
+      "when": "2026-06-13T01:00:00-03:00",
+      "location": "BC Place Vancouver"
+    },
+    {
+      "home": "BRA",
+      "away": "MAR",
+      "when": "2026-06-13T19:00:00-03:00",
+      "location": "New York New Jersey Stadium"
+    },
+    {
+      "home": "QAT",
+      "away": "SUI",
+      "when": "2026-06-13T16:00:00-03:00",
+      "location": "San Francisco Bay Area Stadium"
+    },
+    {
+      "home": "CIV",
+      "away": "ECU",
+      "when": "2026-06-14T20:00:00-03:00",
+      "location": "Philadelphia Stadium"
+    },
+    {
+      "home": "GER",
+      "away": "CUW",
+      "when": "2026-06-14T14:00:00-03:00",
+      "location": "Houston Stadium"
+    },
+    {
+      "home": "NED",
+      "away": "JPN",
+      "when": "2026-06-14T17:00:00-03:00",
+      "location": "Dallas Stadium"
+    },
+    {
+      "home": "SWE",
+      "away": "TUN",
+      "when": "2026-06-14T23:00:00-03:00",
+      "location": "Estadio Monterrey"
+    },
+    {
+      "home": "KSA",
+      "away": "URU",
+      "when": "2026-06-15T19:00:00-03:00",
+      "location": "Miami Stadium"
+    },
+    {
+      "home": "ESP",
+      "away": "CPV",
+      "when": "2026-06-15T13:00:00-03:00",
+      "location": "Atlanta Stadium"
+    },
+    {
+      "home": "IRN",
+      "away": "NZL",
+      "when": "2026-06-15T22:00:00-03:00",
+      "location": "Los Angeles Stadium"
+    },
+    {
+      "home": "BEL",
+      "away": "EGY",
+      "when": "2026-06-15T16:00:00-03:00",
+      "location": "Seattle Stadium"
+    },
+    {
+      "home": "FRA",
+      "away": "SEN",
+      "when": "2026-06-16T16:00:00-03:00",
+      "location": "New York New Jersey Stadium"
+    },
+    {
+      "home": "IRQ",
+      "away": "NOR",
+      "when": "2026-06-16T19:00:00-03:00",
+      "location": "Boston Stadium"
+    },
+    {
+      "home": "ARG",
+      "away": "ALG",
+      "when": "2026-06-16T22:00:00-03:00",
+      "location": "Kansas City Stadium"
+    },
+    {
+      "home": "AUT",
+      "away": "JOR",
+      "when": "2026-06-16T01:00:00-03:00",
+      "location": "San Francisco Bay Area Stadium"
+    },
+    {
+      "home": "GHA",
+      "away": "PAN",
+      "when": "2026-06-17T20:00:00-03:00",
+      "location": "Toronto Stadium"
+    },
+    {
+      "home": "ENG",
+      "away": "CRO",
+      "when": "2026-06-17T17:00:00-03:00",
+      "location": "Dallas Stadium"
+    },
+    {
+      "home": "POR",
+      "away": "COD",
+      "when": "2026-06-17T14:00:00-03:00",
+      "location": "Houston Stadium"
+    },
+    {
+      "home": "UZB",
+      "away": "COL",
+      "when": "2026-06-17T23:00:00-03:00",
+      "location": "Mexico City Stadium"
+    },
+    {
+      "home": "CZE",
+      "away": "RSA",
+      "when": "2026-06-18T13:00:00-03:00",
+      "location": "Atlanta Stadium"
+    },
+    {
+      "home": "SUI",
+      "away": "BIH",
+      "when": "2026-06-18T16:00:00-03:00",
+      "location": "Los Angeles Stadium"
+    },
+    {
+      "home": "CAN",
+      "away": "QAT",
+      "when": "2026-06-18T19:00:00-03:00",
+      "location": "BC Place Vancouver"
+    },
+    {
+      "home": "MEX",
+      "away": "KOR",
+      "when": "2026-06-18T22:00:00-03:00",
+      "location": "Estadio Guadalajara"
+    },
+    {
+      "home": "BRA",
+      "away": "HAI",
+      "when": "2026-06-19T21:30:00-03:00",
+      "location": "Philadelphia Stadium"
+    },
+    {
+      "home": "SCO",
+      "away": "MAR",
+      "when": "2026-06-19T19:00:00-03:00",
+      "location": "Boston Stadium"
+    },
+    {
+      "home": "TUR",
+      "away": "PAR",
+      "when": "2026-06-20T00:00:00-03:00",
+      "location": "San Francisco Bay Area Stadium"
+    },
+    {
+      "home": "USA",
+      "away": "AUS",
+      "when": "2026-06-19T16:00:00-03:00",
+      "location": "Seattle Stadium"
+    },
+    {
+      "home": "GER",
+      "away": "CIV",
+      "when": "2026-06-20T17:00:00-03:00",
+      "location": "Toronto Stadium"
+    },
+    {
+      "home": "ECU",
+      "away": "CUW",
+      "when": "2026-06-20T21:00:00-03:00",
+      "location": "Kansas City Stadium"
+    },
+    {
+      "home": "NED",
+      "away": "SWE",
+      "when": "2026-06-20T14:00:00-03:00",
+      "location": "Houston Stadium"
+    },
+    {
+      "home": "TUN",
+      "away": "JPN",
+      "when": "2026-06-20T01:00:00-03:00",
+      "location": "Estadio Monterrey"
+    },
+    {
+      "home": "URU",
+      "away": "CPV",
+      "when": "2026-06-21T19:00:00-03:00",
+      "location": "Miami Stadium"
+    },
+    {
+      "home": "ESP",
+      "away": "KSA",
+      "when": "2026-06-21T13:00:00-03:00",
+      "location": "Atlanta Stadium"
+    },
+    {
+      "home": "BEL",
+      "away": "IRN",
+      "when": "2026-06-21T16:00:00-03:00",
+      "location": "Los Angeles Stadium"
+    },
+    {
+      "home": "NZL",
+      "away": "EGY",
+      "when": "2026-06-21T22:00:00-03:00",
+      "location": "BC Place Vancouver"
+    },
+    {
+      "home": "NOR",
+      "away": "SEN",
+      "when": "2026-06-22T21:00:00-03:00",
+      "location": "New York New Jersey Stadium"
+    },
+    {
+      "home": "FRA",
+      "away": "IRQ",
+      "when": "2026-06-22T18:00:00-03:00",
+      "location": "Philadelphia Stadium"
+    },
+    {
+      "home": "ARG",
+      "away": "AUT",
+      "when": "2026-06-22T14:00:00-03:00",
+      "location": "Dallas Stadium"
+    },
+    {
+      "home": "JOR",
+      "away": "ALG",
+      "when": "2026-06-23T00:00:00-03:00",
+      "location": "San Francisco Bay Area Stadium"
+    },
+    {
+      "home": "ENG",
+      "away": "GHA",
+      "when": "2026-06-23T17:00:00-03:00",
+      "location": "Boston Stadium"
+    },
+    {
+      "home": "PAN",
+      "away": "CRO",
+      "when": "2026-06-23T20:00:00-03:00",
+      "location": "Toronto Stadium"
+    },
+    {
+      "home": "POR",
+      "away": "UZB",
+      "when": "2026-06-23T14:00:00-03:00",
+      "location": "Houston Stadium"
+    },
+    {
+      "home": "COL",
+      "away": "COD",
+      "when": "2026-06-23T23:00:00-03:00",
+      "location": "Estadio Guadalajara"
+    },
+    {
+      "home": "SCO",
+      "away": "BRA",
+      "when": "2026-06-24T19:00:00-03:00",
+      "location": "Miami Stadium"
+    },
+    {
+      "home": "MAR",
+      "away": "HAI",
+      "when": "2026-06-24T19:00:00-03:00",
+      "location": "Atlanta Stadium"
+    },
+    {
+      "home": "SUI",
+      "away": "CAN",
+      "when": "2026-06-24T16:00:00-03:00",
+      "location": "BC Place Vancouver"
+    },
+    {
+      "home": "BIH",
+      "away": "QAT",
+      "when": "2026-06-24T16:00:00-03:00",
+      "location": "Seattle Stadium"
+    },
+    {
+      "home": "CZE",
+      "away": "MEX",
+      "when": "2026-06-24T22:00:00-03:00",
+      "location": "Mexico City Stadium"
+    },
+    {
+      "home": "RSA",
+      "away": "KOR",
+      "when": "2026-06-24T22:00:00-03:00",
+      "location": "Estadio Monterrey"
+    },
+    {
+      "home": "CUW",
+      "away": "CIV",
+      "when": "2026-06-25T17:00:00-03:00",
+      "location": "Philadelphia Stadium"
+    },
+    {
+      "home": "ECU",
+      "away": "GER",
+      "when": "2026-06-25T17:00:00-03:00",
+      "location": "New York New Jersey Stadium"
+    },
+    {
+      "home": "JPN",
+      "away": "SWE",
+      "when": "2026-06-25T20:00:00-03:00",
+      "location": "Dallas Stadium"
+    },
+    {
+      "home": "TUN",
+      "away": "NED",
+      "when": "2026-06-25T20:00:00-03:00",
+      "location": "Kansas City Stadium"
+    },
+    {
+      "home": "TUR",
+      "away": "USA",
+      "when": "2026-06-25T23:00:00-03:00",
+      "location": "Los Angeles Stadium"
+    },
+    {
+      "home": "PAR",
+      "away": "AUS",
+      "when": "2026-06-25T23:00:00-03:00",
+      "location": "San Francisco Bay Area Stadium"
+    },
+    {
+      "home": "NOR",
+      "away": "FRA",
+      "when": "2026-06-26T16:00:00-03:00",
+      "location": "Boston Stadium"
+    },
+    {
+      "home": "SEN",
+      "away": "IRQ",
+      "when": "2026-06-26T16:00:00-03:00",
+      "location": "Toronto Stadium"
+    },
+    {
+      "home": "EGY",
+      "away": "IRN",
+      "when": "2026-06-27T00:00:00-03:00",
+      "location": "Seattle Stadium"
+    },
+    {
+      "home": "NZL",
+      "away": "BEL",
+      "when": "2026-06-27T00:00:00-03:00",
+      "location": "BC Place Vancouver"
+    },
+    {
+      "home": "CPV",
+      "away": "KSA",
+      "when": "2026-06-26T21:00:00-03:00",
+      "location": "Houston Stadium"
+    },
+    {
+      "home": "URU",
+      "away": "ESP",
+      "when": "2026-06-26T21:00:00-03:00",
+      "location": "Estadio Guadalajara"
+    },
+    {
+      "home": "PAN",
+      "away": "ENG",
+      "when": "2026-06-27T18:00:00-03:00",
+      "location": "New York New Jersey Stadium"
+    },
+    {
+      "home": "CRO",
+      "away": "GHA",
+      "when": "2026-06-27T18:00:00-03:00",
+      "location": "Philadelphia Stadium"
+    },
+    {
+      "home": "ALG",
+      "away": "AUT",
+      "when": "2026-06-27T23:00:00-03:00",
+      "location": "Kansas City Stadium"
+    },
+    {
+      "home": "JOR",
+      "away": "ARG",
+      "when": "2026-06-27T23:00:00-03:00",
+      "location": "Dallas Stadium"
+    },
+    {
+      "home": "COL",
+      "away": "POR",
+      "when": "2026-06-27T20:30:00-03:00",
+      "location": "Miami Stadium"
+    },
+    {
+      "home": "COD",
+      "away": "UZB",
+      "when": "2026-06-27T20:30:00-03:00",
+      "location": "Atlanta Stadium"
+    }
+  ],
+  "playoff_matches": [
+    {
+      "description": "Partido 73 - Dieciseisavos de final",
+      "round": "Dieciseisavos de final",
+      "home_placeholder": "2A",
+      "away_placeholder": "2B",
+      "when": "2026-06-28T16:00:00-03:00",
+      "location": "Los Angeles Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 74 - Dieciseisavos de final",
+      "round": "Dieciseisavos de final",
+      "home_placeholder": "1E",
+      "away_placeholder": "3A/B/C/D/F",
+      "when": "2026-06-29T17:30:00-03:00",
+      "location": "Boston Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 75 - Dieciseisavos de final",
+      "round": "Dieciseisavos de final",
+      "home_placeholder": "1F",
+      "away_placeholder": "2C",
+      "when": "2026-06-29T22:00:00-03:00",
+      "location": "Estadio Monterrey",
+      "knockout": true
+    },
+    {
+      "description": "Partido 76 - Dieciseisavos de final",
+      "round": "Dieciseisavos de final",
+      "home_placeholder": "1C",
+      "away_placeholder": "2F",
+      "when": "2026-06-29T14:00:00-03:00",
+      "location": "Houston Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 77 - Dieciseisavos de final",
+      "round": "Dieciseisavos de final",
+      "home_placeholder": "1I",
+      "away_placeholder": "3C/D/F/G/H",
+      "when": "2026-06-30T18:00:00-03:00",
+      "location": "New York New Jersey Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 78 - Dieciseisavos de final",
+      "round": "Dieciseisavos de final",
+      "home_placeholder": "2E",
+      "away_placeholder": "2I",
+      "when": "2026-06-30T14:00:00-03:00",
+      "location": "Dallas Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 79 - Dieciseisavos de final",
+      "round": "Dieciseisavos de final",
+      "home_placeholder": "1A",
+      "away_placeholder": "3C/E/F/H/I",
+      "when": "2026-06-30T22:00:00-03:00",
+      "location": "Mexico City Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 80 - Dieciseisavos de final",
+      "round": "Dieciseisavos de final",
+      "home_placeholder": "1L",
+      "away_placeholder": "3E/H/I/J/K",
+      "when": "2026-07-01T13:00:00-03:00",
+      "location": "Atlanta Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 81 - Dieciseisavos de final",
+      "round": "Dieciseisavos de final",
+      "home_placeholder": "1D",
+      "away_placeholder": "3B/E/F/I/J",
+      "when": "2026-07-01T21:00:00-03:00",
+      "location": "San Francisco Bay Area Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 82 - Dieciseisavos de final",
+      "round": "Dieciseisavos de final",
+      "home_placeholder": "1G",
+      "away_placeholder": "3A/E/H/I/J",
+      "when": "2026-07-01T17:00:00-03:00",
+      "location": "Seattle Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 83 - Dieciseisavos de final",
+      "round": "Dieciseisavos de final",
+      "home_placeholder": "2K",
+      "away_placeholder": "2L",
+      "when": "2026-07-02T20:00:00-03:00",
+      "location": "Toronto Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 84 - Dieciseisavos de final",
+      "round": "Dieciseisavos de final",
+      "home_placeholder": "1H",
+      "away_placeholder": "2J",
+      "when": "2026-07-02T16:00:00-03:00",
+      "location": "Los Angeles Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 85 - Dieciseisavos de final",
+      "round": "Dieciseisavos de final",
+      "home_placeholder": "1B",
+      "away_placeholder": "3E/F/G/I/J",
+      "when": "2026-07-03T00:00:00-03:00",
+      "location": "BC Place Vancouver",
+      "knockout": true
+    },
+    {
+      "description": "Partido 86 - Dieciseisavos de final",
+      "round": "Dieciseisavos de final",
+      "home_placeholder": "1J",
+      "away_placeholder": "2H",
+      "when": "2026-07-03T19:00:00-03:00",
+      "location": "Miami Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 87 - Dieciseisavos de final",
+      "round": "Dieciseisavos de final",
+      "home_placeholder": "1K",
+      "away_placeholder": "3D/E/I/J/L",
+      "when": "2026-07-03T22:30:00-03:00",
+      "location": "Kansas City Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 88 - Dieciseisavos de final",
+      "round": "Dieciseisavos de final",
+      "home_placeholder": "2D",
+      "away_placeholder": "2G",
+      "when": "2026-07-03T15:00:00-03:00",
+      "location": "Dallas Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 89 - Octavos de final",
+      "round": "Octavos de final",
+      "home_placeholder": "W74",
+      "away_placeholder": "W77",
+      "when": "2026-07-04T18:00:00-03:00",
+      "location": "Philadelphia Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 90 - Octavos de final",
+      "round": "Octavos de final",
+      "home_placeholder": "W73",
+      "away_placeholder": "W75",
+      "when": "2026-07-04T14:00:00-03:00",
+      "location": "Houston Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 91 - Octavos de final",
+      "round": "Octavos de final",
+      "home_placeholder": "W76",
+      "away_placeholder": "W78",
+      "when": "2026-07-05T17:00:00-03:00",
+      "location": "New York New Jersey Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 92 - Octavos de final",
+      "round": "Octavos de final",
+      "home_placeholder": "W79",
+      "away_placeholder": "W80",
+      "when": "2026-07-05T21:00:00-03:00",
+      "location": "Mexico City Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 93 - Octavos de final",
+      "round": "Octavos de final",
+      "home_placeholder": "W83",
+      "away_placeholder": "W84",
+      "when": "2026-07-06T16:00:00-03:00",
+      "location": "Dallas Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 94 - Octavos de final",
+      "round": "Octavos de final",
+      "home_placeholder": "W81",
+      "away_placeholder": "W82",
+      "when": "2026-07-06T21:00:00-03:00",
+      "location": "Seattle Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 95 - Octavos de final",
+      "round": "Octavos de final",
+      "home_placeholder": "W86",
+      "away_placeholder": "W88",
+      "when": "2026-07-07T13:00:00-03:00",
+      "location": "Atlanta Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 96 - Octavos de final",
+      "round": "Octavos de final",
+      "home_placeholder": "W85",
+      "away_placeholder": "W87",
+      "when": "2026-07-07T17:00:00-03:00",
+      "location": "BC Place Vancouver",
+      "knockout": true
+    },
+    {
+      "description": "Partido 97 - Cuartos de final",
+      "round": "Cuartos de final",
+      "home_placeholder": "W89",
+      "away_placeholder": "W90",
+      "when": "2026-07-09T17:00:00-03:00",
+      "location": "Boston Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 98 - Cuartos de final",
+      "round": "Cuartos de final",
+      "home_placeholder": "W93",
+      "away_placeholder": "W94",
+      "when": "2026-07-10T16:00:00-03:00",
+      "location": "Los Angeles Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 99 - Cuartos de final",
+      "round": "Cuartos de final",
+      "home_placeholder": "W91",
+      "away_placeholder": "W92",
+      "when": "2026-07-11T18:00:00-03:00",
+      "location": "Miami Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 100 - Cuartos de final",
+      "round": "Cuartos de final",
+      "home_placeholder": "W95",
+      "away_placeholder": "W96",
+      "when": "2026-07-11T22:00:00-03:00",
+      "location": "Kansas City Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 101 - Semifinal",
+      "round": "Semifinal",
+      "home_placeholder": "W97",
+      "away_placeholder": "W98",
+      "when": "2026-07-14T16:00:00-03:00",
+      "location": "Dallas Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 102 - Semifinal",
+      "round": "Semifinal",
+      "home_placeholder": "W99",
+      "away_placeholder": "W100",
+      "when": "2026-07-15T16:00:00-03:00",
+      "location": "Atlanta Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 103 - Tercer puesto",
+      "round": "Tercer puesto",
+      "home_placeholder": "L101",
+      "away_placeholder": "L102",
+      "when": "2026-07-18T18:00:00-03:00",
+      "location": "Miami Stadium",
+      "knockout": true
+    },
+    {
+      "description": "Partido 104 - Final",
+      "round": "Final",
+      "home_placeholder": "W101",
+      "away_placeholder": "W102",
+      "when": "2026-07-19T16:00:00-03:00",
+      "location": "New York New Jersey Stadium",
+      "knockout": true
+    }
+  ],
+  "teams": [
+    {
+      "name": "México",
+      "code": "MEX",
+      "group": "A",
+      "emoji": "🇲🇽",
+      "image": "teams/flags/MEX.png"
+    },
+    {
+      "name": "Sudáfrica",
+      "code": "RSA",
+      "group": "A",
+      "emoji": "🇿🇦",
+      "image": "teams/flags/RSA.png"
+    },
+    {
+      "name": "Corea del Sur",
+      "code": "KOR",
+      "group": "A",
+      "emoji": "🇰🇷",
+      "image": "teams/flags/KOR.png"
+    },
+    {
+      "name": "República Checa",
+      "code": "CZE",
+      "group": "A",
+      "emoji": "🇨🇿",
+      "image": "teams/flags/CZE.png"
+    },
+    {
+      "name": "Canadá",
+      "code": "CAN",
+      "group": "B",
+      "emoji": "🇨🇦",
+      "image": "teams/flags/CAN.png"
+    },
+    {
+      "name": "Bosnia y Herzegovina",
+      "code": "BIH",
+      "group": "B",
+      "emoji": "🇧🇦",
+      "image": "teams/flags/BIH.png"
+    },
+    {
+      "name": "Qatar",
+      "code": "QAT",
+      "group": "B",
+      "emoji": "🇶🇦",
+      "image": "teams/flags/QAT.png"
+    },
+    {
+      "name": "Suiza",
+      "code": "SUI",
+      "group": "B",
+      "emoji": "🇨🇭",
+      "image": "teams/flags/SUI.png"
+    },
+    {
+      "name": "Brasil",
+      "code": "BRA",
+      "group": "C",
+      "emoji": "🇧🇷",
+      "image": "teams/flags/BRA.png"
+    },
+    {
+      "name": "Marruecos",
+      "code": "MAR",
+      "group": "C",
+      "emoji": "🇲🇦",
+      "image": "teams/flags/MAR.png"
+    },
+    {
+      "name": "Haití",
+      "code": "HAI",
+      "group": "C",
+      "emoji": "🇭🇹",
+      "image": "teams/flags/HAI.png"
+    },
+    {
+      "name": "Escocia",
+      "code": "SCO",
+      "group": "C",
+      "emoji": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
+      "image": "teams/flags/SCO.png"
+    },
+    {
+      "name": "Estados Unidos",
+      "code": "USA",
+      "group": "D",
+      "emoji": "🇺🇸",
+      "image": "teams/flags/USA.png"
+    },
+    {
+      "name": "Paraguay",
+      "code": "PAR",
+      "group": "D",
+      "emoji": "🇵🇾",
+      "image": "teams/flags/PAR.png"
+    },
+    {
+      "name": "Australia",
+      "code": "AUS",
+      "group": "D",
+      "emoji": "🇦🇺",
+      "image": "teams/flags/AUS.png"
+    },
+    {
+      "name": "Turquía",
+      "code": "TUR",
+      "group": "D",
+      "emoji": "🇹🇷",
+      "image": "teams/flags/TUR.png"
+    },
+    {
+      "name": "Alemania",
+      "code": "GER",
+      "group": "E",
+      "emoji": "🇩🇪",
+      "image": "teams/flags/GER.png"
+    },
+    {
+      "name": "Curazao",
+      "code": "CUW",
+      "group": "E",
+      "emoji": "🇨🇼",
+      "image": "teams/flags/CUW.png"
+    },
+    {
+      "name": "Costa de Marfil",
+      "code": "CIV",
+      "group": "E",
+      "emoji": "🇨🇮",
+      "image": "teams/flags/CIV.png"
+    },
+    {
+      "name": "Ecuador",
+      "code": "ECU",
+      "group": "E",
+      "emoji": "🇪🇨",
+      "image": "teams/flags/ECU.png"
+    },
+    {
+      "name": "Países Bajos",
+      "code": "NED",
+      "group": "F",
+      "emoji": "🇳🇱",
+      "image": "teams/flags/NED.png"
+    },
+    {
+      "name": "Japón",
+      "code": "JPN",
+      "group": "F",
+      "emoji": "🇯🇵",
+      "image": "teams/flags/JPN.png"
+    },
+    {
+      "name": "Suecia",
+      "code": "SWE",
+      "group": "F",
+      "emoji": "🇸🇪",
+      "image": "teams/flags/SWE.png"
+    },
+    {
+      "name": "Túnez",
+      "code": "TUN",
+      "group": "F",
+      "emoji": "🇹🇳",
+      "image": "teams/flags/TUN.png"
+    },
+    {
+      "name": "Bélgica",
+      "code": "BEL",
+      "group": "G",
+      "emoji": "🇧🇪",
+      "image": "teams/flags/BEL.png"
+    },
+    {
+      "name": "Egipto",
+      "code": "EGY",
+      "group": "G",
+      "emoji": "🇪🇬",
+      "image": "teams/flags/EGY.png"
+    },
+    {
+      "name": "Irán",
+      "code": "IRN",
+      "group": "G",
+      "emoji": "🇮🇷",
+      "image": "teams/flags/IRN.png"
+    },
+    {
+      "name": "Nueva Zelanda",
+      "code": "NZL",
+      "group": "G",
+      "emoji": "🇳🇿",
+      "image": "teams/flags/NZL.png"
+    },
+    {
+      "name": "España",
+      "code": "ESP",
+      "group": "H",
+      "emoji": "🇪🇸",
+      "image": "teams/flags/ESP.png"
+    },
+    {
+      "name": "Cabo Verde",
+      "code": "CPV",
+      "group": "H",
+      "emoji": "🇨🇻",
+      "image": "teams/flags/CPV.png"
+    },
+    {
+      "name": "Arabia Saudita",
+      "code": "KSA",
+      "group": "H",
+      "emoji": "🇸🇦",
+      "image": "teams/flags/KSA.png"
+    },
+    {
+      "name": "Uruguay",
+      "code": "URU",
+      "group": "H",
+      "emoji": "🇺🇾",
+      "image": "teams/flags/URU.png"
+    },
+    {
+      "name": "Francia",
+      "code": "FRA",
+      "group": "I",
+      "emoji": "🇫🇷",
+      "image": "teams/flags/FRA.png"
+    },
+    {
+      "name": "Senegal",
+      "code": "SEN",
+      "group": "I",
+      "emoji": "🇸🇳",
+      "image": "teams/flags/SEN.png"
+    },
+    {
+      "name": "Irak",
+      "code": "IRQ",
+      "group": "I",
+      "emoji": "🇮🇶",
+      "image": "teams/flags/IRQ.png"
+    },
+    {
+      "name": "Noruega",
+      "code": "NOR",
+      "group": "I",
+      "emoji": "🇳🇴",
+      "image": "teams/flags/NOR.png"
+    },
+    {
+      "name": "Argentina",
+      "code": "ARG",
+      "group": "J",
+      "emoji": "🇦🇷",
+      "image": "teams/flags/ARG.png"
+    },
+    {
+      "name": "Argelia",
+      "code": "ALG",
+      "group": "J",
+      "emoji": "🇩🇿",
+      "image": "teams/flags/ALG.png"
+    },
+    {
+      "name": "Austria",
+      "code": "AUT",
+      "group": "J",
+      "emoji": "🇦🇹",
+      "image": "teams/flags/AUT.png"
+    },
+    {
+      "name": "Jordania",
+      "code": "JOR",
+      "group": "J",
+      "emoji": "🇯🇴",
+      "image": "teams/flags/JOR.png"
+    },
+    {
+      "name": "Portugal",
+      "code": "POR",
+      "group": "K",
+      "emoji": "🇵🇹",
+      "image": "teams/flags/POR.png"
+    },
+    {
+      "name": "RD Congo",
+      "code": "COD",
+      "group": "K",
+      "emoji": "🇨🇩",
+      "image": "teams/flags/COD.png"
+    },
+    {
+      "name": "Uzbekistán",
+      "code": "UZB",
+      "group": "K",
+      "emoji": "🇺🇿",
+      "image": "teams/flags/UZB.png"
+    },
+    {
+      "name": "Colombia",
+      "code": "COL",
+      "group": "K",
+      "emoji": "🇨🇴",
+      "image": "teams/flags/COL.png"
+    },
+    {
+      "name": "Inglaterra",
+      "code": "ENG",
+      "group": "L",
+      "emoji": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+      "image": "teams/flags/ENG.png"
+    },
+    {
+      "name": "Croacia",
+      "code": "CRO",
+      "group": "L",
+      "emoji": "🇭🇷",
+      "image": "teams/flags/CRO.png"
+    },
+    {
+      "name": "Ghana",
+      "code": "GHA",
+      "group": "L",
+      "emoji": "🇬🇭",
+      "image": "teams/flags/GHA.png"
+    },
+    {
+      "name": "Panamá",
+      "code": "PAN",
+      "group": "L",
+      "emoji": "🇵🇦",
+      "image": "teams/flags/PAN.png"
+    }
+  ]
+}

@@ -3,7 +3,6 @@ import json
 import random
 import string
 
-from collections import defaultdict
 from datetime import timedelta
 
 from django.conf import settings
@@ -29,6 +28,7 @@ from ega.constants import (
     NEXT_MATCHES_DAYS,
     WINNER_MATCH_POINTS,
 )
+from ega.bracket import build_predicted_standings
 from ega.managers import LeagueManager, PredictionManager, TeamStatsManager
 
 
@@ -119,7 +119,16 @@ class EgaUser(AbstractUser):
             }
 
     def predicted_ranking(self, tournament):
-        return self.preferences.get('predicted_ranking', {})
+        ranking = self.preferences.get('predicted_ranking', {})
+        if isinstance(ranking, dict) and ranking.get('version') == 2:
+            return ranking.get('standings', {})
+        return ranking
+
+    def predicted_third_places(self, tournament):
+        ranking = self.preferences.get('predicted_ranking', {})
+        if isinstance(ranking, dict) and ranking.get('version') == 2:
+            return ranking.get('third_places', [])
+        return []
 
     def update_predicted_ranking(self, tournament):
         preds = self.prediction_set.filter(
@@ -129,45 +138,14 @@ class EgaUser(AbstractUser):
             away_goals__isnull=False,
         )
 
-        # track (points, goal diff, goals) per team
-        stats = defaultdict(lambda: (0, 0, 0))
-        for p in preds:
-            home_points = away_points = MATCH_TIE_POINTS
-            if p.home_goals > p.away_goals:
-                home_points = MATCH_WON_POINTS
-                away_points = MATCH_LOST_POINTS
-            elif p.home_goals < p.away_goals:
-                home_points = MATCH_LOST_POINTS
-                away_points = MATCH_WON_POINTS
-            home_update = (
-                home_points,
-                p.home_goals - p.away_goals,
-                p.home_goals,
-            )
-            away_update = (
-                away_points,
-                p.away_goals - p.home_goals,
-                p.away_goals,
-            )
-            stats[p.match.home_id] = tuple(
-                map(sum, zip(stats[p.match.home_id], home_update))
-            )
-            stats[p.match.away_id] = tuple(
-                map(sum, zip(stats[p.match.away_id], away_update))
-            )
-
-        standings = sorted(stats.items(), key=lambda i: i[1], reverse=True)
-        stats = TeamStats.objects.filter(tournament=tournament)
-        zones = {s.team_id: s.zone for s in stats}
-        counters = defaultdict(lambda: 1)
-        rankings = {}
-        for team_id, _ in standings:
-            zone = zones[team_id]
-            pos = counters[zone]
-            counters[zone] += 1
-            label = '{}{}'.format(pos, zone)
-            rankings[label] = team_id
-        self.preferences['predicted_ranking'] = rankings
+        standings, third_places = build_predicted_standings(
+            tournament, preds.select_related('match__home', 'match__away')
+        )
+        self.preferences['predicted_ranking'] = {
+            'version': 2,
+            'standings': standings,
+            'third_places': third_places,
+        }
         self.save(update_fields=['preferences'])
 
     def record_referral(self, other):
@@ -240,6 +218,7 @@ class Tournament(models.Model):
     image = models.ImageField(upload_to='tournaments', null=True, blank=True)
     published = models.BooleanField(default=False)
     finished = models.BooleanField(default=False)
+    preferences = models.JSONField(encoder=DjangoJSONEncoder, default=dict)
 
     def __str__(self):
         return self.name
@@ -387,7 +366,7 @@ class Match(models.Model):
 
     @property
     def is_expired(self):
-        return self.deadline < now()
+        return self.deadline is not None and self.deadline < now()
 
 
 class Prediction(models.Model):
