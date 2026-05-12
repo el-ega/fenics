@@ -76,14 +76,13 @@
                     <span class="pull-right"><button onclick="copyText()" class="btn btn-link">{% trans 'Copiar' %}</button></span>
                 </h3>
                 <div id="round16">
-                <p>{% trans 'Así quedaría mi cuadro de dieciseisavos según mis pronósticos:' %}</p>
+                <p>{% trans 'Mis 16avos' %} #elEga</p>
                 <p style="margin-left: 20px">
                     {% for match in projected_bracket %}
                     {{ match.home.emoji }} {% firstof match.home.code match.home %} - {% firstof match.away.code match.away %} {{ match.away.emoji }}
                     {% if not forloop.last %}<br/>{% endif %}
                     {% endfor %}
                 </p>
-                <p>#WorldCup2026 #elEga<br/><a href="https://el-ega.top">https://el-ega.top</a></p>
                 </div>
                 <script>
                     function copyText() {

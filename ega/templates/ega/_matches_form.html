@@ -66,7 +66,7 @@
                         <span class="text-muted">vs</span>
                         <strong>{% firstof match.away.code match.away match.away_placeholder %}{% if match.away %} {{ match.away.emoji }}{% endif %}</strong>
                     </div>
-                    <div class="col-xs-2 col-sm-2 text-center">
+                    <div class="col-xs-2 col-sm-4 text-center">
                         {% if form.instance.home_goals != None and form.instance.away_goals != None %}
                         <strong class="predicted-score">
                             {{ form.instance.home_goals }} - {{ form.instance.away_goals }}
@@ -77,7 +77,7 @@
                         {% endif %}
                         {% show_prediction_trends_compact match %}
                     </div>
-                    <div class="col-xs-4 col-sm-5 match-summary-meta text-muted text-right">
+                    <div class="col-xs-4 col-sm-3 match-summary-meta text-muted text-right">
                         <small>
                             {{ match.description }}
                             | {{ match.when|date:"F j, H:i" }}
@@ -173,5 +173,4 @@
     <p>{% trans 'No hay partidos para jugar.' %}</p>
 {% endif %}
 
-{% include 'ega/_projected_bracket.html' %}
 </div>

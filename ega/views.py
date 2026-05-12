@@ -486,7 +486,6 @@ def _next_matches_context(
     return {
         'tournament': tournament,
         'formset': formset,
-        'projected_bracket': projected_bracket(tournament, user),
         'changes_status': changes_status,
         'changes_message': changes_message,
         **_prediction_filter_options(formset),
