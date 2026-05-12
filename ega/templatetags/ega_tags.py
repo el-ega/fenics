@@ -17,6 +17,16 @@ register = template.Library()
 @register.inclusion_tag('ega/_trends.html')
 def show_prediction_trends(match):
     """Display a progress bar with prediction trends."""
+    return _prediction_trends(match)
+
+
+@register.inclusion_tag('ega/_trends_compact.html')
+def show_prediction_trends_compact(match):
+    """Display a compact progress bar with prediction trends."""
+    return _prediction_trends(match)
+
+
+def _prediction_trends(match):
     values = None
     # only consider settled predictions
     trends = (

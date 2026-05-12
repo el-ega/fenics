@@ -1,0 +1,7 @@
+{% if values %}
+<div class="compact-trends" title="{{ count }} pronósticos">
+    <span class="compact-trend-local" style="width: {{ values.L }}%"></span>
+    <span class="compact-trend-tie" style="width: {{ values.E }}%"></span>
+    <span class="compact-trend-away" style="width: {{ values.V }}%"></span>
+</div>
+{% endif %}

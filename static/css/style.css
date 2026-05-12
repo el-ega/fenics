@@ -205,6 +205,34 @@ table.ranking {
     display: inline-block;
 }
 
+.compact-trends {
+    display: flex;
+    height: 3px;
+    margin: 2px auto 0;
+    max-width: 70px;
+    width: 100%;
+}
+
+.match-heading[aria-expanded="true"] .compact-trends {
+    display: none;
+}
+
+.compact-trends span {
+    display: block;
+}
+
+.compact-trend-local {
+    background-color: #5cb85c;
+}
+
+.compact-trend-tie {
+    background-color: #fcf8e3;
+}
+
+.compact-trend-away {
+    background-color: #5bc0de;
+}
+
 .team-image {
     max-width: 65px;
 }
