@@ -86,6 +86,10 @@
                     class="{% if changes_status == 'success' %}text-success{% elif changes_status == 'error' %}text-danger{% endif %}">
                 {{ changes_message }}
             </strong><br/>
+            <span class="matches-saving-indicator text-muted">
+                <img height="25" src="{% static 'images/loading.gif' %}" />
+                {% trans 'Guardando...' %}
+            </span>
             <button name="save" type="submit" class="btn btn-primary">{% trans 'Guardar' %}</button>
         </div>
 

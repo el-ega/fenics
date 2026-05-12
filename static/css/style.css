@@ -150,6 +150,19 @@ table.ranking {
     position: fixed;
 }
 
+.matches-saving-indicator {
+    display: none;
+    margin-right: 10px;
+}
+
+.htmx-request .matches-saving-indicator {
+    display: inline-block;
+}
+
+.htmx-request .navbar-matches button[type="submit"] {
+    display: none;
+}
+
 .team-image {
     max-width: 65px;
 }
