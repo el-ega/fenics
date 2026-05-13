@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import allauth.socialaccount.fields
 
 
 class Migration(migrations.Migration):
@@ -15,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='socialaccount',
             name='extra_data',
-            field=allauth.socialaccount.fields.JSONField(default='{}', verbose_name='extra data'),
+            field=models.JSONField(default='{}', verbose_name='extra data'),
         ),
         migrations.AlterField(
             model_name='socialaccount',

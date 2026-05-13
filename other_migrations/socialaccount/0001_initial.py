@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 from django.conf import settings
-import allauth.socialaccount.fields
 
 
 class Migration(migrations.Migration):
@@ -22,7 +21,7 @@ class Migration(migrations.Migration):
                 ('uid', models.CharField(max_length=255, verbose_name='uid')),
                 ('last_login', models.DateTimeField(auto_now=True, verbose_name='last login')),
                 ('date_joined', models.DateTimeField(auto_now_add=True, verbose_name='date joined')),
-                ('extra_data', allauth.socialaccount.fields.JSONField(default='{}', verbose_name='extra data')),
+                ('extra_data', models.JSONField(default='{}', verbose_name='extra data')),
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
@@ -63,10 +62,10 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='socialtoken',
-            unique_together=set([('app', 'account')]),
+            unique_together={('app', 'account')},
         ),
         migrations.AlterUniqueTogether(
             name='socialaccount',
-            unique_together=set([('provider', 'uid')]),
+            unique_together={('provider', 'uid')},
         ),
     ]
