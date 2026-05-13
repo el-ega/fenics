@@ -72,6 +72,19 @@
             });
         }
 
+        function wireExpandCollapseAll() {
+            $('#expand-all').click(function() {
+                $('.match-entry:visible .panel-collapse').addClass('in');
+                $('.match-entry:visible .match-toggle-expand').hide();
+                $('.match-entry:visible .match-toggle-collapse').show();
+            });
+            $('#collapse-all').click(function() {
+                $('.match-entry:visible .panel-collapse').removeClass('in');
+                $('.match-entry:visible .match-toggle-expand').show();
+                $('.match-entry:visible .match-toggle-collapse').hide();
+            });
+        }
+
         function wireMatchFilters(container) {
             var root = $(container);
             root.find('#matches-team-filter').val(matchFilters.team);
@@ -130,6 +143,7 @@
 
         wirePredictionForm(document);
         wireMatchFilters(document);
+        wireExpandCollapseAll();
 
         $(document).on("submit", "#matches-form", function() {
             rememberMatchFilters();
@@ -147,6 +161,7 @@
                 document.getElementById('matches-form-container')
             ) {
                 wireCurrentMatchesForm();
+                wireExpandCollapseAll();
             }
         });
 

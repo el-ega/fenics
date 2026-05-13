@@ -49,6 +49,17 @@
             </div>
         </div>
 
+        <div class="text-right" style="margin-bottom: 5px;">
+            <div class="btn-group btn-group-xs" role="group" aria-label="{% trans 'Expandir o contraer todos' %}">
+                <button type="button" class="btn btn-default" id="expand-all" title="{% trans 'Expandir todos' %}">
+                    <span class="glyphicon glyphicon-chevron-down"></span>
+                </button>
+                <button type="button" class="btn btn-default" id="collapse-all" title="{% trans 'Contraer todos' %}">
+                    <span class="glyphicon glyphicon-chevron-up"></span>
+                </button>
+            </div>
+        </div>
+
         {% for form in formset.forms %}
 
         {% with match=form.instance.match %}
@@ -75,7 +86,7 @@
                         {% else %}
                         <span class="text-muted">-</span>
                         {% endif %}
-                        {% show_prediction_trends_compact match %}
+                        {% show_prediction_trends_compact match trends_data %}
                     </div>
                     <div class="col-xs-4 col-sm-3 match-summary-meta text-muted text-right">
                         <small>
@@ -107,7 +118,7 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-12 text-center">
-                        {% show_prediction_trends match %}
+                        {% show_prediction_trends match trends_data %}
                     </div>
                 </div>
                 {% if form.instance.starred %}

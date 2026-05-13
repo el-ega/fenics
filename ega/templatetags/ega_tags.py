@@ -15,18 +15,29 @@ register = template.Library()
 
 
 @register.inclusion_tag('ega/_trends.html')
-def show_prediction_trends(match):
+def show_prediction_trends(match, trends_data=None):
     """Display a progress bar with prediction trends."""
-    return _prediction_trends(match)
+    return _prediction_trends(match, trends_data)
 
 
 @register.inclusion_tag('ega/_trends_compact.html')
-def show_prediction_trends_compact(match):
+def show_prediction_trends_compact(match, trends_data=None):
     """Display a compact progress bar with prediction trends."""
-    return _prediction_trends(match)
+    return _prediction_trends(match, trends_data)
 
 
-def _prediction_trends(match):
+def _prediction_trends(match, trends_data=None):
+    # Use pre-computed trends if available
+    if trends_data and match.id in trends_data:
+        values = trends_data[match.id]
+        return {
+            'home_team': match.home or match.home_placeholder,
+            'away_team': match.away or match.away_placeholder,
+            'count': None,  # not needed for display
+            'values': values,
+        }
+
+    # Fallback to individual query (for backwards compatibility)
     values = None
     # only consider settled predictions
     trends = (

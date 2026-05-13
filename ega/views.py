@@ -86,7 +86,7 @@ def _next_matches(user):
     )
     predictions = user.prediction_set.filter(
         match__in=matches, home_goals__isnull=False, away_goals__isnull=False
-    )
+    ).select_related('match', 'match__home', 'match__away')
     next_matches = []
     for m in matches:
         pred = None
@@ -377,22 +377,24 @@ def league_home(request, slug, league_slug):
 def next_matches(request, slug):
     """Return coming matches for the specified tournament."""
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
-    # create empty predictions if needed
-    missing = Match.objects.filter(tournament=tournament).exclude(
-        prediction__user=request.user
-    )
+    # create empty predictions if needed (only for matches in the target date range)
+    tz_now = now() + timedelta(hours=HOURS_TO_DEADLINE)
+    until = tz_now + timedelta(days=NEXT_MATCHES_DAYS)
+    missing = Match.objects.filter(
+        tournament=tournament,
+        when__range=(tz_now, until),
+    ).exclude(prediction__user=request.user)
     Prediction.objects.bulk_create(
-        [Prediction(user=request.user, match=m) for m in missing]
+        [Prediction(user=request.user, match=m) for m in missing],
+        ignore_conflicts=True,
     )
 
     # predictions for the next matches
-    tz_now = now() + timedelta(hours=HOURS_TO_DEADLINE)
-    until = tz_now + timedelta(days=NEXT_MATCHES_DAYS)
     predictions = Prediction.objects.filter(
         user=request.user,
         match__tournament=tournament,
         match__when__range=(tz_now, until),
-    )
+    ).select_related('match', 'match__home', 'match__away', 'match__tournament')
 
     PredictionFormSet = modelformset_factory(
         Prediction, form=PredictionForm, extra=0
@@ -483,13 +485,55 @@ def next_matches(request, slug):
 def _next_matches_context(
     tournament, user, formset, changes_status='', changes_message=''
 ):
+    match_ids = [form.instance.match_id for form in formset.forms]
+    trends_data = _compute_all_trends(match_ids)
     return {
         'tournament': tournament,
         'formset': formset,
         'changes_status': changes_status,
         'changes_message': changes_message,
+        'trends_data': trends_data,
         **_prediction_filter_options(formset),
     }
+
+
+def _compute_all_trends(match_ids):
+    """Compute prediction trends for all matches in a single query."""
+    from django.db.models import Count
+    from ega.models import Prediction
+
+    trends = (
+        Prediction.objects.filter(match__in=match_ids)
+        .exclude(trend='')
+        .values('match__id', 'trend')
+        .annotate(num=Count('trend'))
+    )
+
+    result = {}
+    for match_id in match_ids:
+        result[match_id] = None
+
+    totals = {}
+    for t in trends:
+        match_id = t['match__id']
+        if match_id not in totals:
+            totals[match_id] = 0
+        totals[match_id] += t['num']
+
+    for match_id, total in totals.items():
+        if total > 0:
+            match_trends = {
+                t['trend']: t['num'] * 100 // total
+                for t in trends
+                if t['match__id'] == match_id
+            }
+            values = {'L': 0, 'E': 0, 'V': 0}
+            values.update(match_trends)
+            diff = 100 - sum(values.values())
+            values[list(values.keys())[-1]] += diff
+            result[match_id] = values
+
+    return result
 
 
 def _prediction_filter_options(formset):
