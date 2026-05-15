@@ -37,6 +37,11 @@ urlpatterns = [
         ega.views.update_champion_prediction,
         name='ega-update-champion',
     ),
+    path(
+        '<slug:slug>/champion-prediction',
+        ega.views.champion_prediction_partial,
+        name='ega-champion-prediction-partial',
+    ),
     path('<slug:slug>/history/', ega.views.history, name='ega-history'),
     path('<slug:slug>/league/', ega.views.leagues, name='ega-leagues'),
     path(

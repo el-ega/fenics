@@ -22,6 +22,15 @@
         <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
         <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+        <script>
+            // Configure htmx to show loading indicator
+            document.body.addEventListener('htmx:beforeRequest', function(evt) {
+                document.body.classList.add('htmx-request');
+            });
+            document.body.addEventListener('htmx:afterRequest', function(evt) {
+                document.body.classList.remove('htmx-request');
+            });
+        </script>
 
         {% block extra-head %}
         {% endblock %}

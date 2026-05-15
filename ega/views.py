@@ -195,6 +195,21 @@ def update_champion_prediction(request, slug):
         form.save()
         team = form.cleaned_data['team']
         team_name = team.name if team is not None else '-'
+
+        # Check if this is an HTMX request
+        if request.headers.get('HX-Request'):
+            # Re-fetch the form with updated instance for the partial template
+            prediction.refresh_from_db()
+            form = ChampionPredictionForm(instance=prediction)
+            return render(
+                request,
+                'ega/_champion_prediction.html',
+                {
+                    'champion_form': form,
+                    'tournament': tournament,
+                },
+            )
+
         messages.success(
             request, _('Pronóstico de campeón actualizado: %s.') % team_name
         )
@@ -202,6 +217,24 @@ def update_champion_prediction(request, slug):
 
     messages.error(request, _('Equipo no válido'))
     return HttpResponseRedirect(reverse('ega-home', args=[slug]))
+
+
+@login_required
+def champion_prediction_partial(request, slug):
+    """Return the champion prediction form and chart as a partial for HTMX."""
+    tournament = get_object_or_404(Tournament, slug=slug, published=True)
+    prediction, created = ChampionPrediction.objects.get_or_create(
+        user=request.user, tournament=tournament
+    )
+    form = ChampionPredictionForm(instance=prediction)
+    return render(
+        request,
+        'ega/_champion_prediction.html',
+        {
+            'champion_form': form,
+            'tournament': tournament,
+        },
+    )
 
 
 @require_http_methods(('GET', 'POST'))

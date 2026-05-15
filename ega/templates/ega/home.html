@@ -21,26 +21,9 @@
                 <h3 class="title">{% trans 'Blog' %} <small><a href="http://blog.el-ega.top">el Ega | blog</a></small></h3>
                 {% latest_news source='ega' latest=1 %}
                 {% if champion_form %}
-                <h3 class="title">{% trans 'Pronosticá el campeón' %}</h3>
-
-                <div>
-                    <form class="form-inline" method="POST" action={% url 'ega-update-champion' tournament.slug %}>
-                    {% csrf_token %}
-                    <div class="form-group">{{ champion_form.team }}</div>
-                    <button name="save" type="submit" class="btn btn-primary">{% trans 'Actualizar' %}</button>
-                    {% if champion_form.instance.team %}
-                    <br/><small class="text-muted">{% trans 'Tu candidato actual es' %} {{ champion_form.instance.team.name }}</small>
-                    {% endif %}
-                    <br/><small class="text-muted">{% trans 'Última actualizacion:' %} {{ champion_form.instance.last_updated }}</small>
-                    <br/><small>{% trans 'Al final del torneo sumás puntos de acuerdo a la antigüedad del pronóstico: antes del comienzo, 8 puntos; durante la fase de grupos, 5 puntos; durante la fase final, 3 puntos.' %}</small>
-                    </form>
+                <div hx-get="{% url 'ega-champion-prediction-partial' tournament.slug %}" hx-trigger="load">
+                    <img src="{% static 'images/loading.gif' %}" width="32" alt="loading"/>
                 </div>
-
-                <div>
-                    {% champion_predictions_chart tournament as chart %}
-                    <embed type="image/svg+xml" src= {{ chart|safe }} />
-                </div>
-
                 {% elif tournament.slug == 'uruguay-clausura-2017' %}
                 <h3 class="title">{% trans 'Noticias' %} <small><a href="http://ovaciondigital.com.uy">Ovación</a></small></h3>
                 {% latest_news source='ovacion' latest=3 %}

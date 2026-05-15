@@ -1,0 +1,27 @@
+{% load i18n %}
+{% load ega_tags %}
+
+<div id="champion-prediction-section">
+    <h3 class="title">{% trans 'Pronosticá el campeón' %}</h3>
+
+    <div id="champion-prediction-form">
+        <form class="form-inline" method="POST" action="{% url 'ega-update-champion' tournament.slug %}"
+              hx-post="{% url 'ega-update-champion' tournament.slug %}"
+              hx-target="#champion-prediction-section"
+              hx-swap="outerHTML">
+            {% csrf_token %}
+            <div class="form-group">{{ champion_form.team }}</div>
+            <button name="save" type="submit" class="btn btn-primary">{% trans 'Actualizar' %}</button>
+            {% if champion_form.instance.team %}
+            <br/><small class="text-muted">{% trans 'Tu candidato actual es' %} {{ champion_form.instance.team.name }}</small>
+            {% endif %}
+            <br/><small class="text-muted">{% trans 'Última actualizacion:' %} {{ champion_form.instance.last_updated }}</small>
+            <br/><small>{% trans 'Al final del torneo sumás puntos de acuerdo a la antigüedad del pronóstico: antes del comienzo, 8 puntos; durante la fase de grupos, 5 puntos; durante la fase final, 3 puntos.' %}</small>
+        </form>
+    </div>
+
+    <div id="champion-prediction-chart">
+        {% champion_predictions_chart tournament as chart %}
+        <embed type="image/svg+xml" src="{{ chart|safe }}" />
+    </div>
+</div>
