@@ -108,11 +108,17 @@
 
             <div>
                 {% for message in messages %}
-                <div id="messages" class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                <div class="alert alert-dismissible {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
                     {{ message }}
                 </div>
                 {% endfor %}
             </div>
+            <script>
+                setTimeout(function() {
+                    $('.alert').fadeOut(500);
+                }, 5000);
+            </script>
 
             <div>
                 {% block content %}
