@@ -127,7 +127,7 @@ LANGUAGE_CODE = 'es'
 
 TIME_ZONE = 'America/Argentina/Buenos_Aires'
 
-USE_I18N = False # True
+USE_I18N = False  # True
 
 USE_L10N = True
 

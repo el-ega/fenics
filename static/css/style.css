@@ -85,6 +85,144 @@ dt {
     color: grey;
 }
 
+.projected-bracket-share {
+    background: transparent;
+    border: 0;
+    color: #555;
+    font-family: inherit;
+    font-size: 12px;
+    max-height: 220px;
+    overflow: auto;
+    padding: 0;
+    white-space: pre-wrap;
+}
+
+.projected-share-tabs {
+    font-size: 11px;
+    margin-bottom: 10px;
+    white-space: nowrap;
+}
+
+.projected-share-tabs > li > a {
+    padding: 6px 8px;
+}
+
+.projected-share-content {
+    color: #555;
+    font-size: 12px;
+    line-height: 1.6;
+    max-height: 220px;
+    overflow: auto;
+}
+
+.projected-bracket-round {
+    color: #777;
+    font-size: 12px;
+    margin: 0 0 10px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.projected-bracket {
+    align-items: flex-start;
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.projected-bracket-column {
+    flex: 0 0 150px;
+}
+
+.projected-bracket-matches {
+    display: grid;
+    gap: 6px;
+}
+
+.projected-bracket-column:nth-child(2) .projected-bracket-matches {
+    gap: 46px;
+    margin-top: 20px;
+}
+
+.projected-bracket-column:nth-child(3) .projected-bracket-matches {
+    gap: 126px;
+    margin-top: 60px;
+}
+
+.projected-bracket-column:nth-child(4) .projected-bracket-matches {
+    gap: 286px;
+    margin-top: 140px;
+}
+
+.projected-bracket-column:nth-child(5) .projected-bracket-matches {
+    margin-top: 300px;
+}
+
+.projected-bracket-match {
+    align-items: center;
+    background: #f8f8f8;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    box-sizing: border-box;
+    display: flex;
+    font-weight: normal;
+    height: 34px;
+    justify-content: space-between;
+    padding: 4px;
+    white-space: nowrap;
+}
+
+.projected-bracket-team {
+    align-items: center;
+    display: flex;
+    flex: 1 1 0;
+    gap: 4px;
+    min-width: 0;
+}
+
+.projected-bracket-team-home {
+    justify-content: flex-start;
+}
+
+.projected-bracket-team-away {
+    justify-content: flex-end;
+}
+
+.projected-bracket-flag {
+    display: inline-block;
+    font-size: 20px;
+    line-height: 1;
+    text-align: center;
+}
+
+.projected-bracket-code {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.projected-bracket-separator {
+    color: #777;
+    flex: 0 0 auto;
+    margin: 0 6px;
+}
+
+.projected-bracket-flag.unresolved {
+    color: #bbb;
+}
+
+.projected-team,
+.projected-team-detail {
+    font-style: italic;
+}
+
+@media (max-width: 767px) {
+    .projected-bracket-column {
+        flex-basis: auto;
+    }
+}
+
 .nav-logo {
     max-height: 50px;
 }

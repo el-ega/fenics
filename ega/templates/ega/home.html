@@ -58,18 +58,32 @@
                     {% trans 'Compartí' %}
                     <span class="pull-right"><button onclick="copyText()" class="btn btn-link">{% trans 'Copiar' %}</button></span>
                 </h3>
-                <div id="round16">
-                <p>{% trans 'Mis 16avos' %} #elEga</p>
-                <p style="margin-left: 20px">
-                    {% for match in projected_bracket %}
-                    {{ match.home.emoji }} {% firstof match.home.code match.home %} - {% firstof match.away.code match.away %} {{ match.away.emoji }}
-                    {% if not forloop.last %}<br/>{% endif %}
+                <ul class="nav nav-tabs projected-share-tabs" role="tablist">
+                    {% for group in projected_bracket_rounds %}
+                    {% if group.round != 'Bronze final' %}
+                    <li role="presentation" class="{% if forloop.first %}active{% endif %}">
+                        <a href="#share-round-{{ forloop.counter }}" aria-controls="share-round-{{ forloop.counter }}" role="tab" data-toggle="tab">
+                            {{ group.round }}
+                        </a>
+                    </li>
+                    {% endif %}
                     {% endfor %}
-                </p>
+                </ul>
+                <div class="tab-content projected-share-content">
+                    {% for group in projected_bracket_rounds %}
+                    {% if group.round != 'Bronze final' %}
+                    <div role="tabpanel" class="tab-pane projected-round-pane{% if forloop.first %} active{% endif %}" id="share-round-{{ forloop.counter }}">
+                        {{ group.round }} #elEga
+                        {% for match in group.matches %}
+                        <div>{{ match.home.emoji }} {% firstof match.home.code match.home %} - {% firstof match.away.code match.away %} {{ match.away.emoji }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% endfor %}
                 </div>
                 <script>
                     function copyText() {
-                        navigator.clipboard.writeText(document.getElementById("round16").innerText);
+                        navigator.clipboard.writeText(document.querySelector(".projected-round-pane.active").innerText);
                     }
                 </script>
             {% elif round16 %}
@@ -106,5 +120,7 @@
         </div>
 
     </div>
+
+    {% include 'ega/_projected_bracket.html' %}
 
 {% endblock %}

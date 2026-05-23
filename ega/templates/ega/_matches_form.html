@@ -76,6 +76,15 @@
                         <strong>{% if match.home %}{{ match.home.emoji }} {% endif %}{% firstof match.home.code match.home match.home_placeholder %}</strong>
                         <span class="text-muted">vs</span>
                         <strong>{% firstof match.away.code match.away match.away_placeholder %}{% if match.away %} {{ match.away.emoji }}{% endif %}</strong>
+                        {% if match.knockout and match.projected_home or match.projected_away %}
+                        <br/>🔮
+                        {% endif %}
+                        {% if match.knockout and match.projected_home.name %}
+                        <small class="text-muted projected-team">{{ match.projected_home.emoji }} {% firstof match.projected_home.code match.projected_home %}</small>
+                        {% endif %}
+                        {% if match.knockout and match.projected_away.name %}
+                        <small class="text-muted projected-team">vs {% firstof match.projected_away.code match.projected_away %} {{ match.projected_away.emoji }}</small>
+                        {% endif %}
                     </div>
                     <div class="col-xs-2 col-sm-4 text-center">
                         {% if form.instance.home_goals != None and form.instance.away_goals != None %}
@@ -128,6 +137,13 @@
                 {% endif %}
                 <div class="row {% if form.instance.starred %}starred{% endif %}">
                     <div class="col-xs-12 col-md-4">
+                        {% if not home and match.projected_home.name %}
+{% comment %}
+                        <p class="text-muted projected-team-detail">
+                            {% trans 'Proyectado' %}: {{ match.projected_home.emoji }} {% firstof match.projected_home.code match.projected_home %}
+                        </p>
+{% endcomment %}
+                        {% endif %}
                         {% include "ega/_team_details.html" with condition="home" team=home placeholder=home_placeholder stats=form.instance.home_team_stats %}
                     </div>
                     <div class="col-xs-12 col-md-4 text-center{% if form.home_goals.errors or form.away_goals.errors %} has-error{% endif %}">
@@ -156,6 +172,13 @@
                         {% endif %}
                     </div>
                     <div class="col-xs-12 col-md-4">
+                        {% if not away and match.projected_away.name %}
+{% comment %}
+                        <p class="text-muted projected-team-detail">
+                            {% trans 'Proyectado' %}: {{ match.projected_away.emoji }} {% firstof match.projected_away.code match.projected_away %}
+                        </p>
+{% endcomment %}
+                        {% endif %}
                         {% include "ega/_team_details.html" with condition="away" team=away placeholder=away_placeholder stats=form.instance.away_team_stats %}
                     </div>
                 </div>

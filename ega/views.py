@@ -28,7 +28,13 @@ from ega.constants import (
     RANKING_TEAMS_PER_PAGE,
     ROUND16_MATCHES,
 )
-from ega.bracket import projected_bracket
+from ega.bracket import (
+    match_number,
+    projected_bracket,
+    projected_bracket_by_match_number,
+    projected_bracket_rounds,
+    projected_bracket_share_text,
+)
 from ega.forms import (
     ChampionPredictionForm,
     EgaUserForm,
@@ -121,7 +127,12 @@ def meta_home(request):
 def _predicted_round16(tournament, user):
     bracket = projected_bracket(tournament, user)
     if bracket:
-        return [(row['home'], row['away']) for row in bracket]
+        first_round = bracket[0]['round']
+        return [
+            (row['home'], row['away'])
+            for row in bracket
+            if row['round'] == first_round
+        ]
 
     predicted_ranking = user.predicted_ranking(tournament)
     teams = {t.id: t for t in tournament.teams.all()}
@@ -163,6 +174,7 @@ def home(request, slug):
     champion_form = ChampionPredictionForm(instance=champion)
 
     round16 = _predicted_round16(tournament, request.user)
+    full_bracket = projected_bracket(tournament, request.user)
 
     return render(
         request,
@@ -176,7 +188,13 @@ def home(request, slug):
             'stats': stats,
             'champion_form': champion_form,
             'round16': round16,
-            'projected_bracket': projected_bracket(tournament, request.user),
+            'projected_bracket': full_bracket,
+            'projected_bracket_rounds': projected_bracket_rounds(
+                tournament, request.user
+            ),
+            'projected_bracket_share_text': projected_bracket_share_text(
+                tournament, request.user
+            ),
         },
     )
 
@@ -410,7 +428,7 @@ def league_home(request, slug, league_slug):
 def next_matches(request, slug):
     """Return coming matches for the specified tournament."""
     tournament = get_object_or_404(Tournament, slug=slug, published=True)
-    # create empty predictions if needed (only for matches in the target date range)
+    # create empty predictions if needed for matches in the target date range
     tz_now = now() + timedelta(hours=HOURS_TO_DEADLINE)
     until = tz_now + timedelta(days=NEXT_MATCHES_DAYS)
     missing = Match.objects.filter(
@@ -427,7 +445,9 @@ def next_matches(request, slug):
         user=request.user,
         match__tournament=tournament,
         match__when__range=(tz_now, until),
-    ).select_related('match', 'match__home', 'match__away', 'match__tournament')
+    ).select_related(
+        'match', 'match__home', 'match__away', 'match__tournament'
+    )
 
     PredictionFormSet = modelformset_factory(
         Prediction, form=PredictionForm, extra=0
@@ -520,6 +540,7 @@ def _next_matches_context(
 ):
     match_ids = [form.instance.match_id for form in formset.forms]
     trends_data = _compute_all_trends(match_ids)
+    _attach_projected_match_teams(tournament, user, formset)
     return {
         'tournament': tournament,
         'formset': formset,
@@ -528,6 +549,16 @@ def _next_matches_context(
         'trends_data': trends_data,
         **_prediction_filter_options(formset),
     }
+
+
+def _attach_projected_match_teams(tournament, user, formset):
+    bracket = projected_bracket_by_match_number(tournament, user)
+    for form in formset.forms:
+        match = form.instance.match
+        number = match_number(match)
+        projected = bracket.get(number)
+        match.projected_home = projected['home'] if projected else None
+        match.projected_away = projected['away'] if projected else None
 
 
 def _compute_all_trends(match_ids):

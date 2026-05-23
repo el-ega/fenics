@@ -196,13 +196,19 @@ class NextMatchesTestCase(BaseTestCase):
         self.assertContains(response, 'matches-phase-filter')
         self.assertContains(
             response,
-            'id="match-%s-details"\n                 class="panel-collapse collapse "'
+            (
+                'id="match-%s-details"\n'
+                '                 class="panel-collapse collapse "'
+            )
             % predicted.id,
             html=False,
         )
         self.assertContains(
             response,
-            'id="match-%s-details"\n                 class="panel-collapse collapse in"'
+            (
+                'id="match-%s-details"\n'
+                '                 class="panel-collapse collapse in"'
+            )
             % unfilled.id,
             html=False,
         )
@@ -262,8 +268,12 @@ class HomeTestCase(BaseTestCase):
         url = reverse("ega-home", kwargs={"slug": DEFAULT_TOURNAMENT})
         response = self.client.get(url)
 
-        self.assertEqual(len(response.context["projected_bracket"]), 16)
+        self.assertEqual(len(response.context["projected_bracket"]), 32)
         self.assertEqual(response.context["round16"][0], ('2A', '2B'))
+        self.assertContains(response, 'projected-share-tabs')
+        self.assertContains(response, 'share-round-1')
+        self.assertContains(response, '2A - 2B')
+        self.assertContains(response, 'Final')
 
     def test_legacy_round16_prediction_based(self):
         self.tournament.slug = 'qatar-2022'
@@ -299,3 +309,37 @@ class HomeTestCase(BaseTestCase):
             for home, away in ROUND16_MATCHES
         ]
         self.assertEqual(response.context["round16"], expected)
+
+    def test_next_matches_shows_projected_teams_for_knockout_placeholders(
+        self,
+    ):
+        tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
+        home = self.factory.make_team(name='Mexico', code='MEX', emoji='🇲🇽')
+        away = self.factory.make_team(
+            name='South Africa', code='RSA', emoji='🇿🇦'
+        )
+        self.tournament.teams.add(home, away)
+        self.user.preferences['predicted_ranking'] = {
+            'version': 2,
+            'standings': {'2A': home.id, '2B': away.id},
+        }
+        self.user.save(update_fields=['preferences'])
+        match = self.factory.make_match(
+            tournament=self.tournament,
+            home=None,
+            away=None,
+            home_placeholder='2A',
+            away_placeholder='2B',
+            description='Match 73 - Round of 32',
+            knockout=True,
+            when=tomorrow,
+        )
+        self.factory.make_prediction(match=match, user=self.user)
+        url = reverse("ega-next-matches", kwargs={"slug": DEFAULT_TOURNAMENT})
+
+        self.client.login(username='user', password='password')
+        response = self.client.get(url)
+
+        self.assertContains(response, 'Proyectado')
+        self.assertContains(response, 'MEX')
+        self.assertContains(response, 'RSA')
