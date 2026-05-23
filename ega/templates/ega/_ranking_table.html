@@ -23,7 +23,7 @@
             <td>{% if row.avatar %}
                 <img class="avatar" src="{{ MEDIA_URL }}{{ row.avatar }}" />
                 {% else %}
-                <img class="avatar" src="{% static 'images/unknown.png' %}" />
+                <span class="avatar-initials avatar-sm">{{ row.username|slice:":1" }}</span>
                 {% endif %}
             </td>
             <td>{{ row.username }}</td>

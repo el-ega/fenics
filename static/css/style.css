@@ -273,6 +273,31 @@ table.ranking {
     max-height: 130px;
 }
 
+.avatar-initials {
+    align-items: center;
+    background-color: #5a7a5c;
+    border-radius: 50%;
+    color: #fff;
+    display: inline-flex;
+    font-weight: bold;
+    justify-content: center;
+    line-height: 1;
+    text-transform: uppercase;
+    user-select: none;
+}
+
+.avatar-initials.avatar-sm {
+    font-size: 18px;
+    height: 50px;
+    width: 50px;
+}
+
+.avatar-initials.avatar-md {
+    font-size: 28px;
+    height: 75px;
+    width: 75px;
+}
+
 .navbar-matches {
     background-color: rgba(248,248,248,0.9);
     border-top: 1px solid #ddd;
