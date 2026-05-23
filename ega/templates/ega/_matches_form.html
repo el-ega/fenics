@@ -77,7 +77,7 @@
                         <span class="text-muted">vs</span>
                         <strong>{% firstof match.away.code match.away match.away_placeholder %}{% if match.away %} {{ match.away.emoji }}{% endif %}</strong>
                         {% if match.knockout and match.projected_home or match.projected_away %}
-                        <br/>🔮
+                        <br/>{% if request.user.avatar %}<img class="avatar-nav" src="{{ request.user.avatar.url }}" />{% else %}<span class="avatar-initials avatar-nav">{{ request.user.username|slice:":1" }}</span>{% endif %}
                         {% endif %}
                         {% if match.knockout and match.projected_home.name %}
                         <small class="text-muted projected-team">{{ match.projected_home.emoji }} {% firstof match.projected_home.code match.projected_home %}</small>
