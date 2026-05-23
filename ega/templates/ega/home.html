@@ -22,7 +22,7 @@
                 {% latest_news source='ega' latest=1 %}
                 {% if champion_form %}
                 <div hx-get="{% url 'ega-champion-prediction-partial' tournament.slug %}" hx-trigger="load">
-                    <img src="{% static 'images/loading.gif' %}" width="32" alt="loading"/>
+                    <span class="spinner"></span>
                 </div>
                 {% elif tournament.slug == 'uruguay-clausura-2017' %}
                 <h3 class="title">{% trans 'Noticias' %} <small><a href="http://ovaciondigital.com.uy">Ovación</a></small></h3>

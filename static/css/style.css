@@ -315,6 +315,21 @@ table.ranking {
     position: fixed;
 }
 
+.spinner {
+    animation: spin 0.75s linear infinite;
+    border: 3px solid #ddd;
+    border-radius: 50%;
+    border-top-color: #5a7a5c;
+    display: inline-block;
+    height: 20px;
+    vertical-align: middle;
+    width: 20px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 .matches-saving-indicator {
     display: none;
     margin-right: 10px;
