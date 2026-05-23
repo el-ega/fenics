@@ -12,7 +12,7 @@
     var matchFilters = {team: '', group: '', phase: ''};
 
     function check_tie(prefix) {
-        if ($('select[name=' + prefix + '-home_goals]').val() == $('select[name=' + prefix + '-away_goals]').val()){
+        if ($('[name=' + prefix + '-home_goals]').val() == $('[name=' + prefix + '-away_goals]').val()){
             $('input[name=' + prefix + '-penalties]').prop( "disabled", false);
             $('[id^=id_' + prefix + '-penalties]').removeAttr("disabled");
             $('#' + prefix + '-help').css("color", "#333");
@@ -54,12 +54,12 @@
         function wirePredictionForm(container) {
             var prefixes = [{% for form in formset.forms %}'{{ form.prefix }}'{% if not forloop.last %},{% endif %}{% endfor %}];
             $.each(prefixes, function(index, prefix) {
-            $('select[name=' + prefix + '-home_goals]').change(function() {
+            $('[name=' + prefix + '-home_goals]').on('change input', function() {
                 pending_changes();
                 check_tie(prefix);
                 remove_default_prediction_msg(prefix);
             });
-            $('select[name=' + prefix + '-away_goals]').change(function() {
+            $('[name=' + prefix + '-away_goals]').on('change input', function() {
                 pending_changes();
                 check_tie(prefix);
                 remove_default_prediction_msg(prefix);

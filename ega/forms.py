@@ -17,31 +17,28 @@ from ega.models import (
 )
 
 
-GOAL_CHOICES = [('', '-')] + [(i, i) for i in range(20)]
 PENALTY_CHOICES = [('L', _('Local')), ('V', _('Visitante'))]
+
+GOALS_WIDGET = forms.NumberInput(
+    attrs={'class': 'form-control', 'min': 0, 'max': 19, 'step': 1}
+)
 
 
 class PredictionFormMixin(object):
-    def _clean_goals(self, field_name):
-        goals = self.cleaned_data.get(field_name)
-        if not goals:
-            goals = None
-        return goals
-
     def clean_home_goals(self):
-        return self._clean_goals('home_goals')
+        return self.cleaned_data.get('home_goals')
 
     def clean_away_goals(self):
-        return self._clean_goals('away_goals')
+        return self.cleaned_data.get('away_goals')
 
     def validate_prediction(self, cleaned_data):
         home_goals = cleaned_data.get("home_goals")
         away_goals = cleaned_data.get("away_goals")
 
         msg = "Pronóstico incompleto."
-        if home_goals and not away_goals:
+        if home_goals is not None and away_goals is None:
             raise forms.ValidationError(msg)
-        if not home_goals and away_goals:
+        if home_goals is None and away_goals is not None:
             raise forms.ValidationError(msg)
 
         penalties = cleaned_data.get('penalties', '')
@@ -56,15 +53,11 @@ class PredictionFormMixin(object):
 
 
 class PredictionForm(PredictionFormMixin, forms.ModelForm):
-    home_goals = forms.ChoiceField(
-        choices=GOAL_CHOICES,
-        required=False,
-        widget=forms.Select(attrs={'class': 'form-control input-lg'}),
+    home_goals = forms.IntegerField(
+        required=False, min_value=0, max_value=19, widget=GOALS_WIDGET
     )
-    away_goals = forms.ChoiceField(
-        choices=GOAL_CHOICES,
-        required=False,
-        widget=forms.Select(attrs={'class': 'form-control input-lg'}),
+    away_goals = forms.IntegerField(
+        required=False, min_value=0, max_value=19, widget=GOALS_WIDGET
     )
     penalties = forms.ChoiceField(
         choices=PENALTY_CHOICES, required=False, widget=forms.RadioSelect()
@@ -95,7 +88,6 @@ class PredictionForm(PredictionFormMixin, forms.ModelForm):
     def clean(self):
         cleaned_data = super(PredictionForm, self).clean()
         (home_goals, away_goals, _) = self.validate_prediction(cleaned_data)
-        # set source to web if a valid prediction was made
         if home_goals is not None and away_goals is not None:
             cleaned_data['source'] = 'web'
         return cleaned_data
@@ -193,15 +185,11 @@ class LeagueForm(forms.ModelForm):
 
 
 class EgaUserForm(PredictionFormMixin, forms.ModelForm):
-    home_goals = forms.ChoiceField(
-        choices=GOAL_CHOICES,
-        required=False,
-        widget=forms.Select(attrs={'class': 'form-control'}),
+    home_goals = forms.IntegerField(
+        required=False, min_value=0, max_value=19, widget=GOALS_WIDGET
     )
-    away_goals = forms.ChoiceField(
-        choices=GOAL_CHOICES,
-        required=False,
-        widget=forms.Select(attrs={'class': 'form-control'}),
+    away_goals = forms.IntegerField(
+        required=False, min_value=0, max_value=19, widget=GOALS_WIDGET
     )
     penalties = forms.ChoiceField(
         choices=PENALTY_CHOICES, required=False, widget=forms.RadioSelect()
@@ -224,11 +212,7 @@ class EgaUserForm(PredictionFormMixin, forms.ModelForm):
             cleaned_data
         )
         if home_goals is not None and away_goals is not None:
-            default_prediction = (
-                int(home_goals),
-                int(away_goals),
-                penalties,
-            )
+            default_prediction = (home_goals, away_goals, penalties)
         else:
             default_prediction = None
 

@@ -436,6 +436,13 @@ table.ranking {
     padding-bottom: 10px;
 }
 
+.goals-input input[type=number] {
+    font-size: 1.4em;
+    text-align: center;
+    width: 70px;
+    margin: 0 auto;
+}
+
 .penalties-input {
     margin-bottom: 20px;
 }
