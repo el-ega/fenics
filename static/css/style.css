@@ -347,9 +347,11 @@ table.ranking {
 
 .compact-trends {
     display: flex;
-    height: 3px;
-    margin: 2px auto 0;
+    height: 6px;
+    margin: 4px auto 0;
     max-width: 70px;
+    border-radius: 3px;
+    overflow: hidden;
     width: 100%;
 }
 
