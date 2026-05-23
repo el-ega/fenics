@@ -7,6 +7,8 @@ body {
     padding-top: 90px;
     /* Margin bottom by footer height */
     margin-bottom: 90px;
+    /* Extra clearance for the fixed save bar on the matches page */
+    padding-bottom: 60px;
 }
 
 dt {
@@ -272,12 +274,12 @@ table.ranking {
 }
 
 .navbar-matches {
-    background-color: rgba(248,248,248,0.8);
-    border: 0;
+    background-color: rgba(248,248,248,0.9);
+    border-top: 1px solid #ddd;
     text-align: center;
-    padding: 5px;
+    padding: 8px 5px;
     position: fixed;
-    bottom: 25px;
+    bottom: 0;
     right: 0px;
     width: 100%;
     z-index: 9999 !important;
