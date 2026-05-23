@@ -18,7 +18,7 @@
     </thead>
     <tbody>
     {% for row in ranking %}
-        <tr>
+        <tr{% if row.username == request.user.username %} class="active"{% endif %}>
             <td>{{ forloop.counter0|add:delta }}</td>
             <td>{% if row.avatar %}
                 <img class="avatar" src="{{ MEDIA_URL }}{{ row.avatar }}" />
