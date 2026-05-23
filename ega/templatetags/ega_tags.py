@@ -117,4 +117,18 @@ def champion_predictions_chart(tournament):
     for e in data[:5]:
         chart.add(e['team__name'], e['num'])
 
+
+@register.simple_tag
+def pagination_range(page_obj, wing=2):
+    """Return a windowed page list with None as ellipsis sentinel."""
+    current = page_obj.number
+    total = page_obj.paginator.num_pages
+    pages = []
+    for p in range(1, total + 1):
+        if p == 1 or p == total or abs(p - current) <= wing:
+            if pages and pages[-1] is not None and p - pages[-1] > 1:
+                pages.append(None)
+            pages.append(p)
+    return pages
+
     return chart.render_data_uri()

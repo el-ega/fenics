@@ -50,23 +50,28 @@
     <div class="col-md-8">
         {% include 'ega/_ranking_table.html' with delta=ranking.start_index score_details=1 %}
 
+        {% if ranking.paginator.num_pages > 1 %}
         <div class="text-center">
             <ul class="pagination">
                 {% if ranking.has_previous %}
                     <li><a href="?page={{ ranking.previous_page_number }}">&laquo;</a></li>
                 {% endif %}
-                {% if ranking.paginator.num_pages > 1 %}
-                {% for p in ranking.paginator.page_range %}
-                    <li {% if ranking.number == p %}class="active"{% endif %}>
-                        <a href="?page={{ p }}">{{ p }}</a>
-                    </li>
+                {% pagination_range ranking as pages %}
+                {% for p in pages %}
+                    {% if p is None %}
+                        <li class="disabled"><span>&hellip;</span></li>
+                    {% else %}
+                        <li {% if ranking.number == p %}class="active"{% endif %}>
+                            <a href="?page={{ p }}">{{ p }}</a>
+                        </li>
+                    {% endif %}
                 {% endfor %}
-                {% endif %}
                 {% if ranking.has_next %}
                     <li><a href="?page={{ ranking.next_page_number }}">&raquo;</a></li>
                 {% endif %}
             </ul>
         </div>
+        {% endif %}
 
     </div>
 
