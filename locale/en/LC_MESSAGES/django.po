@@ -924,6 +924,15 @@ msgstr "Manage your leagues"
 msgid "Perfil"
 msgstr "Profile"
 
+msgid "Ingresar"
+msgstr "Sign In"
+
+msgid "Registrarse"
+msgstr "Sign Up"
+
+msgid "Salir"
+msgstr "Sign Out"
+
 msgid "Reglas"
 msgstr "Rules"
 

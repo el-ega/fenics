@@ -88,12 +88,12 @@
                     <span class="glyphicon glyphicon-user"></span> {{ user }} <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li><a href="{% url 'profile' %}">{% trans "Perfil" %}</a></li>
-                        <li><a href="{% url 'logout' %}">{% trans "Sign Out" %}</a></li>
+                        <li><a href="{% url 'logout' %}">{% trans "Salir" %}</a></li>
                     </ul>
                     </li>
                     {% else %}
-                    <li><a href="{% url 'account_login' %}">{% trans "Sign In" %}</a></li>
-                    <li><a href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a></li>
+                    <li><a href="{% url 'account_login' %}">{% trans "Ingresar" %}</a></li>
+                    <li><a href="{% url 'account_signup' %}">{% trans "Registrarse" %}</a></li>
                     {% endif %}
                 </ul>
             </div><!-- /.navbar-collapse -->
