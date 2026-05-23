@@ -83,9 +83,9 @@
                 <div class="panel-body">
                     <p>{% for p in exacts %}
                         {% if p.user.avatar %}
-                            <img src="{{ p.user.avatar.url }}" class="team-image-xsmall" title="{{ p.user.username }}" />
+                            <img src="{{ p.user.avatar.url }}" class="user-avatar-xs" title="{{ p.user.username }}" />
                         {% else %}
-                            <img src="{% static 'images/unknown.png' %}" class="team-image-xsmall" title="{{ p.user.username }}" />
+                            <span class="avatar-initials avatar-sm" title="{{ p.user.username }}" style="font-size:14px;">{{ p.user.username|slice:":1" }}</span>
                         {% endif %}
                     {% endfor %}</p>
                     {% with winners_count=winners.count %}

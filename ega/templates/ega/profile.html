@@ -6,7 +6,7 @@
 <script type="text/javascript">
 
     function check_tie() {
-        if ($('select[name=home_goals]').val() == $('select[name=away_goals]').val()){
+        if ($('[name=home_goals]').val() == $('[name=away_goals]').val()){
             $('input[name=penalties]').prop( "disabled", false);
             $('[id^=id_penalties]').removeAttr("disabled");
             $('#None-help').css("color", "#333");
@@ -18,8 +18,8 @@
     }
 
     $(document).ready(function () {
-            $('select[name=home_goals]').change(function() {check_tie()});
-            $('select[name=away_goals]').change(function() {check_tie()});
+            $('[name=home_goals]').on('change input', function() {check_tie()});
+            $('[name=away_goals]').on('change input', function() {check_tie()});
 
             check_tie();
         });
@@ -36,7 +36,7 @@
         {% if request.user.avatar %}
         <img class="user-avatar-big" src="{{ request.user.avatar.url }}" />
         {% else %}
-        <img class="user-avatar-big" src="{% static 'images/unknown.png' %}" />
+        <span class="avatar-initials" style="font-size:48px;height:130px;width:130px;">{{ user.username|slice:":1" }}</span>
         {% endif %}
     </div>
     <div class="col-md-6">

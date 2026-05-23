@@ -85,7 +85,9 @@
                         {% endif %}
                     <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    <span class="glyphicon glyphicon-user"></span> {{ user }} <b class="caret"></b></a>
+                    {% if user.avatar %}<img class="avatar-nav" src="{{ user.avatar.url }}" />
+                    {% else %}<span class="avatar-initials avatar-nav">{{ user.username|slice:":1" }}</span>{% endif %}
+                    {{ user }} <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li><a href="{% url 'profile' %}">{% trans "Perfil" %}</a></li>
                         <li><a href="{% url 'logout' %}">{% trans "Salir" %}</a></li>

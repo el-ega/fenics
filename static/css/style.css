@@ -255,8 +255,10 @@ table.ranking {
 }
 
 .ranking .avatar {
-    max-width: 50px;
-    max-height: 50px;
+    border-radius: 50%;
+    height: 50px;
+    object-fit: cover;
+    width: 50px;
 }
 
 .ranking .score {
@@ -264,13 +266,38 @@ table.ranking {
 }
 
 .user-avatar {
-    max-width: 75px;
-    max-height: 75px;
+    border-radius: 50%;
+    height: 75px;
+    object-fit: cover;
+    width: 75px;
 }
 
 .user-avatar-big {
-    max-width: 130px;
-    max-height: 130px;
+    border-radius: 50%;
+    height: 130px;
+    object-fit: cover;
+    width: 130px;
+}
+
+.user-avatar-xs {
+    border-radius: 50%;
+    height: 35px;
+    object-fit: cover;
+    width: 35px;
+}
+
+.avatar-nav {
+    border-radius: 50%;
+    height: 24px;
+    object-fit: cover;
+    vertical-align: middle;
+    width: 24px;
+}
+
+.avatar-initials.avatar-nav {
+    font-size: 11px;
+    height: 24px;
+    width: 24px;
 }
 
 .avatar-initials {
