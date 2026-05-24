@@ -117,6 +117,8 @@ def champion_predictions_chart(tournament):
     for e in data[:5]:
         chart.add(e['team__name'], e['num'])
 
+    return chart.render_data_uri()
+
 
 @register.simple_tag
 def pagination_range(page_obj, wing=2):
@@ -130,5 +132,3 @@ def pagination_range(page_obj, wing=2):
                 pages.append(None)
             pages.append(p)
     return pages
-
-    return chart.render_data_uri()
