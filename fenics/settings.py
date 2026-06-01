@@ -187,6 +187,10 @@ MIGRATION_MODULES = {
 RECAPTCHA_PRIVATE_KEY = ''
 RECAPTCHA_PUBLIC_KEY = ''
 
+# football-data.org API key for fetch_scores management command
+# Get a free key at https://www.football-data.org/client/register
+FOOTBALL_DATA_API_KEY = ''
+
 try:
     from .local_settings import *  # noqa
 except ImportError:
