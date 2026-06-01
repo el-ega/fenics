@@ -24,7 +24,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
             '--tournament',
-            default='mundial-2026',
+            default='worldcup-2026',
             help='Tournament slug to update (default: mundial-2026)',
         )
         parser.add_argument(
@@ -72,8 +72,11 @@ class Command(BaseCommand):
             raise CommandError(f'API request failed: {exc}')
 
         api_matches = response.json().get('matches', [])
+        active = [m for m in api_matches if m.get('status') in (IN_PLAY | FINISHED | SUSPENDED)]
         if options['verbosity'] >= 1:
-            self.stdout.write(f'Fetched {len(api_matches)} matches from API')
+            self.stdout.write(
+                f'Fetched {len(api_matches)} matches from API ({len(active)} active)'
+            )
 
         updated = 0
         skipped = 0
