@@ -6,6 +6,7 @@ import requests
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
+from django.utils.dateparse import parse_datetime
 
 from ega.models import Match, Team, Tournament
 
@@ -85,6 +86,9 @@ class Command(BaseCommand):
             home_tla = (entry.get('homeTeam') or {}).get('tla', '').upper()
             away_tla = (entry.get('awayTeam') or {}).get('tla', '').upper()
 
+            utc_date = entry.get('utcDate')
+            match_date = parse_datetime(utc_date).date() if utc_date else None
+
             try:
                 home_team = Team.objects.get(code__iexact=home_tla, tournament=tournament)
                 away_team = Team.objects.get(code__iexact=away_tla, tournament=tournament)
@@ -94,13 +98,20 @@ class Command(BaseCommand):
                 skipped += 1
                 continue
 
+            qs = Match.objects.filter(tournament=tournament, home=home_team, away=away_team)
+            if match_date:
+                qs = qs.filter(when__date=match_date)
             try:
-                match = Match.objects.get(
-                    tournament=tournament, home=home_team, away=away_team
-                )
+                match = qs.get()
             except Match.DoesNotExist:
                 if options['verbosity'] >= 2:
                     self.stderr.write(f'  Match not found: {home_tla} vs {away_tla}')
+                skipped += 1
+                continue
+            except Match.MultipleObjectsReturned:
+                self.stderr.write(
+                    f'  Ambiguous match (multiple rows): {home_tla} vs {away_tla} on {match_date}'
+                )
                 skipped += 1
                 continue
 
